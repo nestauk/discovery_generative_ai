@@ -1,0 +1,10 @@
+---
+name: Run Lint
+description: Run linters to verify code quality
+
+runs:
+  using: "composite"
+  steps:
+    - name: Lint
+      shell: bash
+      run: poetry run pre-commit run --all-files

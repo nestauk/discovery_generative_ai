@@ -46,6 +46,10 @@ pre-commit = "^2.18.1"                    # Runs a pipeline before commiting cod
 black = "^22.6.0"                         # Python style checks
 
 
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.24.0"
+
 [build-system]
 requires = ["poetry-core>=1.2.0rc1"]
 build-backend = "poetry.core.masonry.api"

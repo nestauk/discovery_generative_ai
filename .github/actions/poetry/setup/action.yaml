@@ -1,6 +1,6 @@
 ---
 name: Set Up Poetry Environment
-description: Install Python and Poetry
+description: Install Python and Poetry. Credits to Andre Sionek for writing the original GitHub Action.
 
 inputs:
   python_version:

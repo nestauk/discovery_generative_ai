@@ -1,6 +1,6 @@
 ---
 name: Run Lint
-description: Run linters to verify code quality
+description: Run linters to verify code quality. Credits to Andre Sionek for writing the original GitHub Action.
 
 runs:
   using: "composite"

@@ -10,7 +10,7 @@ from genai.eli3 import TextGenerator
 APP_TITLE = "Nesta Discovery: Generative AI Prototypes"
 
 with st.sidebar:
-    selected = option_menu("Prototypes", ["Home page", "ELI3", "Dummy"], default_index=1)
+    selected = option_menu("Prototypes", ["Home page", "ELI3", "Dummy"], default_index=0)
 
 
 def main() -> None:

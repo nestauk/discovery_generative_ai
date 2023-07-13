@@ -42,6 +42,13 @@ def eli3() -> None:
             model_name=selected_model,
         )
 
+    prompt_selector = st.radio(label="**Generate with custom prompt**", options=["Default", "Custom"])
+
+    if prompt_selector == "Custom":
+        prompt = st.text_area("Write your own prompt", value=generator.prompt_template.template)
+    else:
+        prompt = None
+
     # Get the user input
     question = st.text_input(
         label="**Question**",
@@ -50,8 +57,8 @@ def eli3() -> None:
     )
 
     # Generate the answer
-    if st.button(label="Generate", help="Generate an answer."):
-        answer = generator.generate(question)
+    if st.button(label="**Generate**", help="Generate an answer."):
+        answer = generator.generate(question, prompt=prompt)
         st.write(answer)
 
 

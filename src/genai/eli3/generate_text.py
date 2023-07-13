@@ -5,6 +5,7 @@ from typing import Optional
 from dotenv import load_dotenv
 from langchain import LLMChain
 from langchain.chat_models import ChatOpenAI
+from langchain.prompts import PromptTemplate
 from langchain.prompts import load_prompt
 from langchain.prompts.chat import ChatPromptTemplate
 from langchain.prompts.chat import HumanMessagePromptTemplate
@@ -38,13 +39,23 @@ class TextGenerator:
         # Load the prompt templates
         self.prompt_template = load_prompt(path)
 
-    def generate(self, question: str) -> str:
-        """Generate text."""
+    def build_prompt(self, prompt: Optional[str] = None) -> ChatPromptTemplate:
+        """Build the prompt. If no prompt is provided, use the default prompt."""
+        # Build the prompt
+        if prompt:
+            p = PromptTemplate(input_variables=["question"], template=prompt)
+            human_message_prompt = HumanMessagePromptTemplate(prompt=p)
+        else:
+            human_message_prompt = HumanMessagePromptTemplate(prompt=self.prompt_template)  # type: ignore
 
-        # Create the prompt
-        human_message_prompt = HumanMessagePromptTemplate(prompt=self.prompt_template)  # type: ignore
         chat_prompt = ChatPromptTemplate.from_messages([human_message_prompt])
 
+        return chat_prompt
+
+    def generate(self, question: str, prompt: Optional[str] = None) -> str:
+        """Generate text."""
+
+        chat_prompt = self.build_prompt(prompt)
         # Run the prompt
         chain = LLMChain(llm=self.chat, prompt=chat_prompt)
         output = chain.run(question=question)

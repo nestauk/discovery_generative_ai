@@ -30,7 +30,17 @@ def eli3() -> None:
 
     # Create the generator
     selected_model = st.radio(label="**OpenAI model**", options=["gpt-3.5-turbo", "gpt-4"])
-    generator = TextGenerator(path="src/genai/eli3/prompts/eli3.json", model_name=selected_model)
+    try:
+        generator = TextGenerator(
+            path="src/genai/eli3/prompts/eli3.json",
+            model_name=selected_model,
+        )
+    except Exception:  # Dirty hack to work with local secrets and not break the app on Streamlit Share
+        generator = TextGenerator(
+            api_key=st.secret("OPENAI_API_KEY"),
+            path="src/genai/eli3/prompts/eli3.json",
+            model_name=selected_model,
+        )
 
     # Get the user input
     question = st.text_input(

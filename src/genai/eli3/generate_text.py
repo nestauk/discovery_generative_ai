@@ -43,7 +43,7 @@ class TextGenerator:
         """Build the prompt. If no prompt is provided, use the default prompt."""
         # Build the prompt
         if prompt:
-            p = PromptTemplate(input_variables=["question"], template=prompt)
+            p = PromptTemplate(input_variables=["input"], template=prompt)
             human_message_prompt = HumanMessagePromptTemplate(prompt=p)
         else:
             human_message_prompt = HumanMessagePromptTemplate(prompt=self.prompt_template)  # type: ignore
@@ -52,12 +52,12 @@ class TextGenerator:
 
         return chat_prompt
 
-    def generate(self, question: str, prompt: Optional[str] = None) -> str:
+    def generate(self, input: str, prompt: Optional[str] = None) -> str:
         """Generate text."""
 
         chat_prompt = self.build_prompt(prompt)
         # Run the prompt
         chain = LLMChain(llm=self.chat, prompt=chat_prompt)
-        output = chain.run(question=question)
+        output = chain.run(input=input)
 
         return output

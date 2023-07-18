@@ -22,7 +22,7 @@ jobs:
       - name: Set up
         uses: ./.github/actions/poetry/setup
         with:
-          python_version: "3.9.10"
+          python_version: "3.9.17"
 
       - name: Install Python Lint Dependencies with Poetry
         shell: bash

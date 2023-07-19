@@ -1,0 +1,8 @@
+{
+    "_type": "prompt",
+    "input_variables": [
+        "input",
+        "areas_of_learning"
+    ],
+    "template": "###Instructions###\nI am an early years educator and I am working with children 3-4 years old. I will describe you a situation in the ###Context### section. Your task is to propose activities such as puzzles, games, role play, arts and crafts that I could plan for the children to extend their learning. Requirements for the activities:\n1. Your suggestions must be fun and engaging for the children.\n2. Your suggestions must be novel, inspiring and memorable.\n3. Your proposed activities engage children in the following Areas of Learning: {areas_of_learning}.\n4. You must generate 11 activities in total.\n\n###Formatting###\nReturn the proposed activities in the following format:\n## Activity name:<activity_name>\nActivity description:<activity_description>\nAreas of learning:<list_of_areas_of_learning>\n\n###Context###\n{input}\n\n###Activities###\n"
+}

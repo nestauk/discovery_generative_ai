@@ -1,0 +1,7 @@
+{
+    "_type": "prompt",
+    "input_variables": [
+        "input"
+    ],
+    "template": "###Instructions###\nI am an early years educator and I am working with children 3-4 years old. I will describe you a situation in the ###Context### section. Your task is to propose activities such as puzzles, games, role play, arts and crafts that I could plan for the children to extend their learning. Requirements for the activities:\n1. Your suggestions must be fun and engaging for the children.\n2. Your suggestions must be novel, inspiring and memorable.\n3. You must split your proposed activities by the Areas of Learning of the EYFS framework mentioned above.\n\n###Context###\n{input}\n\n###Activities###\n"
+}

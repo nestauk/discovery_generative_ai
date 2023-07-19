@@ -9,6 +9,7 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 
 from genai.eli3 import TextGenerator
+from genai.eyfs import ActivityGenerator
 
 
 APP_TITLE = "Nesta Discovery: Generative AI Prototypes"
@@ -98,7 +99,7 @@ def early_year_activity_plan() -> None:
     # Create the generator
     selected_model = st.radio(label="**OpenAI model**", options=["gpt-3.5-turbo", "gpt-4"])
 
-    list_of_prompts = get_prompts(prompts_dir="src/genai/ey_activity_plan/prompts/")
+    list_of_prompts = get_prompts(prompts_dir="src/genai/eyfs/prompts/")
 
     prompt_selector = st.selectbox(
         label="**Pick a prompt or write a custom one**", options=list_of_prompts + ["Custom"]
@@ -106,18 +107,19 @@ def early_year_activity_plan() -> None:
 
     if prompt_selector == "Custom":
         generator = load_llm(
-            path_to_prompt="src/genai/ey_activity_plan/prompts/early_year_activity_plan.json",
+            human_prompt="src/genai/eyfs/prompts/human_prompt_3.json",
             selected_model=selected_model,
         )
         prompt = st.text_area("Write your own prompt", value=generator.prompt_template.template)
     else:
         generator = load_llm(
-            path_to_prompt=prompt_selector,
+            human_prompt=prompt_selector,
             selected_model=selected_model,
         )
         prompt = None
         with st.expander("**Inspect the prompt**"):
             # newlines are messed up https://github.com/streamlit/streamlit/issues/868
+            st.write(generator.system_template.template)
             st.write(generator.prompt_template.template)
 
     # Get the user input
@@ -138,17 +140,19 @@ def get_prompts(prompts_dir: str) -> list:
     return [join(prompts_dir, f) for f in listdir(prompts_dir) if isfile(join(prompts_dir, f))]
 
 
-def load_llm(path_to_prompt: str, selected_model: str) -> TextGenerator:
+def load_llm(human_prompt: str, selected_model: str) -> TextGenerator:
     """Load the LLM."""
     try:
-        generator = TextGenerator(
-            path=path_to_prompt,
+        generator = ActivityGenerator(
+            human_template=human_prompt,
+            system_template="src/genai/eyfs/prompts/system_prompt_eyfs.json",
             model_name=selected_model,
         )
     except Exception:  # Dirty hack to work with local secrets and not break the app on Streamlit Share
-        generator = TextGenerator(
+        generator = ActivityGenerator(
             api_key=st.secret("OPENAI_API_KEY"),
-            path=path_to_prompt,
+            human_template=human_prompt,
+            system_template="src/genai/eyfs/prompts/system_prompt_eyfs.json",
             model_name=selected_model,
         )
 

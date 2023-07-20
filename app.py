@@ -160,10 +160,7 @@ def early_year_activity_plan() -> None:
     # Generate the answer
     if st.button(label="**Generate**", help="Generate an answer."):
         with st.spinner("Generating activities..."):
-            # st.write(description, areas_of_learning, n_results)
-            # st.write(description)
             messages.append({"role": "user", "content": f"###Description###\n{description}\n\n###Activities###\n"})
-            st.write(messages)
 
             r = openai.ChatCompletion.create(
                 model=selected_model,

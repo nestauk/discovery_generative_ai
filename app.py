@@ -118,7 +118,7 @@ def early_year_activity_plan() -> None:
         # n_results = st.slider(label="**Number of results**", min_value=1, max_value=10, value=5, step=1)
 
         description = "<THIS IS WHERE THE GENERATOR WILL SHOW THE RESULTS>"
-        n_results = 12
+        n_results = 10
 
         temperature = st.slider(label="**Temperature**", min_value=0.0, max_value=1.0, value=0.0, step=0.1)
 
@@ -147,11 +147,11 @@ def early_year_activity_plan() -> None:
         {"role": "system", "content": "You are a passionate, energetic early year educator in the UK."},
         {
             "role": "user",
-            "content": f"""###Context###The UK's Early Years Foundation Stage framework recommends that educational programmes must involve activities and experiences for children, as set out under each of the areas of learning described below.\n\n##Areas of Learning###\n{areas_of_learning_text}\n\n###Instructions###\nI am an early years educator and I am working with children 3-4 years old. I will describe you a situation in the ###Description### section. Your task is to propose activities such as puzzles, games, role play, arts and crafts that I could plan for the children to extend their learning.\n\n###Formatting###\nReturn the proposed activities in the following format:\n## <activity_name>\n\n**Activity description**:<activity_description>\n\n**Areas of learning**:<list_of_areas_of_learning>\n\n""",  # noqa: B950
+            "content": f"""###Context###The UK's Early Years Foundation Stage framework recommends that educational programmes must involve activities and experiences for children, as set out under each of the areas of learning described below.\n\n##Areas of Learning###\n{areas_of_learning_text}\n\n###Instructions###\nI am an early years educator and I am working with children 3-4 years old. I will describe you a situation in the ###Description### section. Please propose conversations and activities I could do with the children to extend their learning.\n\nTypes of activities:\n- Conversations: Asking them questions about the topic\n- Puzzles, games, role play, arts and crafts\n\n###Formatting###\nReturn the proposed activities in the following format:\n\n## Conversations\n### <activity_name>\n\n**Activity description**:<activity_description>\n\n**Areas of learning**:<list_of_areas_of_learning>\n\n### <activity_name>\n\n**Activity description**:<activity_description>\n\n**Areas of learning**:<list_of_areas_of_learning>\n\n## Games and Crafts\n### <activity_name>\n\n**Activity description**:<activity_description>\n\n**Areas of learning**:<list_of_areas_of_learning>\n\n### <activity_name>\n\n**Activity description**:<activity_description>\n\n**Areas of learning**:<list_of_areas_of_learning>\n""",  # noqa: B950
         },
         {
             "role": "user",
-            "content": f"###Requirements for the activities###\n1. Your suggestions must be fun and engaging for the children.\n2. Your suggestions must be novel, inspiring and memorable.\n3. Your proposed activities engage children in the following Areas of Learning: {areas_of_learning}.\n4. You must generate {n_results} activities.\n5. Your proposed activities must be played {location}",  # noqa: B950
+            "content": f"###Requirements for the activities###\n1. Your suggestions must be fun and engaging for the children.\n2. Your suggestions must be novel, inspiring and memorable.\n3. You must suggest topics for conversation with the children and questions to ask them.\n4. Your proposed activities engage children in the following Areas of Learning: {areas_of_learning}.\n5. You must generate {n_results} activities.\n6. Your proposed activities must be played {location}",  # noqa: B950
         },
     ]
 

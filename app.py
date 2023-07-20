@@ -144,7 +144,10 @@ def early_year_activity_plan() -> None:
     location = st.selectbox(label="**Location**", options=["Indoor", "Outdoor", "Indoor or Outdoor"], index=2)
 
     messages = [
-        {"role": "system", "content": "You are a passionate, energetic early year educator in the UK."},
+        {
+            "role": "system",
+            "content": "You are a very creative and highly educated assistant who loves designing early year education programmes.",
+        },
         {
             "role": "user",
             "content": f"""###Context###The UK's Early Years Foundation Stage framework recommends that educational programmes must involve activities and experiences for children, as set out under each of the areas of learning described below.\n\n##Areas of Learning###\n{areas_of_learning_text}\n\n###Instructions###\nI am an early years educator and I am working with children 3-4 years old. I will describe you a situation in the ###Description### section. Please propose conversations and activities I could do with the children to extend their learning.\n\nTypes of activities:\n- Conversations: Asking them questions about the topic\n- Puzzles, games, role play, arts and crafts\n\n###Formatting###\nReturn the proposed activities in the following format:\n\n## Conversations\n### <activity_name>\n\n**Activity description**:<activity_description>\n\n**Areas of learning**:<list_of_areas_of_learning>\n\n### <activity_name>\n\n**Activity description**:<activity_description>\n\n**Areas of learning**:<list_of_areas_of_learning>\n\n## Games and Crafts\n### <activity_name>\n\n**Activity description**:<activity_description>\n\n**Areas of learning**:<list_of_areas_of_learning>\n\n### <activity_name>\n\n**Activity description**:<activity_description>\n\n**Areas of learning**:<list_of_areas_of_learning>\n""",  # noqa: B950
@@ -175,7 +178,7 @@ def early_year_activity_plan() -> None:
     # Get the user input
     description = st.text_input(
         label="**What's the topic you want activities for?**",
-        value="A kid came into my lesson talking about having found a snail in their garden at the weekend.",
+        value="Let's create activities educating children on how whales breath",
         help="Prompt the LLM with a some text and it will generate an activity plan for you.",
     )
 

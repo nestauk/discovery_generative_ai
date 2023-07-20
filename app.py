@@ -1,14 +1,20 @@
 """Streamlit app for the Generative AI prototypes."""
 
+import os
+
 from typing import Dict
 from typing import List
 
 import openai
 import streamlit as st
 
+from dotenv import load_dotenv
 from streamlit_option_menu import option_menu
 
 from genai.eli3 import TextGenerator
+
+
+load_dotenv()
 
 
 APP_TITLE = "Nesta Discovery: Generative AI Prototypes"
@@ -94,6 +100,7 @@ def eli3() -> None:
 def early_year_activity_plan() -> None:
     """Come up with activities for children."""
     st.title("Generating activity plans grounded in EY foundation stages")
+    auth_openai()
 
     with st.sidebar:
         # Create the generator
@@ -170,6 +177,14 @@ def early_year_activity_plan() -> None:
 def get_messages_by_role(messages: List[Dict], role: str) -> list:
     """Get all user messages."""
     return [message["content"] for message in messages if message["role"] == role]
+
+
+def auth_openai() -> None:
+    """Authenticate with OpenAI."""
+    try:
+        openai.api_key = os.environ["OPENAI_API_KEY"]
+    except Exception:
+        openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 
 if check_password():

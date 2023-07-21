@@ -161,19 +161,19 @@ def early_year_activity_plan() -> None:
     selected_system_messages = "".join(get_messages_by_role(messages, role="system"))
     selected_user_messages = {"Default": "\n\n".join(get_messages_by_role(messages, role="user"))}
 
-    prompt_selector = st.selectbox(
-        label="**Pick a prompt or write a custom one**",
-        options=["Default", "Custom"],
-    )
+    # prompt_selector = st.selectbox(
+    #     label="**Pick a prompt or write a custom one**",
+    #     options=["Default", "Custom"],
+    # )
 
-    if prompt_selector == "Custom":
-        user_message = st.text_area("**Write your own prompt**", value=selected_user_messages["Default"])
-        messages = [{"role": "system", "content": selected_system_messages}, {"role": "user", "content": user_message}]
-    else:
-        with st.expander("**Inspect the default prompt**"):
-            # newlines are messed up https://github.com/streamlit/streamlit/issues/868
-            st.write(selected_system_messages)
-            st.write(selected_user_messages["Default"])
+    # if prompt_selector == "Custom":
+    #     user_message = st.text_area("**Write your own prompt**", value=selected_user_messages["Default"])
+    #     messages = [{"role": "system", "content": selected_system_messages}, {"role": "user", "content": user_message}]
+    # else:
+    #     with st.expander("**Inspect the default prompt**"):
+    #         # newlines are messed up https://github.com/streamlit/streamlit/issues/868
+    #         st.write(selected_system_messages)
+    #         st.write(selected_user_messages["Default"])
 
     # Get the user input
     description = st.text_input(

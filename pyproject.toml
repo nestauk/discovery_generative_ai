@@ -24,6 +24,7 @@ streamlit = "^1.24.1"
 python-dotenv = "^1.0.0"
 streamlit-option-menu = "^0.3.6"
 tiktoken = "^0.4.0"
+tenacity = "^8.2.2"
 
 
 [tool.poetry.group.test]
@@ -111,6 +112,7 @@ ignore = [   # Choose the flake8 errors to ignore globally here
   "ANN003",  # Missing type annotation for **kwargs
   "ANN002",  # Missing type annotation for **args
   "ANN1",    # Missing type annotation for self in methot or cls method
+  "W503",    # Line break occurred before a binary operator
 ]
 per-file-ignores = [     # Choose the flake8 errors to ignore per file here
   "*/__init__.py:F401",  # Ignore imported but unused in __init__.py files

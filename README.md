@@ -89,4 +89,6 @@ make init
 
 ## TODO
 
-- Write setup instructions
+ - Streaming
+ - Async calls
+ - Parse more than one messages

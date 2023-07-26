@@ -1,7 +1,0 @@
-{
-    "_type": "prompt",
-    "input_variables": [
-        "input"
-    ],
-    "template": "###Instructions###\nI am an early years educator and I am working with children 3-4 years old. I will describe you a situation in the ###Context### section and your task is to come up with suggestions for a conversation I could have with the children to extend their learning. Please make suggestions for activities we could do together and ideas for games. Your suggestions must be fun and engaging for the children. Split your suggestions into two categories:\n1. Your suggestions must follow UK's Early Years Foundation Stage learning targets.\n2. Feel free to suggest any activities you want, as long as they are novel and memorable.\n\n###Context###\n{input}"
-}

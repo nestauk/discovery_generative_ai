@@ -38,7 +38,27 @@ class ActivityGenerator:
         temperature: float = 0.0,
         **openai_kwargs,
     ) -> Dict:
-        """Generate text using OpenAI's API."""
+        """Generate text using OpenAI's API.
+
+        More details on the API and messages: https://platform.openai.com/docs/guides/gpt/chat-completions-api
+
+        Args:
+            messages
+                A list of messages to send to the API.
+
+            message_kwargs
+                A dictionary of keyword arguments to pass to the messages.
+
+            temperature
+                The sampling temperature.
+
+            openai_kwargs
+                Keyword arguments to pass to the OpenAI API.
+
+        Returns:
+            A dictionary containing the response from the API.
+
+        """
         messages = [cls.prepare_message(message, **message_kwargs) for message in messages]
 
         response = cls._call(messages=messages, temperature=temperature, **openai_kwargs)
@@ -89,5 +109,6 @@ class ActivityGenerator:
 
     @staticmethod
     def _extract_placeholders(s: str) -> List[str]:
+        """Extract placeholder variables that can be filled in an f-string."""
         formatter = string.Formatter()
         return [field_name for _, field_name, _, _ in formatter.parse(s) if field_name is not None]

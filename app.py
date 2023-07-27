@@ -87,7 +87,7 @@ def eli3() -> None:
     question = st.text_input(
         label="**Question**",
         value="How can whales breath in water?",
-        help="Ask the LLM a question.",
+        help="Ask the large language model a question.",
     )
 
     # Generate the answer
@@ -138,7 +138,7 @@ def early_year_activity_plan() -> None:
     description = st.text_input(
         label="**What's the topic you want activities for?**",
         value="Let's create activities educating children on how whales breath",
-        help="Prompt the LLM with a some text and it will generate an activity plan for you.",
+        help="Prompt the large language model with a some text and it will generate an activity plan for you.",
     )
 
     # Generate the answer

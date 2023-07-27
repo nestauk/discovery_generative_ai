@@ -82,17 +82,21 @@ poetry --version
 ```
 
 ### How to install this project
-Assuming you have installed `pyenv` and `poetry` as described above, you can now install this project:
+1. Assuming you have installed `pyenv` and `poetry` as described above, you can now install this project:
 
 ```bash
 make init
 ```
 
-Activate the virtual environment:
+2. Activate the virtual environment:
 
 ```bash
 source .venv/bin/activate
 ```
+
+3. Add the secrets to the environment.
+   1. Add your OpenAI API key to the `.env` file. See `.env.example` for an example.
+   2. The streamlit app is password-protected. You can either remove the password requirement from `app.py` or create a `.streamlit/secrets.toml` file and add `password='<MYPASSWORD>'`.
 
 ## TODO
 

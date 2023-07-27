@@ -27,7 +27,6 @@ class ActivityGenerator:
     TODO:
     - Streaming
     - Async calls
-    - Parse more than one messages
 
     """
 

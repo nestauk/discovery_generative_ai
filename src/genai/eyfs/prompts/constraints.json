@@ -1,0 +1,4 @@
+{
+    "role": "user",
+    "content": "###Requirements for the activities###\n1. Your suggestions must be fun and engaging for the children.\n2. Your suggestions must be novel, inspiring and memorable.\n3. You must suggest topics for conversation with the children and questions to ask them.\n4. Your proposed activities engage children in the following Areas of Learning: {areas_of_learning}.\n5. You must generate {n_results} activities.\n6. Your proposed activities must be played {location}\n7. Describe the activities in 3-4 sentences."
+}

@@ -68,7 +68,8 @@ You can use the [official installer](https://python-poetry.org/docs/master/#inst
 curl -sSL https://install.python-poetry.org | python3 -
 ```
 
-Add poetry to your PATH:
+Add poetry to your PATH. **Recommended:** Add the following lines to your `.bash_profile` (or `.zshrc` if you use `zsh`). Save the file and restart your terminal.
+
 
 ```bash
 export PATH="/Users/<MYUSERNAME>/.local/bin:$PATH"
@@ -85,6 +86,12 @@ Assuming you have installed `pyenv` and `poetry` as described above, you can now
 
 ```bash
 make init
+```
+
+Activate the virtual environment:
+
+```bash
+source .venv/bin/activate
 ```
 
 ## TODO

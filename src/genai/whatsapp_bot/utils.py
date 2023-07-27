@@ -1,7 +1,13 @@
-from typing import Dict, Iterator
-import openai
-from dotenv import load_dotenv
 import os
+
+from typing import Dict
+from typing import Iterator
+
+import openai
+
+from dotenv import load_dotenv
+
+
 load_dotenv()
 # OpenAI settings
 openai.api_key = os.environ["OPENAI_API_KEY"]
@@ -24,24 +30,24 @@ AREAS_OF_LEARNING_DESC = {
     "Mathematics": """##Mathematics##\nDeveloping a strong grounding in number is essential so that all children develop the necessary building blocks to excel mathematically. Children should be able to count confidently, develop a deep understanding of the numbers to 10, the relationships between them and the patterns within those numbers. By providing frequent and varied opportunities to build and apply this understanding - such as using manipulatives, including small pebbles and tens frames for organising counting - children will develop a secure base of knowledge and vocabulary from which mastery of mathematics is built. In addition, it is important that the curriculum includes rich opportunities for children to develop their spatial reasoning skills across all areas of mathematics including shape, space and measures. It is important that children develop positive attitudes and interests in mathematics, look for patterns and relationships, spot connections, ‘have a go’, talk to adults and peers about what they notice and not be afraid to make mistakes.""",
     "Understanding the World": """##Understanding the World##\nUnderstanding the world involves guiding children to make sense of their physical world and their community. The frequency and range of children’s personal experiences increases their knowledge and sense of the world around them – from visiting parks, libraries and museums to meeting important members of society such as police officers, nurses and firefighters. In addition, listening to a broad selection of stories, non-fiction, rhymes and poems will foster their understanding of our culturally, socially, technologically and ecologically diverse world. As well as building important knowledge, this extends their familiarity with words that support understanding across domains. Enriching and widening children’s vocabulary will support later reading comprehension.""",
     "Expressive Arts and Design": """##Expressive Arts and Design##\nThe development of children’s artistic and cultural awareness supports their imagination and creativity. It is important that children have regular opportunities to engage with the arts, enabling them to explore and play with a wide range of media and materials. The quality and variety of what children see, hear and participate in is crucial for developing their understanding, self-expression, vocabulary and ability to communicate through the arts. The frequency, repetition and depth of their experiences are fundamental to their progress in interpreting and appreciating what they hear, respond to and observe.""",
-}   
+}
 
 
 def generate_response(prompt: Iterator[Dict[str, str]]):
     """Generate a response from prompt"""
     return openai.ChatCompletion.create(
-    model="gpt-3.5-turbo",
-    messages=prompt,
-    temperature=0.5,
-    max_tokens=1000,
-).to_dict()
+        model="gpt-3.5-turbo",
+        messages=prompt,
+        temperature=0.5,
+        max_tokens=1000,
+    ).to_dict()
 
 
 def activities_prompt(
     msg: str,
     n_results: int = 5,
     location: str = "Indoors or Outdoors",
-    areas_of_learning: Iterator[str] = AOL,      
+    areas_of_learning: Iterator[str] = AOL,
 ) -> Iterator[Dict[str, str]]:
     """
     Placeholder code for generating a prompt for activities
@@ -53,12 +59,12 @@ def activities_prompt(
         areas_of_learning (Iterator[str], optional): areas of learning. Defaults to all areas of learning.
 
     Returns:
-        Iterator[Dict[str, str]]: Prompt for generating activities    
+        Iterator[Dict[str, str]]: Prompt for generating activities
     """
 
-    # Define activities of learning     
+    # Define activities of learning
     areas_of_learning_text = [v for k, v in AREAS_OF_LEARNING_DESC.items() if k in areas_of_learning]
-    # Define prompts
+    # Define prompts
     messages = [
         {
             "role": "system",
@@ -72,6 +78,6 @@ def activities_prompt(
             "role": "user",
             "content": f"###Requirements for the activities###\n1. Your suggestions must be fun and engaging for the children.\n2. Your suggestions must be novel, inspiring and memorable.\n3. You must suggest topics for conversation with the children and questions to ask them.\n4. Your proposed activities engage children in the following Areas of Learning: {areas_of_learning}.\n5. You must generate {n_results} activities.\n6. Your proposed activities must be played {location}",  # noqa: B950
         },
-    ]     
-    messages.append({"role": "user", "content": f"###Description###\n{msg}\n\n###Activities###\n"})  
+    ]
+    messages.append({"role": "user", "content": f"###Description###\n{msg}\n\n###Activities###\n"})
     return messages

@@ -25,6 +25,7 @@ python-dotenv = "^1.0.0"
 streamlit-option-menu = "^0.3.6"
 tiktoken = "^0.4.0"
 tenacity = "^8.2.2"
+beautifulsoup4 = "^4.12.2"
 
 
 [tool.poetry.group.test]

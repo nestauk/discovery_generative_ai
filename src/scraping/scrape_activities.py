@@ -83,7 +83,13 @@ def web_scraper(url: str) -> str:
         Dataframe with URL and content
     """
     # Fetch webpage
-    response = requests.get(url, timeout=10)
+    response = requests.get(
+        url,
+        timeout=10,
+        headers={
+            "User-Agent": "Data collection for the purpose of research. For questions, reach out to karlis.kanders@nesta.org.uk"
+        },
+    )
 
     # Parse with BeautifulSoup
     soup = BeautifulSoup(response.text, "html.parser")

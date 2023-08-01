@@ -1,5 +1,5 @@
 """
-Get text data from the Tiny Happy People website about kids activities
+Get text data from the BBC's Tiny Happy People website about kids activities
 
 Usage:
 
@@ -8,6 +8,16 @@ $ cd src/scraping
 
 Then run the script
 $ poetry run python activities.py
+
+The final output file is stored in data/tiny_happy_people - final.csv
+with the following columns:
+    - CONTENT: Title of the activity
+    - SHORT DESCRIPTION: Short description of the activity
+    - Age Range (if applicable): Age range of the activity
+    - Type: Type of the activity (there are 20+ different types used by BBC)
+    - URL: URL of the activity
+    - text: Scraped text, describing the activity in greater detail
+
 """
 
 import csv

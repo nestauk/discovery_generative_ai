@@ -7,7 +7,7 @@ First navigate to the scraping folder
 $ cd src/scraping
 
 Then run the script
-$ poetry run python activities.py
+$ poetry run python scrape_activities.py
 
 The final output file is stored in data/tiny_happy_people - final.csv
 with the following columns:

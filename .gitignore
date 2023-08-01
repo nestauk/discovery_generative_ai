@@ -164,4 +164,4 @@ data/
 notebooks/
 .DS_Store
 .vscode/
-src/scraping/inputs/*
+src/scraping/data/*

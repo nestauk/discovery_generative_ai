@@ -108,7 +108,7 @@ def early_year_activity_plan() -> None:
         selected_model = st.radio(label="**OpenAI model**", options=["gpt-3.5-turbo", "gpt-4"], index=1)
         description = "<THIS IS WHERE THE GENERATOR WILL SHOW THE RESULTS>"
         n_results = 10
-        temperature = st.slider(label="**Temperature**", min_value=0.0, max_value=1.0, value=0.6, step=0.1)
+        temperature = st.slider(label="**Temperature**", min_value=0.0, max_value=2.0, value=0.6, step=0.1)
 
     # Select the areas of learning
     areas_of_learning = st.multiselect(label="**Areas of learning**", options=aol, default=aol)

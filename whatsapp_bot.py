@@ -40,7 +40,7 @@ areas_of_learning_desc = read_json("src/genai/eyfs/areas_of_learning.json")
 areas_of_learning_text = [v for k, v in areas_of_learning_desc.items() if k in areas_of_learning]
 eyfs_paths = [
     "src/genai/eyfs/prompts/system.json",
-    "src/genai/whatsapp_bot/prompts/eyfs/context_and_task.json",
+    "src/genai/eyfs/prompts/context_and_task.json",
     "src/genai/eyfs/prompts/constraints.json",
     "src/genai/eyfs/prompts/situation.json",
 ]
@@ -141,12 +141,6 @@ def send_text(messages: List[Dict], message_kwargs: Dict, my_contact: str, recei
     return
 
 
-@app.route("/")
-def hello() -> str:
-    """Test the api is working"""
-    return "Hello, World!"
-
-
 @app.route("/text", methods=["POST"])
 def text_reply() -> str:
     """Respond to incoming messages"""
@@ -161,4 +155,4 @@ def text_reply() -> str:
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()

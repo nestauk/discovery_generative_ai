@@ -25,9 +25,9 @@ python-dotenv = "^1.0.0"
 streamlit-option-menu = "^0.3.6"
 tiktoken = "^0.4.0"
 tenacity = "^8.2.2"
+beautifulsoup4 = "^4.12.2"
 Flask = "^2.3.2"
 twilio = "^8.5.0"
-
 
 
 [tool.poetry.group.test]

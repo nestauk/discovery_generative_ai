@@ -34,10 +34,21 @@ class BasePromptTemplate(ABC):
 
     def format_message(self, **kwargs) -> None:
         """Process a message and fill in any placeholders."""
-        placeholders = self._extract_placeholders(self.initial_template["content"])
 
-        if placeholders:
-            self.content = self.initial_template["content"].format(**kwargs)
+        def recursive_format(value: Union[str, dict]) -> Union[str, dict]:
+            if isinstance(value, str):
+                placeholders = self._extract_placeholders(value)
+                if placeholders:
+                    return value.format(**kwargs)
+                return value
+            elif isinstance(value, dict):
+                return {k: recursive_format(v) for k, v in value.items()}
+            else:
+                return value
+
+        for k in self.__dict__.keys():
+            if k != "initial_template":
+                self.__dict__[k] = recursive_format(self.initial_template)
 
     @classmethod
     def load(cls, obj: Union[Dict, str]) -> "BasePromptTemplate":
@@ -114,13 +125,13 @@ class FunctionTemplate(BasePromptTemplate):
 
     name: str
     description: str
-    properties: Dict[str, str]
+    parameters: Dict[str, Union[str, Dict[str, Dict[str, Union[str, List[str]]]], List[str]]]
 
-    def _initialize_template(self) -> Dict[str, str]:
+    def _initialize_template(self) -> Dict[str, Union[str, Dict[str, Dict[str, Union[str, List[str]]]], List[str]]]:
         return {
             "name": self.name,
             "description": self.description,
-            "properties": self.properties,
+            "parameters": self.parameters,
         }
 
     def _from_dict(data: Dict) -> "FunctionTemplate":

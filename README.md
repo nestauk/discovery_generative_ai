@@ -34,7 +34,7 @@ This prototype uses the [OpenAI API](https://beta.openai.com/docs/introduction) 
 Let's create an OpenAI message.
 
 ```python
-from atlas import MessageTemplate
+from genai import MessageTemplate
 
 # Set a dummy role and content
 my_role = "dummy_role"
@@ -72,7 +72,7 @@ prompt = MessageTemplate.load({"role": my_role, "content": my_content})
 Let's create an OpenAI function. The methods are exactly the same as above, only the atttributes are different.
 
 ```python
-from atlas import FunctionTemplate
+from genai import FunctionTemplate
 
 # Set a dummy role and content
 my_name = "dummy_name"

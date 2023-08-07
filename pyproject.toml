@@ -27,6 +27,7 @@ tiktoken = "^0.4.0"
 tenacity = "^8.2.2"
 Flask = "^2.3.2"
 twilio = "^8.5.0"
+chromadb = "^0.4.4"
 
 
 

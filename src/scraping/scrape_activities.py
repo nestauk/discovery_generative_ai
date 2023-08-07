@@ -53,6 +53,11 @@ SCRAP_TEXT = [
     "previousnext",
 ]
 
+# Headers to be used when scraping
+HEADERS = {
+    "User-Agent": "Data collection for the purpose of research. For questions, reach out to karlis.kanders@nesta.org.uk"
+}
+
 
 def pad_element(element: bs4.element.Tag) -> str:
     """Pad an element's content with spaces for certain tags (a recursive function)
@@ -72,7 +77,7 @@ def pad_element(element: bs4.element.Tag) -> str:
 
 
 # Function to scrape the web page
-def web_scraper(url: str) -> str:
+def web_scraper(url: str, timeout: float = 10) -> str:
     """Scrape a web page and return the content
 
     Args:
@@ -85,10 +90,8 @@ def web_scraper(url: str) -> str:
     # Fetch webpage
     response = requests.get(
         url,
-        timeout=10,
-        headers={
-            "User-Agent": "Data collection for the purpose of research. For questions, reach out to karlis.kanders@nesta.org.uk"
-        },
+        timeout=timeout,
+        headers=HEADERS,
     )
 
     # Parse with BeautifulSoup
@@ -132,21 +135,19 @@ if __name__ == "__main__":
     else:
         scraped_urls = []
 
+    new_urls_df = urls_df[~urls_df["URL"].isin(scraped_urls)]
+
     # Scrape the urls
     with open(SCRAPED_PATH, "a") as f:
         writer = csv.writer(f)
-        for _, row in tqdm(urls_df.iterrows(), total=len(urls_df)):
-            # Check if the url has already been scraped
-            if row.URL in scraped_urls:
-                continue
-            else:
-                try:
-                    # if url starts with 'www' then add 'https://'
-                    url = "https://" + row.URL if row.URL.startswith("www") else row.URL
-                    text = web_scraper(url)
-                    writer.writerow([row.URL, text])
-                except Exception:
-                    logging.warning(f"Error scraping {row.URL}")
+        for row in tqdm(new_urls_df.itertuples(), total=len(new_urls_df)):
+            try:
+                # if url starts with 'www' then add 'https://'
+                url = "https://" + row.URL if row.URL.startswith("www") else row.URL
+                text = web_scraper(url)
+                writer.writerow([row.URL, text])
+            except Exception:
+                logging.warning(f"Error scraping {row.URL}")
             sleep(0.5)
 
     # Create the final output table

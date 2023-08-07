@@ -72,7 +72,6 @@ prompt = MessageTemplate.load({"role": my_role, "content": my_content})
 Let's create an OpenAI function. The methods are exactly the same as above, only the atttributes are different.
 
 ```python
-# Let's create a message for OpenAI
 from genai import FunctionTemplate
 
 # Set a dummy role and content

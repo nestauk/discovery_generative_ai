@@ -4,7 +4,7 @@ Collection of generative AI prototypes, mainly using LLMs.
 
 - [Generative AI prototypes](#generative-ai-prototypes)
   - [Prototypes](#prototypes)
-    - [Explain me like I am a 3 year old](#explain-me-like-i-am-a-3-year-old)
+    - [Explain like I am a 3 year old](#explain-me-like-i-am-a-3-year-old)
     - [Suggesting personalised early-years activities](#suggesting-personalised-early-years-activities)
   - [Setup](#setup)
     - [Generic setup for working with `pyenv` and `poetry`](#generic-setup-for-working-with-pyenv-and-poetry)
@@ -14,7 +14,7 @@ Collection of generative AI prototypes, mainly using LLMs.
 
 ## Prototypes
 
-### Explain me like I am a 3 year old
+### Explain like I am a 3 year old
 This prototype uses the [OpenAI API](https://beta.openai.com/docs/introduction) to generate an explanation of a concept. The user can enter a concept and the model will explain it in very simple and cheerful terms.
 
 ![eli3](charts/eli3.png)

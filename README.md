@@ -3,11 +3,26 @@
 Collection of generative AI prototypes, mainly using LLMs.
 
 - [Generative AI prototypes](#generative-ai-prototypes)
+  - [Prototypes](#prototypes)
+    - [Explain like I am a 3 year old](#explain-me-like-i-am-a-3-year-old)
+    - [Suggesting personalised early-years activities](#suggesting-personalised-early-years-activities)
   - [Setup](#setup)
     - [Generic setup for working with `pyenv` and `poetry`](#generic-setup-for-working-with-pyenv-and-poetry)
     - [How to install this project](#how-to-install-this-project)
   - [Launch the streamlit app](#launch-the-streamlit-app)
   - [TODO](#todo)
+
+## Prototypes
+
+### Explain like I am a 3 year old
+This prototype uses the [OpenAI API](https://beta.openai.com/docs/introduction) to generate an explanation of a concept. The user can enter a concept and the model will explain it in very simple and cheerful terms.
+
+![eli3](charts/eli3.png)
+
+### Suggesting personalised early-years activities
+This prototype uses the [OpenAI API](https://beta.openai.com/docs/introduction) to generate [EYFS](https://www.gov.uk/government/publications/early-years-foundation-stage-framework--2)-related activities. The user queries the model with a topic and the model will generate a list of conversations and activities.
+
+![eyfs](charts/eyfs.png)
 
 ## Setup
 
@@ -125,3 +140,4 @@ docker run -p 8501:8501 <USERNAME>/<YOUR_IMAGE_NAME>
  - Streaming
  - Async calls
  - Parse more than one messages
+ - Create and parse prompts systematically (e.g. using a template)

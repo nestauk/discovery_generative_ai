@@ -229,4 +229,3 @@ docker run -p 8501:8501 <USERNAME>/<YOUR_IMAGE_NAME>
  - Streaming
  - Async calls
  - Parse more than one messages
- - Create and parse prompts systematically (e.g. using a template)

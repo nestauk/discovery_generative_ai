@@ -48,7 +48,7 @@ class BasePromptTemplate(ABC):
 
         for k in self.__dict__.keys():
             if k != "initial_template":
-                self.__dict__[k] = recursive_format(self.initial_template)
+                self.__dict__[k] = recursive_format(self.initial_template[k])
 
     @classmethod
     def load(cls, obj: Union[Dict, str]) -> "BasePromptTemplate":
@@ -61,7 +61,10 @@ class BasePromptTemplate(ABC):
             raise TypeError(f"Expected a JSON file path or a dictionary, got {type(obj)}.")
 
     @staticmethod
-    def _exclude_keys(d: dict, exclude: Optional[str] = None) -> dict:
+    def _exclude_keys(
+        d: dict,
+        exclude: Optional[List[str]] = None,  # noqa: B006
+    ) -> dict:
         """Exclude keys from a dictionary."""
         if exclude:
             for item in exclude:
@@ -69,7 +72,10 @@ class BasePromptTemplate(ABC):
             return d
         return d
 
-    def to_prompt(self, exclude: Optional[str] = "initial_template") -> Dict:
+    def to_prompt(
+        self,
+        exclude: Optional[List[str]] = ["initial_template"],  # noqa: B006
+    ) -> Dict:
         """Convert a Template instance to a JSON string."""
         d = asdict(self)
         return self._exclude_keys(d, exclude=exclude)

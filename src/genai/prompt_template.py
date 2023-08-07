@@ -27,6 +27,7 @@ class BasePromptTemplate(ABC):
         """To be implemented by child classes"""
         pass
 
+    @staticmethod
     @abstractmethod
     def _from_dict(data: Dict) -> None:
         """Create a Template instance from a dictionary."""

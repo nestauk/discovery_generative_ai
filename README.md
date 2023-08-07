@@ -3,10 +3,26 @@
 Collection of generative AI prototypes, mainly using LLMs.
 
 - [Generative AI prototypes](#generative-ai-prototypes)
+  - [Prototypes](#prototypes)
+    - [Explain like I am a 3 year old](#explain-me-like-i-am-a-3-year-old)
+    - [Suggesting personalised early-years activities](#suggesting-personalised-early-years-activities)
   - [Setup](#setup)
     - [Generic setup for working with `pyenv` and `poetry`](#generic-setup-for-working-with-pyenv-and-poetry)
     - [How to install this project](#how-to-install-this-project)
+  - [Launch the streamlit app](#launch-the-streamlit-app)
   - [TODO](#todo)
+
+## Prototypes
+
+### Explain like I am a 3 year old
+This prototype uses the [OpenAI API](https://beta.openai.com/docs/introduction) to generate an explanation of a concept. The user can enter a concept and the model will explain it in very simple and cheerful terms.
+
+![eli3](charts/eli3.png)
+
+### Suggesting personalised early-years activities
+This prototype uses the [OpenAI API](https://beta.openai.com/docs/introduction) to generate [EYFS](https://www.gov.uk/government/publications/early-years-foundation-stage-framework--2)-related activities. The user queries the model with a topic and the model will generate a list of conversations and activities.
+
+![eyfs](charts/eyfs.png)
 
 ## Setup
 
@@ -98,8 +114,30 @@ source .venv/bin/activate
    1. Add your OpenAI API key to the `.env` file. See `.env.example` for an example.
    2. The streamlit app is password-protected. You can either remove the password requirement from `app.py` or create a `.streamlit/secrets.toml` file and add `password='<MYPASSWORD>'`.
 
+## Launch the streamlit app
+You can use the [Dockerfile](Dockerfile) to launch the streamlit app without installing the repo and its dependencies.
+
+1. Add the required secrets.
+   1. Add your OpenAI API key to the `.env` file. See `.env.example` for an example.
+   2. The streamlit app is password-protected. You can either remove the password requirement from `app.py` or create a `.streamlit/secrets.toml` file and add `password='<MYPASSWORD>'`.
+
+2. Assuming Docker is install on your local machine, you can build the image with:
+
+```bash
+docker build -t <USERNAME>/<YOUR_IMAGE_NAME> .
+```
+
+3. Then run the image with:
+
+```bash
+docker run -p 8501:8501 <USERNAME>/<YOUR_IMAGE_NAME>
+```
+
+4. You can now access the app at `http://localhost:8501`.
+
 ## TODO
 
  - Streaming
  - Async calls
  - Parse more than one messages
+ - Create and parse prompts systematically (e.g. using a template)

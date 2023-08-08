@@ -1,0 +1,1 @@
+{"role": "user", "content": "###Areas of learning###\n{areas_of_learning}\n\n###Instructions###\nCategorise the following text to one or more areas of learning.\n{text}\n"}

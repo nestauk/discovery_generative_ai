@@ -145,7 +145,7 @@ class EYFSClassifier:
         Args:
             messages
                 A list of messages to send to the API. They can be:
-                - dictionaries containing the keys "role" and "content"
+                - dictionaries
                 - str (JSON file path)
 
             message_kwargs
@@ -156,6 +156,9 @@ class EYFSClassifier:
 
             openai_kwargs
                 Keyword arguments to pass to the OpenAI API.
+
+            concurrency:
+                The number of concurrent requests to make.
 
         Returns:
             A dictionary containing the response from the API.

@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM python:3.9.17-slim
+FROM --platform=linux/amd64 python:3.9.17-slim
 
 # Set environment varibles
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -25,10 +25,13 @@ COPY app.py /app/app.py
 COPY .env /app/.env
 COPY .streamlit /app/.streamlit
 
-# Project initialization:
+# Project inhitialization:
 RUN poetry config virtualenvs.create false \
     && poetry install --no-interaction --no-ansi
 
+
+
 EXPOSE 8501
 # Specify the command to run your application
-CMD ["streamlit", "run", "app.py"]
+CMD ["sh", "-c", "streamlit run --server.port $PORT app.py"]
+# CMD ["streamlit", "run", "app.py"]

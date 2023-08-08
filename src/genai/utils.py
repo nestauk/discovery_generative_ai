@@ -1,5 +1,7 @@
 import json
 
+from typing import Generator
+
 
 def read_json(path: str) -> dict:
     """Read a JSON file and return a dictionary."""
@@ -7,7 +9,7 @@ def read_json(path: str) -> dict:
         return json.load(f)
 
 
-def batch(lst, n):
+def batch(lst: list, n: int) -> Generator:
     """Yield successive n-sized chunks from lst."""
     for i in range(0, len(lst), n):
-        yield lst[i : i + n]  # noqa: E203
+        yield lst[i : i + n]

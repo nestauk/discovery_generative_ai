@@ -1,9 +1,6 @@
 import asyncio
-import json
 import os
 import time
-
-from typing import List
 
 import openai
 import pandas as pd
@@ -62,7 +59,7 @@ async def main() -> None:
     df = get_bbc_activities(PATH_TO_BBC_ACTIVITIES)
 
     # Fetch the EYFS areas of learning
-    areas_of_learning_keys, areas_of_learning_text = get_areas_of_learning(PATH_TO_AREAS_OF_LEARNING)
+    _, areas_of_learning_text = get_areas_of_learning(PATH_TO_AREAS_OF_LEARNING)
 
     print(f"Number of BBC activities: {len(df)}")  # noqa: T001
 
@@ -111,4 +108,4 @@ if "__main__" == __name__:
         loop.close()
     e = time.perf_counter()
 
-    print(f"Concurrent execution completed in: {e - s:0.2f} seconds")
+    print(f"Concurrent execution completed in: {e - s:0.2f} seconds")  # noqa: T001

@@ -25,7 +25,7 @@ COPY app.py /app/app.py
 COPY .env /app/.env
 COPY .streamlit /app/.streamlit
 
-# Project inhitialization:
+# Project initialization:
 RUN poetry config virtualenvs.create false \
     && poetry install --no-interaction --no-ansi
 
@@ -34,4 +34,3 @@ RUN poetry config virtualenvs.create false \
 EXPOSE 8501
 # Specify the command to run your application
 CMD ["sh", "-c", "streamlit run --server.port $PORT app.py"]
-# CMD ["streamlit", "run", "app.py"]

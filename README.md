@@ -6,6 +6,7 @@ Collection of generative AI prototypes, mainly using LLMs.
   - [Prototypes](#prototypes)
     - [Explain like I am a 3 year old](#explain-like-i-am-a-3-year-old)
     - [Suggesting personalised early-years activities](#suggesting-personalised-early-years-activities)
+    - [Suggesting personalised early-years activities w/ external knowledge base](#suggesting-personalised-early-years-activities-w-external-knowledge-base)
   - [Templating messages and functions](#templating-messages-and-functions)
     - [MessageTemplate](#messagetemplate)
     - [FunctionTemplate](#functiontemplate)
@@ -26,6 +27,11 @@ This prototype uses the [OpenAI API](https://beta.openai.com/docs/introduction) 
 This prototype uses the [OpenAI API](https://beta.openai.com/docs/introduction) to generate [EYFS](https://www.gov.uk/government/publications/early-years-foundation-stage-framework--2)-related activities. The user queries the model with a topic and the model will generate a list of conversations and activities.
 
 ![eyfs](charts/eyfs.png)
+
+### Suggesting personalised early-years activities w/ external knowledge base
+This prototype uses the [OpenAI API](https://beta.openai.com/docs/introduction) to generate [EYFS](https://www.gov.uk/government/publications/early-years-foundation-stage-framework--2)-related activities. It leverages external knowledge bases like [BBC's Tiny People](https://www.bbc.co.uk/tiny-happy-people/) to append example activities to the prompt based on. The user queries the model with a topic and the model will generate a list of conversations and activities.
+
+![eyfs-external-kb-classifier](charts/eyfs-kb-labels-and-vectors.png)
 
 ## Templating messages and functions
 `MessageTemplate` and `FunctionTemplate` enables you to define a template for a prompt and work with existing templates. Both classes inherit methods from `BasePromptTemplate`.

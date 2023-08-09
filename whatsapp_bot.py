@@ -1,3 +1,4 @@
+import copy
 import os
 import re
 
@@ -5,6 +6,8 @@ from threading import Thread
 from time import sleep
 from typing import Dict
 from typing import List
+
+import openai
 
 from dotenv import load_dotenv
 from flask import Flask
@@ -22,6 +25,7 @@ client = Client(os.environ["TWILIO_ACCOUNT_SID"], os.environ["TWILIO_AUTH_TOKEN"
 # OpenAI model
 LLM = "gpt-3.5-turbo"
 TEMPERATURE = 0.5
+openai.api_key = os.environ["OPENAI_API_KEY"]
 
 # Prepare ELI3 base prompt
 ELI3_MESSAGES = read_json("src/genai/whatsapp_bot/prompts/eli3/eli3.json")
@@ -88,25 +92,30 @@ def generate_reply(incoming_message: str, sender_contact: str, receiver_contact:
         Response text
     """
     text_message = incoming_message.lower()
+
     # 'explain' response
     if text_message[0:7] == "explain":
         response = ActivityGenerator.generate(
             model=LLM,
             temperature=TEMPERATURE,
-            messages=[ELI3_MESSAGES],
+            messages=[ELI3_MESSAGES.copy()],
             message_kwargs={"input": text_message[7:].strip()},
         )
         return response["choices"][0]["message"]["content"]
     # 'activities' response
     elif "activities" in text_message[0:10]:
         EYFS_PARAMETERS["description"] = text_message
-        thread = Thread(target=send_text, args=[EYFS_MESSAGES, EYFS_PARAMETERS, receiver_contact, sender_contact])
+        thread = Thread(
+            target=send_text, args=[copy.deepcopy(EYFS_MESSAGES), EYFS_PARAMETERS, receiver_contact, sender_contact]
+        )
         thread.start()
         return "Thank you for your question. I am thinking..."
     else:
         # Return a default message
-        return 'Write "Explain <your question>" to explain a concept to a 3-year old \n\n or" \
-             + "\n\n "Activities <your topic>" to get activity ideas'
+        return (
+            'Write "Explain <your question>" to explain a concept to a 3-year old \n\n or'
+            + '\n\n "Activities <your topic>" to get activity ideas'
+        )
 
 
 def send_text(messages: List[Dict], message_kwargs: Dict, my_contact: str, receiver_contact: str) -> None:
@@ -141,6 +150,12 @@ def send_text(messages: List[Dict], message_kwargs: Dict, my_contact: str, recei
     return
 
 
+@app.route("/")
+def hello_world() -> str:
+    """Information message"""
+    return "Nesta generative AI prototype: WhatsApp bot for suggesting kids activities"
+
+
 @app.route("/text", methods=["POST"])
 def text_reply() -> str:
     """Respond to incoming messages"""
@@ -155,4 +170,5 @@ def text_reply() -> str:
 
 
 if __name__ == "__main__":
-    app.run()
+    port = int(os.environ.get("PORT", 5000))
+    app.run(debug=False, host="0.0.0.0", port=port)

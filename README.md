@@ -141,6 +141,31 @@ docker run -p 8501:8501 <USERNAME>/<YOUR_IMAGE_NAME>
 
 4. You can now access the app at `http://localhost:8501`.
 
+
+### Deploying the app with Heroku
+
+Alternatively, if you would like to deploy the app on a public server, you can use the `Dockerfile.heroku` file, which has a few modifications to make it work with Heroku.
+
+First create the app and make sure to add the environment variables to your Heroku app:
+
+```bash
+heroku create
+heroku config:set OPENAI_API_KEY=<your_api_key>
+```
+
+Then build and push the image to Heroku:
+
+```bash
+heroku container:push heroku --recursive --app <your_app_name>
+```
+
+Finally, release the image and start the app:
+
+```bash
+heroku container:release heroku
+heroku ps:scale web=1
+```
+
 ## TODO
 
  - Streaming

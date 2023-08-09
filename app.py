@@ -11,6 +11,7 @@ from streamlit_option_menu import option_menu
 from genai.streamlit_pages import early_year_activity_plan
 from genai.streamlit_pages import eli3
 from genai.streamlit_pages import eyfs_kb_bbc
+from genai.streamlit_pages import eyfs_parallel
 
 
 load_dotenv()
@@ -24,30 +25,30 @@ def auth_openai() -> None:
         openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 
-def check_password() -> bool:
-    """Return `True` if the user had the correct password."""
+# def check_password() -> bool:
+#     """Return `True` if the user had the correct password."""
 
-    def password_entered() -> None:
-        """Check whether a password entered by the user is correct."""
-        if st.session_state["password"] == st.secrets["password"]:
-            st.session_state["password_correct"] = True
-            del st.session_state["password"]  # don't store password
-        else:
-            st.session_state["password_correct"] = False
+#     def password_entered() -> None:
+#         """Check whether a password entered by the user is correct."""
+#         if st.session_state["password"] == st.secrets["password"]:
+#             st.session_state["password_correct"] = True
+#             del st.session_state["password"]  # don't store password
+#         else:
+#             st.session_state["password_correct"] = False
 
-    if "password_correct" not in st.session_state:
-        # First run, show input for password.
-        st.text_input("Password", type="password", on_change=password_entered, key="password")
-        return False
-    elif not st.session_state["password_correct"]:
-        # Password not correct, show input + error.
-        st.text_input("Password", type="password", on_change=password_entered, key="password")
-        st.error("😕 Password incorrect")
-        return False
-    else:
-        # Password correct.
+#     if "password_correct" not in st.session_state:
+#         # First run, show input for password.
+#         st.text_input("Password", type="password", on_change=password_entered, key="password")
+#         return False
+#     elif not st.session_state["password_correct"]:
+#         # Password not correct, show input + error.
+#         st.text_input("Password", type="password", on_change=password_entered, key="password")
+#         st.error("😕 Password incorrect")
+#         return False
+#     else:
+#         # Password correct.
 
-        return True
+#         return True
 
 
 def main() -> None:
@@ -56,7 +57,13 @@ def main() -> None:
     with st.sidebar:
         selected = option_menu(
             "Prototypes",
-            ["Home page", "ELI3", "EYFS-based activities", "EYFS-based activities + BBC activities"],
+            [
+                "Home page",
+                "ELI3",
+                "EYFS-based activities",
+                "EYFS-based activities + BBC activities",
+                "EYFS prototypes in parallel",
+            ],
             default_index=0,
         )
     if selected == "Home page":
@@ -68,7 +75,10 @@ def main() -> None:
         early_year_activity_plan()
     elif selected == "EYFS-based activities + BBC activities":
         eyfs_kb_bbc()
+    elif selected == "EYFS prototypes in parallel":
+        eyfs_parallel()
 
 
-if check_password():
-    main()
+# if check_password():
+#     main()
+main()

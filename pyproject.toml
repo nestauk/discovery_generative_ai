@@ -30,6 +30,7 @@ Flask = "^2.3.2"
 twilio = "^8.5.0"
 chromadb = "^0.4.4"
 aiofiles = "^23.1.0"
+gunicorn = "^21.2.0"
 
 
 [tool.poetry.group.test]
@@ -133,7 +134,8 @@ exclude = [
 
 [tool.bandit]
 skips = [      # Choose the bandit errors to ignore globally
-  "B101"       # Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.
+  "B101",      # Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.
+  "B104",      # Possible binding to all interfaces
 ]
 exclude_dirs = [
   ".venv",

@@ -43,6 +43,11 @@ Note that to run this prototype, you need to:
 
 #### Generate activities based on the user's query and the BBC activities
 ![eyfs-external-kb-app](charts/eyfs-kb-bbc-app.png)
+### WhatsApp interface to early-years prompts
+
+This prototype uses a text messaging app (WhatsApp) as an accessible front end to a large language model (LLM), which can explain simple concepts or generate personalised activity ideas. More information can be found [here](src/genai/whatsapp_bot/).
+
+![whatsapp](charts/whatsapp_bot.png)
 
 ## Templating messages and functions
 `MessageTemplate` and `FunctionTemplate` enables you to define a template for a prompt and work with existing templates. Both classes inherit methods from `BasePromptTemplate`.

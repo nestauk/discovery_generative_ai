@@ -132,8 +132,8 @@ exclude = [
 
 [tool.bandit]
 skips = [      # Choose the bandit errors to ignore globally
-  "B101",    # Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.
-  "B104",    # Possible binding to all interfaces
+  "B101",      # Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.
+  "B104",      # Possible binding to all interfaces
 ]
 exclude_dirs = [
   ".venv",

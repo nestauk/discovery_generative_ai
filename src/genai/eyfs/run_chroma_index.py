@@ -46,7 +46,7 @@ def get_labelled_bbc_activities(path: str) -> pd.DataFrame:
 def get_bbc_activities(path: str) -> pd.DataFrame:
     """Read and clean the BBC activities file and return a dataframe."""
     df = pd.read_csv(path)
-    df = df.rename(columns={"Age Range (if applicable)": "Age"})
+    df = df.rename(columns={"Age Range (if applicable)": "Age", "CONTENT": "title"})
     df = df.dropna(subset=["text", "URL"])
     df = df.drop_duplicates(subset=["URL"])
 
@@ -93,14 +93,21 @@ def build_chroma_index(
     url = batch(df["URL"].tolist(), batch_size)
     area_of_learnings = batch(df["areas_of_learning"].tolist(), batch_size)
     text = batch(df["text"].tolist(), batch_size)
+    titles = batch(df["title"].tolist(), batch_size)
 
-    for batch_embeddings, batch_url, batch_area_of_learnings, batch_text in zip(
-        embeddings, url, area_of_learnings, text
+    for batch_embeddings, batch_url, batch_area_of_learnings, batch_text, batch_title in zip(
+        embeddings,
+        url,
+        area_of_learnings,
+        text,
+        titles,
     ):
         collection.add(
             ids=batch_url,
             embeddings=batch_embeddings,
-            metadatas=[{"area_of_learning": aol} for aol in batch_area_of_learnings],
+            metadatas=[
+                {"area_of_learning": aol, "title": title} for aol, title in zip(batch_area_of_learnings, batch_title)
+            ],
             documents=batch_text,
         )
 
@@ -113,7 +120,7 @@ def main() -> None:
     labels = get_labelled_bbc_activities(PATH_TO_LABELLED_ACTIVITIES)
     bbc = get_bbc_activities(PATH_TO_BBC_ACTIVITIES)
 
-    df = labels.merge(bbc[["SHORT DESCRIPTION", "text", "URL"]], how="left", left_on="URL", right_on="URL")
+    df = labels.merge(bbc[["SHORT DESCRIPTION", "text", "URL", "title"]], how="left", left_on="URL", right_on="URL")
 
     # Encode the BBC activities' text
     df["embedding"] = df["text"].apply(lambda row: get_embedding(row, model="text-embedding-ada-002"))

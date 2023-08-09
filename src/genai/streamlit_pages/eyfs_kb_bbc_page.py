@@ -63,7 +63,7 @@ def eyfs_kb_bbc(path: str = "data/eyfs/chroma_index/") -> None:
             encoded_query = get_embedding(query)
 
             # Search with Chroma
-            docs, urls, categories = query_chroma(
+            docs, urls, categories, titles = query_chroma(
                 collection,
                 encoded_query,
                 areas_of_learning=areas_of_learning,
@@ -91,10 +91,10 @@ def eyfs_kb_bbc(path: str = "data/eyfs/chroma_index/") -> None:
 
             st.write(r)
 
-            st.subheader("Sources")
+        st.subheader("Sources")
 
-            for url, doc, category in zip(urls, docs, categories):
-                st.write(f"""**URL**: {url}\n\n**Text**: {doc}\n\n**Area of learning**: {category}\n\n====\n\n""")
+        for url, category, title in zip(urls, categories, titles):
+            st.write(f"""- [{title}]({url}) ({category})""")
 
 
 @st.cache_resource
@@ -163,11 +163,13 @@ def query_chroma(
     docs = []
     urls = []
     aol = []
+    titles = []
     for area_of_learning in areas_of_learning:
         r = collection.query(encoded_query, n_results=top_n, where={"area_of_learning": area_of_learning})
         urls.extend(r["ids"][0])
         docs.extend(r["documents"][0])
         aol.extend([v["area_of_learning"] for v in r["metadatas"][0]])
+        titles.extend([v["title"] for v in r["metadatas"][0]])
 
     # Subset docs to fit the prompt length
     idx = sample_docs(len(docs), max_n)
@@ -175,5 +177,6 @@ def query_chroma(
     docs = [docs[i] for i in idx]
     urls = [urls[i] for i in idx]
     aol = [aol[i] for i in idx]
+    titles = [titles[i] for i in idx]
 
-    return docs, urls, aol
+    return docs, urls, aol, titles

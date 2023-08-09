@@ -243,3 +243,9 @@ class EYFSClassifier:
 
         async with aiofiles.open(file, "a") as f:
             await f.write(f"{json.dumps(item)}\n")
+
+
+def get_embedding(text: str, model: str = "text-embedding-ada-002") -> List[float]:
+    """Encode text with OpenAI's text embedding model."""
+    text = text.replace("\n", " ")
+    return openai.Embedding.create(input=[text], model=model)["data"][0]["embedding"]

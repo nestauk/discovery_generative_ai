@@ -121,6 +121,7 @@ class MessageTemplate(BasePromptTemplate):
             "content": self.content,
         }
 
+    @staticmethod
     def _from_dict(data: Dict) -> "MessageTemplate":
         """Create a Template instance from a dictionary."""
         return MessageTemplate(**data)
@@ -141,6 +142,7 @@ class FunctionTemplate(BasePromptTemplate):
             "parameters": self.parameters,
         }
 
+    @staticmethod
     def _from_dict(data: Dict) -> "FunctionTemplate":
         """Create a Template instance from a dictionary."""
         return FunctionTemplate(**data)

@@ -1,3 +1,5 @@
+"""Classify the BBC activities to EYFS areas of learning."""
+
 import asyncio
 import os
 import time

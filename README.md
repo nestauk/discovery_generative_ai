@@ -24,6 +24,12 @@ This prototype uses the [OpenAI API](https://beta.openai.com/docs/introduction) 
 
 ![eyfs](charts/eyfs.png)
 
+### WhatsApp interface to early-years prompts
+
+This prototype uses a text messaging app (WhatsApp) as an accessible front end to a large language model (LLM), which can explain simple concepts or generate personalised activity ideas. More information can be found [here](src/genai/whatsapp_bot/).
+
+![whatsapp](charts/whatsapp_bot.png)
+
 ## Setup
 
 

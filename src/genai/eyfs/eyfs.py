@@ -3,6 +3,8 @@ import string
 
 from typing import Dict
 from typing import List
+from typing import Optional
+from typing import Union
 
 import openai
 
@@ -17,6 +19,8 @@ from tenacity import retry_if_exception_type
 from tenacity import stop_after_attempt
 from tenacity import wait_exponential
 
+from genai import MessageTemplate
+
 
 logger = logging.getLogger(__name__)
 
@@ -26,28 +30,34 @@ class ActivityGenerator:
 
     TODO:
     - Streaming
-    - Async calls
 
     """
 
     @classmethod
     def generate(
         cls,
-        messages: List[Dict],
-        message_kwargs: Dict,
+        messages: List[Union[str, Dict]],
+        message_kwargs: Optional[Dict] = None,
+        model: str = "gpt-3.5-turbo",
         temperature: float = 0.0,
         **openai_kwargs,
-    ) -> Dict:
+    ) -> Union[Dict, str]:
         """Generate text using OpenAI's API.
 
         More details on the API and messages: https://platform.openai.com/docs/guides/gpt/chat-completions-api
 
         Args:
             messages
-                A list of messages to send to the API.
+                A list of messages to send to the API. They can be:
+                - dictionaries
+                - str (JSON file path)
+                - instances of classes that inherit from BasePromptTemplate
 
             message_kwargs
                 A dictionary of keyword arguments to pass to the messages.
+
+            model
+                The OpenAI model to use.
 
             temperature
                 The sampling temperature.
@@ -59,24 +69,31 @@ class ActivityGenerator:
             A dictionary containing the response from the API.
 
         """
+        if not message_kwargs:
+            message_kwargs = {}
+
         messages = [cls.prepare_message(message, **message_kwargs) for message in messages]
 
-        response = cls._call(messages=messages, temperature=temperature, **openai_kwargs)
+        response = cls._call(
+            messages=messages,
+            temperature=temperature,
+            model=model,
+            **openai_kwargs,
+        )
 
-        return response  # type: ignore
+        return response["choices"][0]["message"]["content"]
 
     @classmethod
-    def prepare_message(cls, message: Dict, **kwargs) -> Dict:
-        """Process a message and fill in any placeholders."""
-        placeholders = cls._extract_placeholders(message["content"])
-
-        if len(placeholders) > 0:
-            message["content"] = message["content"].format(**kwargs)
-
-        if isinstance(message, dict):
-            return message
+    def prepare_message(cls, obj: Union[MessageTemplate, dict, str], **kwargs) -> Dict:
+        """Process a message."""
+        if not isinstance(obj, MessageTemplate):
+            prompt = MessageTemplate.load(obj)
         else:
-            raise ValueError("Message must be a dictionary.")
+            prompt = obj
+
+        prompt.format_message(**kwargs)
+
+        return prompt.to_prompt()
 
     @staticmethod
     @retry(

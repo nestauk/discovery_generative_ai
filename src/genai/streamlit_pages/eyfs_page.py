@@ -66,4 +66,4 @@ def early_year_activity_plan() -> None:
                 message_kwargs=messages_placeholders,
             )
 
-            st.write(r["choices"][0]["message"]["content"])
+            st.write(r)

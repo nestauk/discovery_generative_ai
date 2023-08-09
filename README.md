@@ -33,6 +33,11 @@ This prototype uses the [OpenAI API](https://beta.openai.com/docs/introduction) 
 ### Suggesting personalised early-years activities w/ external knowledge base
 This prototype uses the [OpenAI API](https://beta.openai.com/docs/introduction) to generate [EYFS](https://www.gov.uk/government/publications/early-years-foundation-stage-framework--2)-related activities. It leverages external knowledge bases like [BBC's Tiny People](https://www.bbc.co.uk/tiny-happy-people/) to append example activities to the prompt based on. The user queries the model with a topic and the model will generate a list of conversations and activities.
 
+Note that to run this prototype, you need to:
+1. Get in touch for the BBC Tiny Happy People dataset
+2. Run `python src/genai/eyfs/run_classifier.py`
+3. Run `python src/genai/eyfs/run_chroma_index.py`
+
 #### Categorise the BBC activities to the EYFS areas of learning and build a vector index
 ![eyfs-external-kb-classifier](charts/eyfs-kb-labels-and-vectors.png)
 

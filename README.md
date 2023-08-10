@@ -7,8 +7,8 @@ Collection of generative AI prototypes, mainly using LLMs.
     - [Explain like I am a 3 year old](#explain-like-i-am-a-3-year-old)
     - [Suggesting personalised early-years activities](#suggesting-personalised-early-years-activities)
     - [Suggesting personalised early-years activities w/ external knowledge base](#suggesting-personalised-early-years-activities-w-external-knowledge-base)
-      - [Categorise the BBC activities to the EYFS areas of learning and build a vector index](#categorise-the-bbc-activities-to-the-eyfs-areas-of-learning-and-build-a-vector-index)
-      - [Generate activities based on the user's query and the BBC activities](#generate-activities-based-on-the-users-query-and-the-bbc-activities)
+      - [Categorise "Tiny Happy People" activities to the EYFS areas of learning and build a vector index](#categorise-tiny-happy-people-activities-to-the-eyfs-areas-of-learning-and-build-a-vector-index)
+      - [Generate activities based on the user's query and the "Tiny Happy People" activities](#generate-activities-based-on-the-users-query-and-the-tiny-happy-people-activities)
     - [WhatsApp interface to early-years prompts](#whatsapp-interface-to-early-years-prompts)
   - [Templating messages and functions](#templating-messages-and-functions)
     - [MessageTemplate](#messagetemplate)
@@ -40,10 +40,10 @@ Note that to run this prototype, you need to:
 2. Run `python src/genai/eyfs/run_classifier.py`
 3. Run `python src/genai/eyfs/run_pinecone_index.py`
 
-#### Categorise the BBC activities to the EYFS areas of learning and build a vector index
+#### Categorise "Tiny Happy People" activities to the EYFS areas of learning and build a vector index
 ![eyfs-external-kb-classifier](charts/eyfs-kb-labels-and-vectors.png)
 
-#### Generate activities based on the user's query and the BBC activities
+#### Generate activities based on the user's query and the "Tiny Happy People" activities
 ![eyfs-external-kb-app](charts/eyfs-kb-bbc-app.png)
 ### WhatsApp interface to early-years prompts
 

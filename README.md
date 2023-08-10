@@ -9,6 +9,7 @@ Collection of generative AI prototypes, mainly using LLMs.
     - [Suggesting personalised early-years activities w/ external knowledge base](#suggesting-personalised-early-years-activities-w-external-knowledge-base)
       - [Categorise the BBC activities to the EYFS areas of learning and build a vector index](#categorise-the-bbc-activities-to-the-eyfs-areas-of-learning-and-build-a-vector-index)
       - [Generate activities based on the user's query and the BBC activities](#generate-activities-based-on-the-users-query-and-the-bbc-activities)
+    - [WhatsApp interface to early-years prompts](#whatsapp-interface-to-early-years-prompts)
   - [Templating messages and functions](#templating-messages-and-functions)
     - [MessageTemplate](#messagetemplate)
     - [FunctionTemplate](#functiontemplate)
@@ -16,6 +17,7 @@ Collection of generative AI prototypes, mainly using LLMs.
     - [Generic setup for working with `pyenv` and `poetry`](#generic-setup-for-working-with-pyenv-and-poetry)
     - [How to install this project](#how-to-install-this-project)
   - [Launch the streamlit app](#launch-the-streamlit-app)
+    - [Deploying the app with Heroku](#deploying-the-app-with-heroku)
   - [TODO](#todo)
 
 ## Prototypes
@@ -31,12 +33,12 @@ This prototype uses the [OpenAI API](https://beta.openai.com/docs/introduction) 
 ![eyfs](charts/eyfs.png)
 
 ### Suggesting personalised early-years activities w/ external knowledge base
-This prototype uses the [OpenAI API](https://beta.openai.com/docs/introduction) to generate [EYFS](https://www.gov.uk/government/publications/early-years-foundation-stage-framework--2)-related activities. It leverages external knowledge bases like [BBC's Tiny People](https://www.bbc.co.uk/tiny-happy-people/) to append example activities to the prompt based on. The user queries the model with a topic and the model will generate a list of conversations and activities.
+This prototype uses the [OpenAI API](https://beta.openai.com/docs/introduction) to generate [EYFS](https://www.gov.uk/government/publications/early-years-foundation-stage-framework--2)-related activities. It leverages external knowledge bases like [BBC's "Tiny Happy People"](https://www.bbc.co.uk/tiny-happy-people/) to append example activities to the prompt based on. The user queries the model with a topic and the model will generate a list of conversations and activities.
 
 Note that to run this prototype, you need to:
 1. Get in touch for the BBC Tiny Happy People dataset
 2. Run `python src/genai/eyfs/run_classifier.py`
-3. Run `python src/genai/eyfs/run_chroma_index.py`
+3. Run `python src/genai/eyfs/run_pinecone_index.py`
 
 #### Categorise the BBC activities to the EYFS areas of learning and build a vector index
 ![eyfs-external-kb-classifier](charts/eyfs-kb-labels-and-vectors.png)
@@ -244,6 +246,31 @@ docker run -p 8501:8501 <USERNAME>/<YOUR_IMAGE_NAME>
 ```
 
 4. You can now access the app at `http://localhost:8501`.
+
+
+### Deploying the app with Heroku
+
+Alternatively, if you would like to deploy the app on a public server, you can use the `Dockerfile.heroku` file, which has a few modifications to make it work with Heroku.
+
+First create the app and make sure to add the environment variables to your Heroku app:
+
+```bash
+heroku create
+heroku config:set OPENAI_API_KEY=<your_api_key>
+```
+
+Then build and push the image to Heroku:
+
+```bash
+heroku container:push heroku --recursive --app <your_app_name>
+```
+
+Finally, release the image and start the app:
+
+```bash
+heroku container:release heroku
+heroku ps:scale web=1
+```
 
 ## TODO
 

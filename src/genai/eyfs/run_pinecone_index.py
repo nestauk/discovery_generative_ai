@@ -1,4 +1,4 @@
-"""Join the BBC activities with the labelled activities and build a Chroma index."""
+"""Join the BBC activities with the labelled activities and build a pinecone index."""
 
 import os
 
@@ -23,6 +23,7 @@ openai.api_key = os.environ["OPENAI_API_KEY"]
 PATH_TO_LABELLED_ACTIVITIES = "data/eyfs_labels/parsed_json.jsonl"
 PATH_TO_BBC_ACTIVITIES = "data/eyfs/tiny_happy_people - final - tiny_happy_people - final.csv"
 INDEX_NAME = "eyfs-index"
+ENCODER_NAME = "text-embedding-ada-002"
 
 
 def get_labelled_bbc_activities(path: str) -> pd.DataFrame:
@@ -108,7 +109,7 @@ def main() -> None:
     df = labels.merge(bbc[["SHORT DESCRIPTION", "text", "URL", "title"]], how="left", left_on="URL", right_on="URL")
 
     # Encode the BBC activities' text
-    df["embedding"] = df["text"].apply(lambda row: get_embedding(row, model="text-embedding-ada-002"))
+    df["embedding"] = df["text"].apply(lambda row: get_embedding(row, model=ENCODER_NAME))
 
     # Batch items
     items = []

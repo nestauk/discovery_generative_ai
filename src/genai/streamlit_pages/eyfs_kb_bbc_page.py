@@ -1,6 +1,7 @@
 import os
 import random
 
+from typing import List
 from typing import Union
 
 import pinecone
@@ -61,7 +62,7 @@ def eyfs_kb_bbc(index_name: str = "eyfs-index") -> None:
             # Encode the query
             encoded_query = get_embedding(query)
 
-            # Search with Chroma
+            # Search with Pinecone
             similar_docs = query_pinecone(
                 index,
                 encoded_query,
@@ -109,22 +110,15 @@ def get_index(index_name: str, environment: str = "us-west1-gcp") -> pinecone.in
     return index
 
 
-def try_sample_docs(num_docs: int, n: int) -> Union[list, ValueError]:
+def sample_docs(num_docs: int, n: int) -> Union[List[int], ValueError]:
     """Sample docs (without replacement)."""
     try:
         return random.sample(range(num_docs), n)
-    except ValueError as e:
-        return e
-
-
-def sample_docs(num_docs: int, n: int) -> Union[list, ValueError]:
-    """Sample docs (without replacement)."""
-    idx = try_sample_docs(num_docs, n)
-    if isinstance(idx, ValueError):
-        idx = sample_docs(num_docs, num_docs)
-        if isinstance(idx, ValueError):
-            raise ValueError(f"Cannot sample docs: {idx}")
-    return idx
+    except ValueError:
+        try:
+            return random.sample(range(num_docs), num_docs)
+        except ValueError as e:
+            raise ValueError(f"Cannot sample docs: {e}")
 
 
 def query_pinecone(

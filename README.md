@@ -36,7 +36,7 @@ This prototype uses the [OpenAI API](https://beta.openai.com/docs/introduction) 
 Note that to run this prototype, you need to:
 1. Get in touch for the BBC Tiny Happy People dataset
 2. Run `python src/genai/eyfs/run_classifier.py`
-3. Run `python src/genai/eyfs/run_chroma_index.py`
+3. Run `python src/genai/eyfs/run_pinecone_index.py`
 
 #### Categorise the BBC activities to the EYFS areas of learning and build a vector index
 ![eyfs-external-kb-classifier](charts/eyfs-kb-labels-and-vectors.png)

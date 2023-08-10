@@ -1,4 +1,4 @@
-"""Join the BBC activities with the labelled activities and build a Chroma index."""
+"""Join the BBC activities with the labelled activities and build a pinecone index."""
 
 import os
 

@@ -62,7 +62,7 @@ def eyfs_kb_bbc(index_name: str = "eyfs-index") -> None:
             # Encode the query
             encoded_query = get_embedding(query)
 
-            # Search with Chroma
+            # Search with Pinecone
             similar_docs = query_pinecone(
                 index,
                 encoded_query,

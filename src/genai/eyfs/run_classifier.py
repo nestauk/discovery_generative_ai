@@ -58,20 +58,20 @@ async def main() -> None:
     openai.aiosession.set(ClientSession())
 
     # Fetch the BBC activities
-    df = get_bbc_activities(PATH_TO_BBC_ACTIVITIES)
+    activities_df = get_bbc_activities(PATH_TO_BBC_ACTIVITIES)
 
     # Fetch the EYFS areas of learning
     _, areas_of_learning_text = get_areas_of_learning(PATH_TO_AREAS_OF_LEARNING)
 
-    print(f"Number of BBC activities: {len(df)}")  # noqa: T001
+    print(f"Number of BBC activities: {len(activities_df)}")  # noqa: T001
 
     message = MessageTemplate.load(PATH_TO_MESSAGE_PROMPT)
     function = FunctionTemplate.load(PATH_TO_FUNCTION)
     model = "gpt-3.5-turbo"
     temperature = 0.6
 
-    for i, batched_results in enumerate(batch(df, 20)):
-        print(f"Batch {i} / {len(df) // 20}")  # noqa: T001
+    for i, batched_results in enumerate(batch(activities_df, 20)):
+        print(f"Batch {i} / {len(activities_df) // 20}")  # noqa: T001
         tasks = [
             EYFSClassifier.agenerate(
                 model=model,

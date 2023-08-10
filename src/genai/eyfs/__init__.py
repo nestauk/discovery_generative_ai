@@ -1,3 +1,3 @@
 from .eyfs import ActivityGenerator
-from .llm import EYFSClassifier
-from .llm import get_embedding
+from .eyfs import EYFSClassifier
+from .eyfs import get_embedding

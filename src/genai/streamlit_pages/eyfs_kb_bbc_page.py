@@ -1,23 +1,22 @@
+import os
 import random
 
 from typing import Union
 
-import chromadb
+import pinecone
 import streamlit as st
-
-from chromadb.api.models.Collection import Collection
 
 from genai.eyfs import ActivityGenerator
 from genai.eyfs import get_embedding
 from genai.utils import read_json
 
 
-def eyfs_kb_bbc(path: str = "data/eyfs/chroma_index/") -> None:
+def eyfs_kb_bbc(index_name: str = "eyfs-index") -> None:
     """Run the EYFS + BBC activities app."""
     st.title("Generating activity plans grounded in EY foundation stages")
     areas_of_learning_desc = read_json("src/genai/eyfs/areas_of_learning.json")
     aol = list(areas_of_learning_desc.keys())
-    collection = get_collection(path=path, index_name="eyfs_chroma_index")
+    index = get_index(index_name=index_name)
 
     with st.sidebar:
         # Select a model, temperature and number of results
@@ -63,8 +62,8 @@ def eyfs_kb_bbc(path: str = "data/eyfs/chroma_index/") -> None:
             encoded_query = get_embedding(query)
 
             # Search with Chroma
-            docs, urls, categories, titles = query_chroma(
-                collection,
+            similar_docs = query_pinecone(
+                index,
                 encoded_query,
                 areas_of_learning=areas_of_learning,
                 top_n=4,
@@ -79,7 +78,9 @@ def eyfs_kb_bbc(path: str = "data/eyfs/chroma_index/") -> None:
                 "n_results": n_results,
                 "location": location,
                 "areas_of_learning_text": areas_of_learning_text,
-                "activity_examples": "\n======\n".join(docs),
+                "activity_examples": "\n======\n".join(
+                    [similar_doc["metadata"]["text"] for similar_doc in similar_docs]
+                ),
             }
 
             r = ActivityGenerator.generate(
@@ -93,16 +94,19 @@ def eyfs_kb_bbc(path: str = "data/eyfs/chroma_index/") -> None:
 
         st.subheader("Sources")
 
-        for url, category, title in zip(urls, categories, titles):
-            st.write(f"""- [{title}]({url}) ({category})""")
+        for similar_doc in similar_docs:
+            title = similar_doc["metadata"]["title"]
+            url = similar_doc["id"]
+            category = similar_doc["metadata"]["areas_of_learning"]
+            st.write(f"""- [{title}]({url}) {category}""")
 
 
 @st.cache_resource
-def get_collection(path: str, index_name: str) -> Collection:
-    """Return and persist the chroma db collection."""
-    client = chromadb.PersistentClient(path=path)
-    collection = client.get_or_create_collection(name=index_name)
-    return collection
+def get_index(index_name: str, environment: str = "us-west1-gcp") -> pinecone.index.Index:
+    """Return and persist the pinecone index."""
+    pinecone.init(api_key=os.environ["PINECONE_API_KEY"], environment=environment)
+    index = pinecone.Index(index_name)
+    return index
 
 
 def try_sample_docs(num_docs: int, n: int) -> Union[list, ValueError]:
@@ -123,19 +127,19 @@ def sample_docs(num_docs: int, n: int) -> Union[list, ValueError]:
     return idx
 
 
-def query_chroma(
-    collection: Collection,
+def query_pinecone(
+    index: pinecone.index.Index,
     encoded_query: list,
     areas_of_learning: list,
     top_n: int = 4,
     max_n: int = 4,
-) -> tuple:
-    """Query the chroma db collection.
+) -> list:
+    """Query the pinecone index.
 
     Parameters
     ----------
-    collection
-        Chroma db index.
+    index
+        Pinecone index.
 
     query
         Query vector to search for.
@@ -158,25 +162,17 @@ def query_chroma(
         List of urls.
 
     """
-    encoded_query = get_embedding("sing a song")
+    results = index.query(
+        vector=encoded_query,
+        top_k=top_n,
+        include_metadata=True,
+        filter={
+            "areas_of_learning": {"$in": areas_of_learning},
+        },
+    )
 
-    docs = []
-    urls = []
-    aol = []
-    titles = []
-    for area_of_learning in areas_of_learning:
-        r = collection.query(encoded_query, n_results=top_n, where={"area_of_learning": area_of_learning})
-        urls.extend(r["ids"][0])
-        docs.extend(r["documents"][0])
-        aol.extend([v["area_of_learning"] for v in r["metadatas"][0]])
-        titles.extend([v["title"] for v in r["metadatas"][0]])
-
+    results = results["matches"]
     # Subset docs to fit the prompt length
-    idx = sample_docs(len(docs), max_n)
+    idx = sample_docs(len(results), max_n)
 
-    docs = [docs[i] for i in idx]
-    urls = [urls[i] for i in idx]
-    aol = [aol[i] for i in idx]
-    titles = [titles[i] for i in idx]
-
-    return docs, urls, aol, titles
+    return [results[i] for i in idx]

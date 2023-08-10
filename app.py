@@ -10,6 +10,7 @@ from streamlit_option_menu import option_menu
 
 from genai.streamlit_pages import early_year_activity_plan
 from genai.streamlit_pages import eli3
+from genai.streamlit_pages import eyfs_compare
 from genai.streamlit_pages import eyfs_kb_bbc
 
 
@@ -56,7 +57,13 @@ def main() -> None:
     with st.sidebar:
         selected = option_menu(
             "Prototypes",
-            ["Home page", "ELI3", "EYFS-based activities", "EYFS-based activities + BBC activities"],
+            [
+                "Home page",
+                "ELI3",
+                "EYFS-based activities",
+                "EYFS-based activities + BBC activities",
+                "EYFS prototypes comparison",
+            ],
             default_index=0,
         )
     if selected == "Home page":
@@ -68,6 +75,8 @@ def main() -> None:
         early_year_activity_plan()
     elif selected == "EYFS-based activities + BBC activities":
         eyfs_kb_bbc()
+    elif selected == "EYFS prototypes comparison":
+        eyfs_compare()
 
 
 if check_password():

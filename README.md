@@ -6,6 +6,9 @@ Collection of generative AI prototypes, mainly using LLMs.
   - [Prototypes](#prototypes)
     - [Explain like I am a 3 year old](#explain-like-i-am-a-3-year-old)
     - [Suggesting personalised early-years activities](#suggesting-personalised-early-years-activities)
+    - [Suggesting personalised early-years activities w/ external knowledge base](#suggesting-personalised-early-years-activities-w-external-knowledge-base)
+      - [Categorise "Tiny Happy People" activities to the EYFS areas of learning and build a vector index](#categorise-the-bbc-activities-to-the-eyfs-areas-of-learning-and-build-a-vector-index)
+      - [Generate activities based on the user's query and the "Tiny Happy People" activities](#generate-activities-based-on-the-users-query-and-the-bbc-activities)
   - [Templating messages and functions](#templating-messages-and-functions)
     - [MessageTemplate](#messagetemplate)
     - [FunctionTemplate](#functiontemplate)
@@ -27,6 +30,19 @@ This prototype uses the [OpenAI API](https://beta.openai.com/docs/introduction) 
 
 ![eyfs](charts/eyfs.png)
 
+### Suggesting personalised early-years activities w/ external knowledge base
+This prototype uses the [OpenAI API](https://beta.openai.com/docs/introduction) to generate [EYFS](https://www.gov.uk/government/publications/early-years-foundation-stage-framework--2)-related activities. It leverages external knowledge bases like [BBC's "Tiny Happy People"](https://www.bbc.co.uk/tiny-happy-people/) to append example activities to the prompt based on. The user queries the model with a topic and the model will generate a list of conversations and activities.
+
+Note that to run this prototype, you need to:
+1. Get in touch for the BBC Tiny Happy People dataset
+2. Run `python src/genai/eyfs/run_classifier.py`
+3. Run `python src/genai/eyfs/run_pinecone_index.py`
+
+#### Categorise the BBC activities to the EYFS areas of learning and build a vector index
+![eyfs-external-kb-classifier](charts/eyfs-kb-labels-and-vectors.png)
+
+#### Generate activities based on the user's query and the BBC activities
+![eyfs-external-kb-app](charts/eyfs-kb-bbc-app.png)
 ### WhatsApp interface to early-years prompts
 
 This prototype uses a text messaging app (WhatsApp) as an accessible front end to a large language model (LLM), which can explain simple concepts or generate personalised activity ideas. More information can be found [here](src/genai/whatsapp_bot/).

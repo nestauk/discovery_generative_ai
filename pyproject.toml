@@ -28,7 +28,9 @@ tenacity = "^8.2.2"
 beautifulsoup4 = "^4.12.2"
 Flask = "^2.3.2"
 twilio = "^8.5.0"
+aiofiles = "^23.1.0"
 gunicorn = "^21.2.0"
+pinecone-client = "^2.2.2"
 
 
 [tool.poetry.group.test]

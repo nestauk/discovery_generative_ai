@@ -84,7 +84,7 @@ class ActivityGenerator:
             **openai_kwargs,
         )
 
-        return response["choices"][0]["message"]["content"]
+        return response
 
     @classmethod
     def prepare_message(cls, obj: Union[MessageTemplate, dict, str], **kwargs) -> Dict:

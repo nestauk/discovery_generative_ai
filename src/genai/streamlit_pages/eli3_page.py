@@ -24,6 +24,8 @@ def eli3() -> None:
 
     # Generate the answer
     if st.button(label="**Generate**", help="Generate an answer."):
+        res_box = st.empty()
+        report = []
         messages_placeholders = {
             "input": question,
         }
@@ -33,6 +35,12 @@ def eli3() -> None:
             temperature=temperature,
             messages=[message],
             message_kwargs=messages_placeholders,
+            stream=True,
         )
 
-        st.write(r)
+        for chunk in r:
+            content = chunk["choices"][0].get("delta", {}).get("content")
+            report.append(content)
+            if chunk["choices"][0]["finish_reason"] != "stop":
+                result = "".join(report).strip()
+                res_box.markdown(f"{result}")

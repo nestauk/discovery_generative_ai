@@ -72,6 +72,8 @@ def eyfs_kb_bbc(index_name: str = "eyfs-index") -> None:
             )
 
         with st.spinner("Generating activities..."):
+            res_box = st.empty()
+            report = []
             # Create the prompt
             messages_placeholders = {
                 "description": query,
@@ -89,9 +91,16 @@ def eyfs_kb_bbc(index_name: str = "eyfs-index") -> None:
                 temperature=temperature,
                 messages=messages,
                 message_kwargs=messages_placeholders,
+                stream=True,
             )
 
-            st.write(r)
+            for chunk in r:
+                content = chunk["choices"][0].get("delta", {}).get("content")
+                report.append(content)
+                if chunk["choices"][0]["finish_reason"] != "stop":
+                    result = "".join(report).strip()
+                    res_box.markdown(f"{result}")
+            # st.write(r["choices"][0]["message"]["content"])
 
         st.subheader("Sources")
 

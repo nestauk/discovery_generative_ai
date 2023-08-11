@@ -47,6 +47,8 @@ def eyfs_compare() -> None:
         eyfs_bbc_prototype.subheader("EYFS-related activities with ext KB (BBC)")
         with eyfs_prototype:
             with st.spinner("Generating activities..."):
+                res_box = st.empty()
+                report = []
                 # Create the messages
                 paths = [
                     "src/genai/eyfs/prompts/system.json",
@@ -69,9 +71,15 @@ def eyfs_compare() -> None:
                     temperature=temperature,
                     messages=messages,
                     message_kwargs=messages_placeholders,
+                    stream=True,
                 )
 
-                st.write(r)
+                for chunk in r:
+                    content = chunk["choices"][0].get("delta", {}).get("content")
+                    report.append(content)
+                    if chunk["choices"][0]["finish_reason"] != "stop":
+                        result = "".join(report).strip()
+                        res_box.markdown(f"{result}")
 
         with eyfs_bbc_prototype:
             # Create the messages
@@ -97,6 +105,8 @@ def eyfs_compare() -> None:
                 )
 
             with st.spinner("Generating activities..."):
+                res_box = st.empty()
+                report = []
                 # Create the prompt
                 messages_placeholders = {
                     "description": query,
@@ -114,9 +124,15 @@ def eyfs_compare() -> None:
                     temperature=temperature,
                     messages=messages,
                     message_kwargs=messages_placeholders,
+                    stream=True,
                 )
 
-                st.write(r)
+                for chunk in r:
+                    content = chunk["choices"][0].get("delta", {}).get("content")
+                    report.append(content)
+                    if chunk["choices"][0]["finish_reason"] != "stop":
+                        result = "".join(report).strip()
+                        res_box.markdown(f"{result}")
 
             st.subheader("Sources")
 

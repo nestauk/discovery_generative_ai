@@ -12,24 +12,6 @@ def eli3() -> None:
     with st.sidebar:
         selected_model = st.radio(label="**OpenAI model**", options=["gpt-3.5-turbo", "gpt-4"])
         temperature = st.slider(label="**Temperature**", min_value=0.0, max_value=2.0, value=0.6, step=0.1)
-    # try:
-    #     generator = TextGenerator(
-    #         path="src/genai/eli3/prompts/eli3.json",
-    #         model_name=selected_model,
-    #     )
-    # except Exception:  # Dirty hack to work with local secrets and not break the app on Streamlit Share
-    #     generator = TextGenerator(
-    #         api_key=st.secret("OPENAI_API_KEY"),
-    #         path="src/genai/eli3/prompts/eli3.json",
-    #         model_name=selected_model,
-    #     )
-
-    # prompt_selector = st.radio(label="**Generate with custom prompt**", options=["Default", "Custom"])
-
-    # if prompt_selector == "Custom":
-    #     prompt = st.text_area("Write your own prompt", value=generator.prompt_template.template)
-    # else:
-    #     prompt = None
 
     message = MessageTemplate.load("src/genai/eli3/prompts/eli3.json")
 

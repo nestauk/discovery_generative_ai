@@ -12,6 +12,7 @@ from genai.streamlit_pages import early_year_activity_plan
 from genai.streamlit_pages import eli3
 from genai.streamlit_pages import eyfs_compare
 from genai.streamlit_pages import eyfs_kb_bbc
+from genai.streamlit_pages.chatbot_page import chatbot
 
 
 load_dotenv()
@@ -51,6 +52,15 @@ def check_password() -> bool:
         return True
 
 
+def delete_openai_state():
+    try:
+        del st.session_state["messages"]
+        del st.session_state["openai_model"]
+        del st.session_state["temperature"]
+    except KeyError as e:
+        pass
+
+
 def main() -> None:
     """Run the app."""
     auth_openai()
@@ -63,6 +73,7 @@ def main() -> None:
                 "EYFS-based activities",
                 "EYFS-based activities + BBC activities",
                 "EYFS prototypes comparison",
+                "Chatbot",
             ],
             default_index=0,
         )
@@ -70,6 +81,7 @@ def main() -> None:
         st.title("Nesta Discovery: Generative AI Prototypes")
         st.write("Welcome to the Nesta Discovery Generative AI prototypes. Please select a prototype from the menu.")
     elif selected == "ELI3":
+        # delete_openai_state()
         eli3()
     elif selected == "EYFS-based activities":
         early_year_activity_plan()
@@ -77,7 +89,11 @@ def main() -> None:
         eyfs_kb_bbc()
     elif selected == "EYFS prototypes comparison":
         eyfs_compare()
+    elif selected == "Chatbot":
+        # delete_openai_state()
+        chatbot()
 
 
-if check_password():
-    main()
+# if check_password():
+#     main()
+main()

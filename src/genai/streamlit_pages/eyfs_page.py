@@ -70,9 +70,8 @@ def early_year_activity_plan() -> None:
         ]
 
     # Display chat messages from history on app rerun.
-    # The first message is the prompt, so we skip it.
+    # The first messages are the prompt, so we skip it.
     for message in st.session_state.messages[len(prompt_templates) :]:
-        # for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
@@ -82,6 +81,7 @@ def early_year_activity_plan() -> None:
         # Display user message in chat message container
         with st.chat_message("user"):
             st.markdown(prompt)
+
         # Add user message to chat history
         if len(st.session_state.messages) == len(prompt_templates):
             description = prompt

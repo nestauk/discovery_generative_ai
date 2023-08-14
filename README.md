@@ -38,6 +38,8 @@ This prototype uses the [OpenAI API](https://beta.openai.com/docs/introduction) 
 
 ![eyfs](charts/eyfs.png)
 
+This prototype supports a chat interface similar to the ELI3 prototype.
+
 ### Suggesting personalised early-years activities w/ external knowledge base
 
 This prototype uses the [OpenAI API](https://beta.openai.com/docs/introduction) to generate [EYFS](https://www.gov.uk/government/publications/early-years-foundation-stage-framework--2)-related activities. It leverages external knowledge bases like [BBC's "Tiny Happy People"](https://www.bbc.co.uk/tiny-happy-people/) to append example activities to the prompt based on. The user queries the model with a topic and the model will generate a list of conversations and activities.

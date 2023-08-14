@@ -38,7 +38,7 @@ def eli3() -> None:
             st.markdown(message["content"])
 
     # Accept user input
-    prompt = st.chat_input("Say something")
+    prompt = st.chat_input("How do whales breath?")
     if prompt:
         # Display user message in chat message container
         with st.chat_message("user"):

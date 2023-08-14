@@ -6,15 +6,14 @@ from genai.streamlit_pages.utils import delete_messages_state
 from genai.utils import read_json
 
 
-def delete_message_placeholder_state() -> None:
+def reset_state() -> None:
     """Delete the message placeholder state."""
-    try:
-        del st.session_state["areas_of_learning_text"]
-        del st.session_state["areas_of_learning"]
-        del st.session_state["n_results"]
-        del st.session_state["location"]
-    except KeyError:
-        pass
+    keys = ["areas_of_learning_text", "areas_of_learning", "n_results", "location", "messages"]
+    for key in keys:
+        try:
+            del st.session_state[key]
+        except KeyError:
+            pass
 
 
 def early_year_activity_plan() -> None:
@@ -41,6 +40,8 @@ def early_year_activity_plan() -> None:
             step=0.1,
             on_change=delete_messages_state,
         )
+
+        st.button("Reset chat", on_click=reset_state, type="primary", help="Reset the chat history")
 
     # Select the areas of learning
     areas_of_learning = st.multiselect(

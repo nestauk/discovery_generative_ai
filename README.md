@@ -28,6 +28,10 @@ This prototype uses the [OpenAI API](https://beta.openai.com/docs/introduction) 
 
 ![eli3](charts/eli3.png)
 
+ELI3 has a chat interface, meaning you can ask follow-up questions or another ELI3 question.
+
+![eli3-chat](charts/eli3-chat.png)
+
 ### Suggesting personalised early-years activities
 
 This prototype uses the [OpenAI API](https://beta.openai.com/docs/introduction) to generate [EYFS](https://www.gov.uk/government/publications/early-years-foundation-stage-framework--2)-related activities. The user queries the model with a topic and the model will generate a list of conversations and activities.

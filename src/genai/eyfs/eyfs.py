@@ -67,11 +67,15 @@ class ActivityGenerator:
             A dictionary containing the response from the API.
 
         """
+        import streamlit as st
+
         if not message_kwargs:
             message_kwargs = {}
 
         messages = [cls.prepare_message(message, **message_kwargs) for message in messages]
 
+        st.write(f"MESSAGES: ======\n\n{messages}\n\n======")
+        # return messages
         response = cls._call(
             messages=messages,
             temperature=temperature,

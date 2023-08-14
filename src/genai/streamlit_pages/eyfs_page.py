@@ -1,6 +1,7 @@
 import streamlit as st
 
 from genai.eyfs.eyfs import ActivityGenerator
+from genai.streamlit_pages.utils import delete_messages_state
 from genai.utils import read_json
 
 
@@ -12,13 +13,30 @@ def early_year_activity_plan() -> None:
 
     with st.sidebar:
         # Select a model, temperature and number of results
-        selected_model = st.radio(label="**OpenAI model**", options=["gpt-3.5-turbo", "gpt-4"], index=1)
+        selected_model = st.radio(
+            label="**OpenAI model**",
+            options=["gpt-3.5-turbo", "gpt-4"],
+            index=1,
+            on_change=delete_messages_state,
+        )
         description = "<THIS IS WHERE THE GENERATOR WILL SHOW THE RESULTS>"
         n_results = 10
-        temperature = st.slider(label="**Temperature**", min_value=0.0, max_value=2.0, value=0.6, step=0.1)
+        temperature = st.slider(
+            label="**Temperature**",
+            min_value=0.0,
+            max_value=2.0,
+            value=0.6,
+            step=0.1,
+            on_change=delete_messages_state,
+        )
 
     # Select the areas of learning
-    areas_of_learning = st.multiselect(label="**Areas of learning**", options=aol, default=aol)
+    areas_of_learning = st.multiselect(
+        label="**Areas of learning**",
+        options=aol,
+        default=aol,
+        on_change=delete_messages_state,
+    )
     areas_of_learning_text = [v for k, v in areas_of_learning_desc.items() if k in areas_of_learning]
 
     # Describe each Area of Learning in an expanding window

@@ -25,7 +25,7 @@ def eli3() -> None:
             on_change=delete_messages_state,
         )
 
-    prompt_template = MessageTemplate.load("src/genai/eli3/prompts/eli3.json")
+    prompt_template = MessageTemplate.load("src/genai/eli3/prompts/eli3_chat.json")
 
     # Initialize chat history
     if "messages" not in st.session_state:

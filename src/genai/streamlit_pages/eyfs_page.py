@@ -3,17 +3,8 @@ import streamlit as st
 from genai import MessageTemplate
 from genai.eyfs.eyfs import ActivityGenerator
 from genai.streamlit_pages.utils import delete_messages_state
+from genai.streamlit_pages.utils import reset_state
 from genai.utils import read_json
-
-
-def reset_state() -> None:
-    """Delete the message placeholder state."""
-    keys = ["areas_of_learning_text", "areas_of_learning", "n_results", "location", "messages"]
-    for key in keys:
-        try:
-            del st.session_state[key]
-        except KeyError:
-            pass
 
 
 def early_year_activity_plan() -> None:

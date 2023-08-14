@@ -13,7 +13,7 @@ def delete_message_placeholder_state() -> None:
         del st.session_state["areas_of_learning"]
         del st.session_state["n_results"]
         del st.session_state["location"]
-    except Exception:
+    except KeyError:
         pass
 
 
@@ -64,25 +64,12 @@ def early_year_activity_plan() -> None:
     # Create the messages
     paths = [
         "src/genai/eyfs/prompts/system.json",
-        "src/genai/eyfs/prompts/context_and_task_chat.json",
+        "src/genai/eyfs/prompts/context_and_task.json",
         "src/genai/eyfs/prompts/constraints.json",
-        # "src/genai/eyfs/prompts/situation.json",
+        "src/genai/eyfs/prompts/situation.json",
     ]
 
     prompt_templates = [MessageTemplate.load(path) for path in paths]
-
-    # # Get the user input
-    # description = st.text_input(
-    #     label="**What's the topic you want activities for?**",
-    #     value="Let's create activities educating children on how whales breath",
-    #     help="Prompt the large language model with a some text and it will generate an activity plan for you.",
-    # )
-
-    # keys = ["areas_of_learning", "n_results", "location", "areas_of_learning_text"]
-    # if any(k not in st.session_state for k in keys):
-    #     st.session_state.messages = [
-    #         {"role": prompt_template.role, "content": prompt_template.content} for prompt_template in prompt_templates
-    #     ]
 
     # Initialize chat history
     if "messages" not in st.session_state:
@@ -98,38 +85,28 @@ def early_year_activity_plan() -> None:
             st.markdown(message["content"])
 
     # Accept user input
-    prompt = st.chat_input("Say something")
+    prompt = st.chat_input("Let's create activities educating children on how whales breathe")
     if prompt:
         # Display user message in chat message container
         with st.chat_message("user"):
             st.markdown(prompt)
         # Add user message to chat history
-        st.session_state.messages.append({"role": "user", "content": prompt})
+        if len(st.session_state.messages) == len(prompt_templates):
+            description = prompt
+        else:
+            st.session_state.messages.append({"role": "user", "content": prompt})
+            description = ""
 
         with st.chat_message("assistant"):
             message_placeholder = st.empty()
             full_response = ""
-
-            # r = ActivityGenerator.generate(
-            #     model=selected_model,
-            #     temperature=temperature,
-            #     messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages],
-            #     message_kwargs={
-            #         "description": prompt,
-            #         "areas_of_learning": areas_of_learning,
-            #         "n_results": n_results,
-            #         "location": location,
-            #         "areas_of_learning_text": areas_of_learning_text,
-            #     },
-            #     stream=True,
-            # )
 
             for response in ActivityGenerator.generate(
                 model=selected_model,
                 temperature=temperature,
                 messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages],
                 message_kwargs={
-                    "description": prompt,
+                    "description": description,
                     "areas_of_learning": areas_of_learning,
                     "n_results": n_results,
                     "location": location,
@@ -141,31 +118,3 @@ def early_year_activity_plan() -> None:
                 message_placeholder.markdown(full_response + "▌")
             message_placeholder.markdown(full_response)
         st.session_state.messages.append({"role": "assistant", "content": full_response})
-
-    # # Generate the answer
-    # if st.button(label="**Generate**", help="Generate an answer."):
-    #     with st.spinner("Generating activities..."):
-    #         res_box = st.empty()
-    #         report = []
-    # messages_placeholders = {
-    #     "description": description,
-    #     "areas_of_learning": areas_of_learning,
-    #     "n_results": n_results,
-    #     "location": location,
-    #     "areas_of_learning_text": areas_of_learning_text,
-    # }
-
-    #         r = ActivityGenerator.generate(
-    #             model=selected_model,
-    #             temperature=temperature,
-    #             messages=messages,
-    #             message_kwargs=messages_placeholders,
-    #             stream=True,
-    #         )
-
-    #         for chunk in r:
-    #             content = chunk["choices"][0].get("delta", {}).get("content")
-    #             report.append(content)
-    #             if chunk["choices"][0]["finish_reason"] != "stop":
-    #                 result = "".join(report).strip()
-    #                 res_box.markdown(f"{result}")

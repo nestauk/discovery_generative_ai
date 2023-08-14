@@ -12,6 +12,7 @@ from genai.streamlit_pages import early_year_activity_plan
 from genai.streamlit_pages import eli3
 from genai.streamlit_pages import eyfs_compare
 from genai.streamlit_pages import eyfs_kb_bbc
+from genai.streamlit_pages.utils import delete_messages_state
 
 
 load_dotenv()
@@ -65,6 +66,8 @@ def main() -> None:
                 "EYFS prototypes comparison",
             ],
             default_index=0,
+            on_change=delete_messages_state,
+            key="menu_selection",
         )
     if selected == "Home page":
         st.title("Nesta Discovery: Generative AI Prototypes")

@@ -2,6 +2,7 @@ import streamlit as st
 
 from genai import MessageTemplate
 from genai.eyfs import ActivityGenerator
+from genai.streamlit_pages.utils import delete_messages_state
 
 
 def eli3() -> None:
@@ -10,37 +11,52 @@ def eli3() -> None:
 
     # Create the generator
     with st.sidebar:
-        selected_model = st.radio(label="**OpenAI model**", options=["gpt-3.5-turbo", "gpt-4"])
-        temperature = st.slider(label="**Temperature**", min_value=0.0, max_value=2.0, value=0.6, step=0.1)
-
-    message = MessageTemplate.load("src/genai/eli3/prompts/eli3.json")
-
-    # Get the user input
-    question = st.text_input(
-        label="**Question**",
-        value="How can whales breath in water?",
-        help="Ask the large language model a question.",
-    )
-
-    # Generate the answer
-    if st.button(label="**Generate**", help="Generate an answer."):
-        res_box = st.empty()
-        report = []
-        messages_placeholders = {
-            "input": question,
-        }
-
-        r = ActivityGenerator.generate(
-            model=selected_model,
-            temperature=temperature,
-            messages=[message],
-            message_kwargs=messages_placeholders,
-            stream=True,
+        selected_model = st.radio(
+            label="**OpenAI model**",
+            options=["gpt-3.5-turbo", "gpt-4"],
+            on_change=delete_messages_state,
+        )
+        temperature = st.slider(
+            label="**Temperature**",
+            min_value=0.0,
+            max_value=2.0,
+            value=0.6,
+            step=0.1,
+            on_change=delete_messages_state,
         )
 
-        for chunk in r:
-            content = chunk["choices"][0].get("delta", {}).get("content")
-            report.append(content)
-            if chunk["choices"][0]["finish_reason"] != "stop":
-                result = "".join(report).strip()
-                res_box.markdown(f"{result}")
+    prompt_template = MessageTemplate.load("src/genai/eli3/prompts/eli3_chat.json")
+
+    # Initialize chat history
+    if "messages" not in st.session_state:
+        st.session_state.messages = [{"role": prompt_template.role, "content": prompt_template.content}]
+
+    # Display chat messages from history on app rerun.
+    # The first message is the prompt, so we skip it.
+    for message in st.session_state.messages[1:]:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+
+    # Accept user input
+    prompt = st.chat_input("Say something")
+    if prompt:
+        # Display user message in chat message container
+        with st.chat_message("user"):
+            st.markdown(prompt)
+        # Add user message to chat history
+        st.session_state.messages.append({"role": "user", "content": prompt})
+
+        with st.chat_message("assistant"):
+            message_placeholder = st.empty()
+            full_response = ""
+            for response in ActivityGenerator.generate(
+                model=selected_model,
+                temperature=temperature,
+                messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages],
+                message_kwargs=None,
+                stream=True,
+            ):
+                full_response += response.choices[0].delta.get("content", "")
+                message_placeholder.markdown(full_response + "▌")
+            message_placeholder.markdown(full_response)
+        st.session_state.messages.append({"role": "assistant", "content": full_response})

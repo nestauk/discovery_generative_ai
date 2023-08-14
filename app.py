@@ -13,6 +13,7 @@ from genai.streamlit_pages import eli3
 from genai.streamlit_pages import eyfs_compare
 from genai.streamlit_pages import eyfs_kb_bbc
 from genai.streamlit_pages.chatbot_page import chatbot
+from genai.streamlit_pages.utils import delete_messages_state
 
 
 load_dotenv()
@@ -52,15 +53,6 @@ def check_password() -> bool:
         return True
 
 
-def delete_openai_state():
-    try:
-        del st.session_state["messages"]
-        del st.session_state["openai_model"]
-        del st.session_state["temperature"]
-    except KeyError as e:
-        pass
-
-
 def main() -> None:
     """Run the app."""
     auth_openai()
@@ -76,6 +68,8 @@ def main() -> None:
                 "Chatbot",
             ],
             default_index=0,
+            on_change=delete_messages_state,
+            key="menu_selection",
         )
     if selected == "Home page":
         st.title("Nesta Discovery: Generative AI Prototypes")

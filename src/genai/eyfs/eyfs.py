@@ -29,12 +29,7 @@ logger = logging.getLogger(__name__)
 
 
 class ActivityGenerator:
-    """Generate tokens using OpenAI's API.
-
-    TODO:
-    - Streaming
-
-    """
+    """Generate tokens using OpenAI's API."""
 
     @classmethod
     def generate(

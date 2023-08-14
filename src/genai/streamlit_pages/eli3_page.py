@@ -53,7 +53,7 @@ def eli3() -> None:
                 model=selected_model,
                 temperature=temperature,
                 messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages],
-                message_kwargs={"input": ""},
+                message_kwargs=None,
                 stream=True,
             ):
                 full_response += response.choices[0].delta.get("content", "")

@@ -1,0 +1,1 @@
+{"name": "extract_activity_names", "description": "Extract all entities starting with three hashtags.", "parameters": {"type": "object", "properties": {"activity_names": {"type": "array", "items": {"type": "string", "description": "The name of an activity. It usually starts with ###."}}}, "required": ["activity_names"]}}

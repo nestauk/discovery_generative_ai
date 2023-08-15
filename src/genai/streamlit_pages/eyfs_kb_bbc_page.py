@@ -1,3 +1,4 @@
+import json
 import os
 import random
 
@@ -7,7 +8,7 @@ from typing import Union
 import pinecone
 import streamlit as st
 
-from genai import MessageTemplate
+from genai import MessageTemplate, FunctionTemplate
 from genai.eyfs import ActivityGenerator
 from genai.eyfs import get_embedding
 from genai.streamlit_pages.utils import reset_state
@@ -84,7 +85,21 @@ def eyfs_kb_bbc(index_name: str = "eyfs-index") -> None:
             st.markdown(message["content"])
 
     # Accept user input
+    if "choice" not in st.session_state:
+        st.session_state["choice"] = None
+
+    if "choices" not in st.session_state:
+        st.session_state["choices"] = None
+
     prompt = st.chat_input("Let's create activities educating children on how whales breathe")
+    if st.session_state["choices"] is not None:
+        st.session_state["choice"] = st.selectbox(
+            "#### Give me detailed instructions on how to play...",
+            options=st.session_state["choices"],
+        )
+        st.write(st.session_state["choice"])
+        prompt = f"Give me detailed instructions on how to play {st.session_state['choice']}"
+
     if prompt:
         # Display user message in chat message container
         with st.chat_message("user"):
@@ -94,7 +109,6 @@ def eyfs_kb_bbc(index_name: str = "eyfs-index") -> None:
         # The very first message will be used to fill in the prompt template
         # after that, we store the user messages in the chat history
         if len(st.session_state.messages) == len(prompt_templates):
-            # if st.session_state.user_messages_count == 1:
             query = prompt
             with st.spinner("Searching for relevant BBC activities..."):
                 # Encode the query
@@ -151,6 +165,57 @@ def eyfs_kb_bbc(index_name: str = "eyfs-index") -> None:
                     url = similar_doc["id"]
                     category = similar_doc["metadata"]["areas_of_learning"]
                     st.write(f"""- [{title}]({url}) {category}""")
+
+                with st.spinner("Coming up with suggested prompts..."):
+                    message = MessageTemplate(
+                        role="user",
+                        content="Extract all activity names from the text. Activity names always start with three hashtags. \n\n{text}",
+                    )
+                    message_kwargs = {
+                        "text": full_response,
+                    }
+                    f = FunctionTemplate.load("src/genai/eyfs/prompts/choices_function.json")
+                    r = ActivityGenerator.generate(
+                        messages=[message],
+                        model=selected_model,
+                        temperature=temperature,
+                        message_kwargs=message_kwargs,
+                        functions=[f.to_prompt()],
+                        function_call={"name": "extract_activity_names"},
+                    )
+
+                    choices = json.loads(r["choices"][0]["message"]["function_call"]["arguments"])["activity_names"]
+                    st.session_state["choices"] = choices
+
+                    st.write(st.session_state["choices"])
+
+            # if len(st.session_state.messages) == len(prompt_templates) and st.session_state["choices"]:
+            # st.write("#### Suggested queries...")
+            # for choice in st.session_state["choices"]:
+            #     if st.button(f"Give me detailed instructions on how to play {choice}", use_container_width=True):
+            #         st.session_state["choice"] = choice
+
+            #         st.write("inner ", st.session_state["choice"])
+
+            # st.session_state["choice"] = st.selectbox(
+            #     "#### Give me detailed instructions on how to play...",
+            #     options=st.session_state["choices"],
+            # )
+
+            # st.write(choice)
+            # st.session_state["choice"] = choice
+            # if st.button("Pick a choice"):
+            #     st.session_state["choice"] = choice
+
+            # st.write(choice)
+            # st.session_state["choice"] = choice
+
+            st.write("outer ", st.session_state["choice"])
+
+        # elif len(st.session_state.messages) > len(prompt_templates):
+        if len(st.session_state.messages) > len(prompt_templates):
+            st.session_state["choice"] = None
+            st.session_state["choices"] = None
         st.session_state.messages.append({"role": "assistant", "content": full_response})
 
 

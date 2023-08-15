@@ -79,7 +79,7 @@ class ActivityGenerator:
             **openai_kwargs,
         )
 
-        return messages, response
+        return response
 
     @classmethod
     def prepare_message(cls, obj: Union[MessageTemplate, dict, str], **kwargs) -> Dict:

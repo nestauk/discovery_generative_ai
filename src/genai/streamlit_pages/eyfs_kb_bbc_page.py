@@ -10,7 +10,6 @@ import streamlit as st
 from genai import MessageTemplate
 from genai.eyfs import ActivityGenerator
 from genai.eyfs import get_embedding
-from genai.streamlit_pages.utils import delete_messages_state
 from genai.streamlit_pages.utils import reset_state
 from genai.utils import read_json
 
@@ -28,7 +27,7 @@ def eyfs_kb_bbc(index_name: str = "eyfs-index") -> None:
             label="**OpenAI model**",
             options=["gpt-3.5-turbo", "gpt-4"],
             index=1,
-            on_change=delete_messages_state,
+            on_change=reset_state,
         )
         # description = "<THIS IS WHERE THE GENERATOR WILL SHOW THE RESULTS>"
         n_results = 10
@@ -38,7 +37,7 @@ def eyfs_kb_bbc(index_name: str = "eyfs-index") -> None:
             max_value=2.0,
             value=0.6,
             step=0.1,
-            on_change=delete_messages_state,
+            on_change=reset_state,
         )
 
         st.button("Reset chat", on_click=reset_state, type="primary", help="Reset the chat history")
@@ -48,7 +47,7 @@ def eyfs_kb_bbc(index_name: str = "eyfs-index") -> None:
         label="**Areas of learning**",
         options=aol,
         default=aol,
-        on_change=delete_messages_state,
+        on_change=reset_state,
     )
     areas_of_learning_text = [v for k, v in areas_of_learning_desc.items() if k in areas_of_learning]
 
@@ -87,7 +86,6 @@ def eyfs_kb_bbc(index_name: str = "eyfs-index") -> None:
     # Accept user input
     prompt = st.chat_input("Let's create activities educating children on how whales breathe")
     if prompt:
-        # st.session_state.user_messages_count += 1
         # Display user message in chat message container
         with st.chat_message("user"):
             st.markdown(prompt)
@@ -133,7 +131,7 @@ def eyfs_kb_bbc(index_name: str = "eyfs-index") -> None:
                 ),
             }
 
-            msgs, r = ActivityGenerator.generate(
+            r = ActivityGenerator.generate(
                 model=selected_model,
                 temperature=temperature,
                 messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages],
@@ -145,8 +143,6 @@ def eyfs_kb_bbc(index_name: str = "eyfs-index") -> None:
                 full_response += response.choices[0].delta.get("content", "")
                 message_placeholder.markdown(full_response + "▌")
             message_placeholder.markdown(full_response)
-
-            st.write(msgs)
 
             if len(st.session_state.messages) == len(prompt_templates):
                 st.subheader("Sources")

@@ -2,7 +2,7 @@ import streamlit as st
 
 from genai import MessageTemplate
 from genai.eyfs import ActivityGenerator
-from genai.streamlit_pages.utils import delete_messages_state
+from genai.streamlit_pages.utils import reset_state
 
 
 def eli3() -> None:
@@ -14,7 +14,7 @@ def eli3() -> None:
         selected_model = st.radio(
             label="**OpenAI model**",
             options=["gpt-3.5-turbo", "gpt-4"],
-            on_change=delete_messages_state,
+            on_change=reset_state,
         )
         temperature = st.slider(
             label="**Temperature**",
@@ -22,7 +22,7 @@ def eli3() -> None:
             max_value=2.0,
             value=0.6,
             step=0.1,
-            on_change=delete_messages_state,
+            on_change=reset_state,
         )
 
     prompt_template = MessageTemplate.load("src/genai/eli3/prompts/eli3_chat.json")

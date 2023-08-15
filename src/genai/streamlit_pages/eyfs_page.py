@@ -2,7 +2,6 @@ import streamlit as st
 
 from genai import MessageTemplate
 from genai.eyfs.eyfs import ActivityGenerator
-from genai.streamlit_pages.utils import delete_messages_state
 from genai.streamlit_pages.utils import reset_state
 from genai.utils import read_json
 
@@ -19,7 +18,7 @@ def early_year_activity_plan() -> None:
             label="**OpenAI model**",
             options=["gpt-3.5-turbo", "gpt-4"],
             index=1,
-            on_change=delete_messages_state,
+            on_change=reset_state,
         )
         description = "<THIS IS WHERE THE GENERATOR WILL SHOW THE RESULTS>"
         n_results = 10
@@ -29,7 +28,7 @@ def early_year_activity_plan() -> None:
             max_value=2.0,
             value=0.6,
             step=0.1,
-            on_change=delete_messages_state,
+            on_change=reset_state,
         )
 
         st.button("Reset chat", on_click=reset_state, type="primary", help="Reset the chat history")
@@ -39,7 +38,7 @@ def early_year_activity_plan() -> None:
         label="**Areas of learning**",
         options=aol,
         default=aol,
-        on_change=delete_messages_state,
+        on_change=reset_state,
     )
     areas_of_learning_text = [v for k, v in areas_of_learning_desc.items() if k in areas_of_learning]
 

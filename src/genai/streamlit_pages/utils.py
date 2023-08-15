@@ -17,7 +17,7 @@ def delete_messages_state(key: Optional[str] = None) -> None:
 
 def reset_state() -> None:
     """Delete the message placeholder state."""
-    keys = ["areas_of_learning_text", "areas_of_learning", "n_results", "location", "messages"]
+    keys = ["areas_of_learning_text", "areas_of_learning", "n_results", "location", "messages", "user_messages_count"]
     for key in keys:
         try:
             del st.session_state[key]

@@ -87,12 +87,16 @@ def eyfs_kb_bbc(index_name: str = "eyfs-index") -> None:
     # Accept user input
     prompt = st.chat_input("Let's create activities educating children on how whales breathe")
     if prompt:
+        # st.session_state.user_messages_count += 1
         # Display user message in chat message container
         with st.chat_message("user"):
             st.markdown(prompt)
 
         # Add user message to chat history
+        # The very first message will be used to fill in the prompt template
+        # after that, we store the user messages in the chat history
         if len(st.session_state.messages) == len(prompt_templates):
+            # if st.session_state.user_messages_count == 1:
             query = prompt
             with st.spinner("Searching for relevant BBC activities..."):
                 # Encode the query
@@ -106,6 +110,10 @@ def eyfs_kb_bbc(index_name: str = "eyfs-index") -> None:
                     top_n=4,
                     max_n=4,
                 )
+
+                if "similar_docs" not in st.session_state:
+                    st.session_state["similar_docs"] = similar_docs
+
         else:
             st.session_state.messages.append({"role": "user", "content": prompt})
             query = ""
@@ -121,89 +129,33 @@ def eyfs_kb_bbc(index_name: str = "eyfs-index") -> None:
                 "location": location,
                 "areas_of_learning_text": areas_of_learning_text,
                 "activity_examples": "\n======\n".join(
-                    [similar_doc["metadata"]["text"] for similar_doc in similar_docs]
+                    [similar_doc["metadata"]["text"] for similar_doc in st.session_state["similar_docs"]]
                 ),
             }
 
-            for response in ActivityGenerator.generate(
+            msgs, r = ActivityGenerator.generate(
                 model=selected_model,
                 temperature=temperature,
                 messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages],
                 message_kwargs=messages_placeholders,
                 stream=True,
-            ):
+            )
+
+            for response in r:
                 full_response += response.choices[0].delta.get("content", "")
                 message_placeholder.markdown(full_response + "▌")
             message_placeholder.markdown(full_response)
 
-            st.subheader("Sources")
+            st.write(msgs)
 
-            for similar_doc in similar_docs:
-                title = similar_doc["metadata"]["title"]
-                url = similar_doc["id"]
-                category = similar_doc["metadata"]["areas_of_learning"]
-                st.write(f"""- [{title}]({url}) {category}""")
+            if len(st.session_state.messages) == len(prompt_templates):
+                st.subheader("Sources")
+                for similar_doc in st.session_state["similar_docs"]:
+                    title = similar_doc["metadata"]["title"]
+                    url = similar_doc["id"]
+                    category = similar_doc["metadata"]["areas_of_learning"]
+                    st.write(f"""- [{title}]({url}) {category}""")
         st.session_state.messages.append({"role": "assistant", "content": full_response})
-
-    # # Get the user input
-    # query = st.text_input(
-    #     label="**What's the topic you want activities for?**",
-    #     value="Let's create activities educating children on how whales breath",
-    #     help="Prompt the large language model with a some text and it will generate an activity plan for you.",
-    # )
-
-    # if st.button(label="**Generate**", help="Generate an answer."):
-    #     with st.spinner("Searching for relevant BBC activities..."):
-    #         # Encode the query
-    #         encoded_query = get_embedding(query)
-
-    #         # Search with Pinecone
-    #         similar_docs = query_pinecone(
-    #             index,
-    #             encoded_query,
-    #             areas_of_learning=areas_of_learning,
-    #             top_n=4,
-    #             max_n=4,
-    #         )
-
-    #     with st.spinner("Generating activities..."):
-    #         res_box = st.empty()
-    #         report = []
-    #         # Create the prompt
-    #         messages_placeholders = {
-    #             "description": query,
-    #             "areas_of_learning": areas_of_learning,
-    #             "n_results": n_results,
-    #             "location": location,
-    #             "areas_of_learning_text": areas_of_learning_text,
-    #             "activity_examples": "\n======\n".join(
-    #                 [similar_doc["metadata"]["text"] for similar_doc in similar_docs]
-    #             ),
-    #         }
-
-    #         r = ActivityGenerator.generate(
-    #             model=selected_model,
-    #             temperature=temperature,
-    #             messages=messages,
-    #             message_kwargs=messages_placeholders,
-    #             stream=True,
-    #         )
-
-    #         for chunk in r:
-    #             content = chunk["choices"][0].get("delta", {}).get("content")
-    #             report.append(content)
-    #             if chunk["choices"][0]["finish_reason"] != "stop":
-    #                 result = "".join(report).strip()
-    #                 res_box.markdown(f"{result}")
-    #         # st.write(r["choices"][0]["message"]["content"])
-
-    # st.subheader("Sources")
-
-    # for similar_doc in similar_docs:
-    #     title = similar_doc["metadata"]["title"]
-    #     url = similar_doc["id"]
-    #     category = similar_doc["metadata"]["areas_of_learning"]
-    #     st.write(f"""- [{title}]({url}) {category}""")
 
 
 @st.cache_resource

@@ -42,7 +42,7 @@ if "__main__" == __name__:
                                 "type_": k,
                                 "source": "dm",
                                 "text": item,
-                                "area_of_learning": aol,
+                                "areas_of_learning": aol,
                             },
                         )
                     )

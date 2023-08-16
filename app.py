@@ -11,6 +11,7 @@ from streamlit_option_menu import option_menu
 from genai.streamlit_pages import early_year_activity_plan
 from genai.streamlit_pages import eli3
 from genai.streamlit_pages import eyfs_compare
+from genai.streamlit_pages import eyfs_dm_kb
 from genai.streamlit_pages import eyfs_kb_bbc
 from genai.streamlit_pages.utils import reset_state
 
@@ -64,6 +65,7 @@ def main() -> None:
                 "EYFS-based activities",
                 "EYFS-based activities + BBC activities",
                 "EYFS prototypes comparison",
+                "Development Matters prototype",
             ],
             default_index=0,
             on_change=reset_state,
@@ -80,6 +82,8 @@ def main() -> None:
         eyfs_kb_bbc()
     elif selected == "EYFS prototypes comparison":
         eyfs_compare()
+    elif selected == "Development Matters prototype":
+        eyfs_dm_kb()
 
 
 # if check_password():

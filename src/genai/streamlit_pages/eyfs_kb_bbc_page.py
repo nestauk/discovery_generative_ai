@@ -1,18 +1,13 @@
-import os
-import random
-
-from typing import List
-from typing import Union
-
 import pinecone
 import streamlit as st
 
 from genai import MessageTemplate
 from genai.eyfs import ActivityGenerator
 from genai.eyfs import get_embedding
+from genai.streamlit_pages.utils import get_index
 from genai.streamlit_pages.utils import reset_state
+from genai.streamlit_pages.utils import sample_docs
 from genai.utils import read_json
-from genai.vector_index import PineconeIndex
 
 
 def eyfs_kb_bbc(index_name: str = "eyfs-index") -> None:
@@ -152,25 +147,6 @@ def eyfs_kb_bbc(index_name: str = "eyfs-index") -> None:
         st.session_state.messages.append({"role": "assistant", "content": full_response})
 
 
-@st.cache_resource
-def get_index(index_name: str, environment: str = "us-west1-gcp") -> pinecone.index.Index:
-    """Return and persist the pinecone index."""
-    conn = PineconeIndex(api_key=os.environ["PINECONE_API_KEY"], environment=environment)
-    index = conn.connect(index_name=index_name)
-    return index
-
-
-def sample_docs(num_docs: int, n: int) -> Union[List[int], ValueError]:
-    """Sample docs (without replacement)."""
-    try:
-        return random.sample(range(num_docs), n)
-    except ValueError:
-        try:
-            return random.sample(range(num_docs), num_docs)
-        except ValueError as e:
-            raise ValueError(f"Cannot sample docs: {e}")
-
-
 def query_pinecone(
     index: pinecone.index.Index,
     encoded_query: list,
@@ -202,8 +178,6 @@ def query_pinecone(
     docs
         List of documents.
 
-    urls
-        List of urls.
 
     """
     results = index.query(

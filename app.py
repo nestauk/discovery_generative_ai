@@ -82,6 +82,5 @@ def main() -> None:
         eyfs_compare()
 
 
-# if check_password():
-#     main()
-main()
+if check_password():
+    main()

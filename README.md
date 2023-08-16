@@ -10,6 +10,9 @@ Collection of generative AI prototypes, mainly using LLMs.
       - [Categorise "Tiny Happy People" activities to the EYFS areas of learning and build a vector index](#categorise-tiny-happy-people-activities-to-the-eyfs-areas-of-learning-and-build-a-vector-index)
       - [Generate activities based on the user's query and the "Tiny Happy People" activities](#generate-activities-based-on-the-users-query-and-the-tiny-happy-people-activities)
     - [WhatsApp interface to early-years prompts](#whatsapp-interface-to-early-years-prompts)
+    - [Suggest early-years activities anchored to the Development Matters guidance](#suggest-early-years-activities-anchored-to-the-development-matters-guidance)
+      - [Vectorise the Development Matters learning goals and examples](#vectorise-the-development-matters-learning-goals-and-examples)
+      - [Generate activities based on the user's query and the Development Matters learning goals and examples](#generate-activities-based-on-the-users-query-and-the-development-matters-learning-goals-and-examples)
   - [Templating messages and functions](#templating-messages-and-functions)
     - [MessageTemplate](#messagetemplate)
     - [FunctionTemplate](#functiontemplate)
@@ -63,6 +66,17 @@ Note that to run this prototype, you need to:
 This prototype uses a text messaging app (WhatsApp) as an accessible front end to a large language model (LLM), which can explain simple concepts or generate personalised activity ideas. More information can be found [here](src/genai/whatsapp_bot/).
 
 ![whatsapp](charts/whatsapp_bot.png)
+
+### Suggest early-years activities anchored to the Development Matters guidance
+This prototype generates early-years activities that are anchored to the [Development Matters guidance](https://www.gov.uk/government/publications/development-matters--2/development-matters).
+
+#### Vectorise the Development Matters learning goals and examples
+
+![dm-pinecone](charts/dm-pinecone.png)
+
+#### Generate activities based on the user's query and the Development Matters learning goals and examples
+
+![dm-app](charts/dm-app.png)
 
 ## Templating messages and functions
 

@@ -12,6 +12,7 @@ from genai.eyfs import ActivityGenerator
 from genai.eyfs import get_embedding
 from genai.streamlit_pages.utils import reset_state
 from genai.utils import read_json
+from genai.vector_index import PineconeIndex
 
 
 def eyfs_kb_bbc(index_name: str = "eyfs-index") -> None:
@@ -154,8 +155,8 @@ def eyfs_kb_bbc(index_name: str = "eyfs-index") -> None:
 @st.cache_resource
 def get_index(index_name: str, environment: str = "us-west1-gcp") -> pinecone.index.Index:
     """Return and persist the pinecone index."""
-    pinecone.init(api_key=os.environ["PINECONE_API_KEY"], environment=environment)
-    index = pinecone.Index(index_name)
+    conn = PineconeIndex(api_key=os.environ["PINECONE_API_KEY"], environment=environment)
+    index = conn.connect(index_name=index_name)
     return index
 
 
@@ -211,6 +212,7 @@ def query_pinecone(
         include_metadata=True,
         filter={
             "areas_of_learning": {"$in": areas_of_learning},
+            "source": {"$eq": "BBC"},
         },
     )
 

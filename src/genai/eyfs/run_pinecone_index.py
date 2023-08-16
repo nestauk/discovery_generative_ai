@@ -2,18 +2,15 @@
 
 import os
 
-from typing import Generator
-
 import numpy as np
 import openai
 import pandas as pd
-import pinecone
 
 from dotenv import load_dotenv
 
 from genai.eyfs import get_embedding
-from genai.utils import batch
 from genai.utils import read_json
+from genai.vector_index import PineconeIndex
 
 
 load_dotenv()
@@ -48,58 +45,6 @@ def get_bbc_activities(path: str) -> pd.DataFrame:
     return df
 
 
-def build_vector_index(
-    items: Generator,
-    index_name: str,
-    vector_size: int = 1536,
-    metric: str = "euclidean",
-    environment: str = "us-west1-gcp",
-) -> None:
-    """Build a vector index from a dataframe.
-
-    Parameters
-    ----------
-    items
-        The items to be indexed.
-
-    index_name
-        Name of the index.
-
-    vector_size
-        Length of the indexed vectors.
-
-    metric
-        The distance metric to use.
-
-    environment
-        The cloud environment to use.
-
-    """
-    # Connect to pinecone
-    pinecone.init(
-        api_key=os.environ["PINECONE_API_KEY"],
-        environment=environment,
-    )
-
-    # Search by this metadata
-    metadata_config = {"indexed": ["areas_of_learning"]}
-
-    # Build a new index every time
-    if index_name in pinecone.list_indexes():
-        pinecone.delete_index(index_name)
-
-    pinecone.create_index(
-        index_name,
-        dimension=vector_size,
-        metadata_config=metadata_config,
-        metric=metric,
-    )
-
-    index = pinecone.Index(index_name)
-    for batched_items in items:
-        index.upsert(batched_items)
-
-
 def main() -> None:
     """Run the script."""
     # Read and merge dataframes
@@ -117,14 +62,20 @@ def main() -> None:
         item = (
             tup.URL,
             tup.embedding,
-            {"areas_of_learning": tup.areas_of_learning, "title": tup.title, "text": tup.text},
+            {"areas_of_learning": tup.areas_of_learning, "title": tup.title, "text": tup.text, "source": "BBC"},
         )
         items.append(item)
 
-    items = batch(items, 100)
-
     # Build the index
-    build_vector_index(items, INDEX_NAME, vector_size=len(df["embedding"].iloc[0]))
+    conn = PineconeIndex(api_key=os.environ["PINECONE_API_KEY"], environment="us-west1-gcp")
+    conn.build_and_upsert(
+        index_name=INDEX_NAME,
+        dimension=len(df["embedding"].iloc[0]),
+        metric="euclidean",
+        docs=items,
+        metadata_config={"indexed": ["areas_of_learning", "source"]},
+        batch_size=80,
+    )
 
 
 if "__main__" == __name__:

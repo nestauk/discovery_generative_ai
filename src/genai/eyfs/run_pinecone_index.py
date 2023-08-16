@@ -73,7 +73,7 @@ def main() -> None:
         dimension=len(df["embedding"].iloc[0]),
         metric="euclidean",
         docs=items,
-        metadata_config={"indexed": ["areas_of_learning", "source"]},
+        metadata_config={"indexed": ["areas_of_learning", "source", "type_", "age_group"]},
         batch_size=80,
     )
 

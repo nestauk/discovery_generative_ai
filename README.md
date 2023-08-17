@@ -307,7 +307,3 @@ heroku ps:scale web=1
 ```
 
 ## TODO
-
-- Streaming
-- Async calls
-- Parse more than one messages

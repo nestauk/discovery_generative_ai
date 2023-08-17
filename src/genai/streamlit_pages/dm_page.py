@@ -1,13 +1,15 @@
+from typing import List
+
 import pinecone
 import streamlit as st
-from genai.streamlit_pages.utils import reset_state
-from genai.utils import read_json
-from genai.streamlit_pages.utils import get_index
-from genai.streamlit_pages.utils import sample_docs
-from genai.eyfs import get_embedding
 
 from genai import MessageTemplate
 from genai.eyfs import ActivityGenerator
+from genai.eyfs import get_embedding
+from genai.streamlit_pages.utils import get_index
+from genai.streamlit_pages.utils import reset_state
+from genai.streamlit_pages.utils import sample_docs
+from genai.utils import read_json
 
 
 def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
@@ -16,7 +18,11 @@ def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
     areas_of_learning_desc = read_json("src/genai/eyfs/areas_of_learning.json")
     aol = list(areas_of_learning_desc.keys())
     index = get_index(index_name=index_name)
-    examples = None
+
+    if "examples" not in st.session_state:
+        st.session_state["examples"] = ""
+
+    message = MessageTemplate.load("src/genai/dm/prompts/dm_prompt.json")
 
     with st.sidebar:
         # Select a model, temperature and number of results
@@ -33,6 +39,16 @@ def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
             max_value=2.0,
             value=0.6,
             step=0.1,
+            on_change=reset_state,
+        )
+
+        n_examples = st.slider(
+            label="**Examples**",
+            help="Number of Examples from Development Matters to use in the prompt",
+            min_value=1,
+            max_value=10,
+            value=5,
+            step=1,
             on_change=reset_state,
         )
 
@@ -82,25 +98,50 @@ def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
                         areas_of_learning=areas_of_learning,
                         age_group=age_groups,
                         type_="examples",
+                        top_n=n_examples,
                     )
                     results.extend(search_results)
 
                 idx = sample_docs(num_docs=len(results), n=6)
                 results = [results[i] for i in idx]
 
-                examples = "\n\n".join([result["metadata"]["text"] for result in results])
+                st.session_state["examples"] = "\n\n".join([result["metadata"]["text"] for result in results])
 
-                st.write(examples)
+            # st.write(st.session_state["examples"])
+            if st.session_state["examples"]:
+                st.write("### Development Matters guidance: Examples")
+                for result in st.session_state["examples"].split("\n\n"):
+                    st.write(f"- {result}\n")
+
+            # LLM call
+            text_input = st.text_input(label="Describe a theme for the activity")
+            if st.button("Generate activities"):
+                messages_placeholders = {
+                    "description": text_input,
+                    "areas_of_learning": areas_of_learning,
+                    "examples": st.session_state["examples"],
+                    "age_groups": age_groups,
+                }
+
+                message_placeholder = st.empty()
+                full_response = ""
+                for response in ActivityGenerator.generate(
+                    model=selected_model,
+                    temperature=temperature,
+                    messages=[message],
+                    message_kwargs=messages_placeholders,
+                    stream=True,
+                ):
+                    full_response += response.choices[0].delta.get("content", "")
+                    message_placeholder.markdown(full_response + "▌")
+
+                message_placeholder.markdown(full_response)
 
     elif choice == "Describe a learning goal":
         text_input = st.text_input(label="Describe a learning goal")
 
-    if examples:
-        if st.button("Generate activities"):
-            
 
-
-def get_data(path, type_, areas_of_learning, age_groups):
+def get_data(path: str, type_: str, areas_of_learning: List[str], age_groups: List[str]) -> List[str]:
     """Get Learning Goals or Examples based on the selected areas of learning and age groups."""
     data = read_json(path)
     # Temp hack to exclude the template

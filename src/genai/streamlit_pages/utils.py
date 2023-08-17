@@ -13,7 +13,16 @@ from genai.vector_index import PineconeIndex
 
 def reset_state(key: Optional[str] = None) -> None:
     """Delete the message placeholder state."""
-    keys = ["areas_of_learning_text", "areas_of_learning", "n_results", "location", "messages", "choice", "choices"]
+    keys = [
+        "areas_of_learning_text",
+        "areas_of_learning",
+        "n_results",
+        "location",
+        "messages",
+        "choice",
+        "choices",
+        "examples",
+    ]
     for key in keys:
         try:
             del st.session_state[key]

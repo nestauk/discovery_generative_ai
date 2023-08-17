@@ -22,6 +22,9 @@ def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
     if "examples" not in st.session_state:
         st.session_state["examples"] = ""
 
+    if "learning_goals" not in st.session_state:
+        st.session_state["learning_goals"] = ""
+
     message = MessageTemplate.load("src/genai/dm/prompts/dm_prompt.json")
 
     with st.sidebar:
@@ -44,7 +47,7 @@ def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
 
         n_examples = st.slider(
             label="**Examples**",
-            help="Number of Examples from Development Matters to use in the prompt",
+            help="Number of search results. Those are added to the prompt.",
             min_value=1,
             max_value=10,
             value=5,
@@ -95,9 +98,12 @@ def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
                     search_results = query_pinecone(
                         index=index,
                         encoded_query=get_embedding(learning_goal),
-                        areas_of_learning=areas_of_learning,
-                        age_group=age_groups,
-                        type_="examples",
+                        filters={
+                            "areas_of_learning": {"$in": areas_of_learning},
+                            "source": {"$eq": "dm"},
+                            "age_group": {"$in": age_groups},
+                            "type_": {"$eq": "examples"},
+                        },
                         top_n=n_examples,
                     )
                     results.extend(search_results)
@@ -107,7 +113,6 @@ def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
 
                 st.session_state["examples"] = "\n\n".join([result["metadata"]["text"] for result in results])
 
-            # st.write(st.session_state["examples"])
             if st.session_state["examples"]:
                 st.write("### Development Matters guidance: Examples")
                 for result in st.session_state["examples"].split("\n\n"):
@@ -138,7 +143,78 @@ def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
                 message_placeholder.markdown(full_response)
 
     elif choice == "Describe a learning goal":
-        text_input = st.text_input(label="Describe a learning goal")
+        if age_groups:
+            text_input = st.text_input(label="Describe a learning goal")
+            if st.button("Search for learning goals"):
+                results = query_pinecone(
+                    index=index,
+                    encoded_query=get_embedding(text_input),
+                    filters={
+                        "source": {"$eq": "dm"},
+                        "age_group": {"$in": age_groups},
+                        "type_": {"$eq": "learning_goals"},
+                    },
+                    top_n=n_examples,
+                )
+
+                idx = sample_docs(num_docs=len(results), n=n_examples)
+                results = [results[i] for i in idx]
+
+                st.session_state["learning_goals"] = "\n\n".join([result["metadata"]["text"] for result in results])
+
+            if st.session_state["learning_goals"]:
+                st.write("### Development Matters guidance: Learning Goals")
+                for result in st.session_state["learning_goals"].split("\n\n"):
+                    st.write(f"- {result}\n")
+
+                results = []
+                for learning_goal in st.session_state["learning_goals"].split("\n\n"):
+                    search_results = query_pinecone(
+                        index=index,
+                        encoded_query=get_embedding(learning_goal),
+                        filters={
+                            "source": {"$eq": "dm"},
+                            "age_group": {"$in": age_groups},
+                            "type_": {"$eq": "examples"},
+                        },
+                        top_n=n_examples,
+                    )
+                    results.extend(search_results)
+
+                idx = sample_docs(num_docs=len(results), n=6)
+                results = [results[i] for i in idx]
+
+                st.session_state["examples"] = "\n\n".join([result["metadata"]["text"] for result in results])
+                areas_of_learning = [result["metadata"]["areas_of_learning"] for result in results]
+
+            if st.session_state["examples"]:
+                st.write("### Development Matters guidance: Examples")
+                for result in st.session_state["examples"].split("\n\n"):
+                    st.write(f"- {result}\n")
+
+            # LLM call
+            text_input = st.text_input(label="Describe a theme for the activity")
+            if st.button("Generate activities"):
+                messages_placeholders = {
+                    "description": text_input,
+                    "areas_of_learning": areas_of_learning,
+                    "examples": st.session_state["examples"],
+                    "age_groups": age_groups,
+                }
+
+                message_placeholder = st.empty()
+                full_response = ""
+                for response in ActivityGenerator.generate(
+                    model=selected_model,
+                    temperature=temperature,
+                    messages=[message],
+                    message_kwargs=messages_placeholders,
+                    stream=True,
+                ):
+                    full_response += response.choices[0].delta.get("content", "")
+                    message_placeholder.markdown(full_response + "▌")
+
+                message_placeholder.markdown(full_response)
 
 
 def get_data(path: str, type_: str, areas_of_learning: List[str], age_groups: List[str]) -> List[str]:
@@ -163,9 +239,7 @@ def get_data(path: str, type_: str, areas_of_learning: List[str], age_groups: Li
 def query_pinecone(
     index: pinecone.index.Index,
     encoded_query: list,
-    areas_of_learning: list,
-    age_group: list,
-    type_: str,
+    filters: dict,
     top_n: int = 5,
     max_n: int = 10,
 ) -> list:
@@ -198,12 +272,7 @@ def query_pinecone(
         vector=encoded_query,
         top_k=top_n,
         include_metadata=True,
-        filter={
-            "areas_of_learning": {"$in": areas_of_learning},
-            "source": {"$eq": "dm"},
-            "age_group": {"$in": age_group},
-            "type_": {"$eq": type_},
-        },
+        filter=filters,
     )
 
     return results["matches"]

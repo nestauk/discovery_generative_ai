@@ -80,7 +80,7 @@ def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
 
         if areas_of_learning and age_groups:
             predefined_learning_goals = get_data(
-                path="data/dm/dm.json",
+                path="src/genai/dm/dm.json",
                 type_="learning_goals",
                 areas_of_learning=areas_of_learning,
                 age_groups=age_groups,

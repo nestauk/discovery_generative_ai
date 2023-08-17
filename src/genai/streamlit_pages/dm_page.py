@@ -62,19 +62,19 @@ def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
         options=["Pick a predefined learning goal", "Describe a learning goal"],
     )
 
-    age_groups = st.multiselect(
+    age_groups = st.selectbox(
         label="**Age group (in years)**",
         options=["0-3", "3-4", "4-5"],
-        default=["0-3", "3-4", "4-5"],
+        index=2,
         on_change=reset_state,
     )
 
     if choice == "Pick a predefined learning goal":
         # Select the areas of learning
-        areas_of_learning = st.multiselect(
+        areas_of_learning = st.selectbox(
             label="**Areas of learning**",
             options=aol,
-            default=aol,
+            index=1,
             on_change=reset_state,
         )
 
@@ -82,8 +82,8 @@ def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
             predefined_learning_goals = get_data(
                 path="src/genai/dm/dm.json",
                 type_="learning_goals",
-                areas_of_learning=areas_of_learning,
-                age_groups=age_groups,
+                areas_of_learning=[areas_of_learning],
+                age_groups=[age_groups],
             )
             learning_goals = st.multiselect(
                 label="**Predefined Learning Goals**",
@@ -99,19 +99,19 @@ def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
                         index=index,
                         encoded_query=get_embedding(learning_goal),
                         filters={
-                            "areas_of_learning": {"$in": areas_of_learning},
+                            "areas_of_learning": {"$in": [areas_of_learning]},
                             "source": {"$eq": "dm"},
-                            "age_group": {"$in": age_groups},
+                            "age_group": {"$in": [age_groups]},
                             "type_": {"$eq": "examples"},
                         },
                         top_n=n_examples,
                     )
                     results.extend(search_results)
 
-                idx = sample_docs(num_docs=len(results), n=6)
+                results = list(set([result["metadata"]["text"] for result in results]))
+                idx = sample_docs(num_docs=len(results), n=n_examples)
                 results = [results[i] for i in idx]
-
-                st.session_state["examples"] = "\n\n".join([result["metadata"]["text"] for result in results])
+                st.session_state["examples"] = "\n\n".join(results)
 
             if st.session_state["examples"]:
                 st.write("### Development Matters guidance: Examples")
@@ -151,16 +151,16 @@ def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
                     encoded_query=get_embedding(text_input),
                     filters={
                         "source": {"$eq": "dm"},
-                        "age_group": {"$in": age_groups},
+                        "age_group": {"$in": [age_groups]},
                         "type_": {"$eq": "learning_goals"},
                     },
                     top_n=n_examples,
                 )
 
+                results = list(set([result["metadata"]["text"] for result in results]))
                 idx = sample_docs(num_docs=len(results), n=n_examples)
                 results = [results[i] for i in idx]
-
-                st.session_state["learning_goals"] = "\n\n".join([result["metadata"]["text"] for result in results])
+                st.session_state["learning_goals"] = "\n\n".join(results)
 
             if st.session_state["learning_goals"]:
                 st.write("### Development Matters guidance: Learning Goals")
@@ -174,18 +174,17 @@ def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
                         encoded_query=get_embedding(learning_goal),
                         filters={
                             "source": {"$eq": "dm"},
-                            "age_group": {"$in": age_groups},
+                            "age_group": {"$in": [age_groups]},
                             "type_": {"$eq": "examples"},
                         },
                         top_n=n_examples,
                     )
                     results.extend(search_results)
-
-                idx = sample_docs(num_docs=len(results), n=6)
-                results = [results[i] for i in idx]
-
-                st.session_state["examples"] = "\n\n".join([result["metadata"]["text"] for result in results])
                 areas_of_learning = [result["metadata"]["areas_of_learning"] for result in results]
+                results = list(set([result["metadata"]["text"] for result in results]))
+                idx = sample_docs(num_docs=len(results), n=n_examples)
+                results = [results[i] for i in idx]
+                st.session_state["examples"] = "\n\n".join(results)
 
             if st.session_state["examples"]:
                 st.write("### Development Matters guidance: Examples")

@@ -25,7 +25,7 @@ def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
     if "learning_goals" not in st.session_state:
         st.session_state["learning_goals"] = ""
 
-    message = MessageTemplate.load("src/genai/dm/prompts/dm_prompt.json")
+    message = MessageTemplate.load("src/genai/dm/prompts/dm_prompt_2.json")
 
     with st.sidebar:
         # Select a model, temperature and number of results
@@ -92,7 +92,7 @@ def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
                 on_change=reset_state,
             )
 
-            if st.button("Search for activity examples"):
+            if st.button("**Search for activity examples**"):
                 results = []
                 for learning_goal in learning_goals:
                     search_results = query_pinecone(
@@ -120,7 +120,7 @@ def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
 
             # LLM call
             text_input = st.text_input(label="Describe a theme for the activity")
-            if st.button("Generate activities"):
+            if st.button("**Generate activities**"):
                 messages_placeholders = {
                     "description": text_input,
                     "areas_of_learning": areas_of_learning,

@@ -86,6 +86,5 @@ def main() -> None:
         eyfs_dm_kb()
 
 
-# if check_password():
-#     main()
-main()
+if check_password():
+    main()

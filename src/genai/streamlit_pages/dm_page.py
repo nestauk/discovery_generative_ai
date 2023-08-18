@@ -1,8 +1,11 @@
+import json
+
 from typing import List
 
 import pinecone
 import streamlit as st
 
+from genai import FunctionTemplate
 from genai import MessageTemplate
 from genai.eyfs import ActivityGenerator
 from genai.eyfs import get_embedding
@@ -24,6 +27,15 @@ def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
 
     if "learning_goals" not in st.session_state:
         st.session_state["learning_goals"] = ""
+
+    if "full_response" not in st.session_state:
+        st.session_state["full_response"] = None
+
+    if "choices" not in st.session_state:
+        st.session_state["choices"] = []
+
+    if "choice" not in st.session_state:
+        st.session_state["choice"] = None
 
     message = MessageTemplate.load("src/genai/dm/prompts/dm_prompt_2.json")
 
@@ -138,7 +150,7 @@ def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
 
         text_input = st.text_input(label="Describe a theme for the activity")
         if st.button("Generate activities"):
-            llm_call(
+            st.session_state["full_response"] = llm_call(
                 selected_model=selected_model,
                 temperature=temperature,
                 message=message,
@@ -149,6 +161,41 @@ def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
                     "age_groups": age_groups,
                 },
             )
+
+        if st.session_state["full_response"] and st.button("**Pick an activity and ask follow-up questions**"):
+            st.write(st.session_state["full_response"])
+
+            # Select an activity
+            msg = MessageTemplate(
+                role="user",
+                content="Extract all activity names from the text. Activity names always start with three hashtags. \n\n{text}",
+            )
+            message_kwargs = {
+                "text": st.session_state["full_response"],
+            }
+            f = FunctionTemplate.load("src/genai/eyfs/prompts/choices_function.json")
+            r = ActivityGenerator.generate(
+                messages=[msg],
+                model=selected_model,
+                temperature=temperature,
+                message_kwargs=message_kwargs,
+                functions=[f.to_prompt()],
+                function_call={"name": "extract_activity_names"},
+            )
+
+            st.session_state["choices"] = json.loads(r["choices"][0]["message"]["function_call"]["arguments"])[
+                "activity_names"
+            ]
+
+            st.session_state["choice"] = st.multiselect(
+                "Select",
+                options=st.session_state["choices"],
+            )
+
+            text_input = st.text_input("Ask a follow-up question")
+            if st.button("Generate response"):
+                st.write("TESTTEST")
+                st.write(st.session_state["choice"])
 
 
 def get_data(path: str, type_: str, areas_of_learning: List[str], age_groups: List[str]) -> List[str]:
@@ -245,7 +292,7 @@ def sidebar() -> tuple:
     return selected_model, temperature, n_examples
 
 
-def llm_call(selected_model: str, temperature: float, message: MessageTemplate, messages_placeholders: dict) -> None:
+def llm_call(selected_model: str, temperature: float, message: MessageTemplate, messages_placeholders: dict) -> str:
     """Call the LLM."""
     message_placeholder = st.empty()
     full_response = ""
@@ -260,3 +307,5 @@ def llm_call(selected_model: str, temperature: float, message: MessageTemplate, 
         message_placeholder.markdown(full_response + "▌")
 
     message_placeholder.markdown(full_response)
+
+    return full_response

@@ -23,6 +23,7 @@ def reset_state(key: Optional[str] = None) -> None:
         "choices",
         "examples",
         "learning_goals",
+        "full_response",
     ]
     for key in keys:
         try:

@@ -68,12 +68,16 @@ def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
                 areas_of_learning=[areas_of_learning],
                 age_groups=[age_groups],
             )
-            learning_goals = st.multiselect(
-                label="**Predefined Learning Goals**",
-                options=predefined_learning_goals,
-                default=predefined_learning_goals[0],
-                on_change=reset_state,
-            )
+            # Hack till we bring in the rest of the AOL
+            try:
+                learning_goals = st.multiselect(
+                    label="**Predefined Learning Goals**",
+                    options=predefined_learning_goals,
+                    default=predefined_learning_goals[0],
+                    on_change=reset_state,
+                )
+            except IndexError:
+                st.write("**ERROR**: You can only pick `Communication and Language` or `Mathematics` for now.")
 
             if st.button("**Search for activity examples**"):
                 results = []

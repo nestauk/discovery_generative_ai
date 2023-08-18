@@ -316,37 +316,131 @@
         }
     },
     {
-        "area_of_learning": "",
-        "description": "",
+        "area_of_learning": "Personal, social and emotional development",
+        "description": "Children’s personal, social and emotional development (PSED) is crucial for children to lead healthy and happy lives, and is fundamental to their cognitive development. Underpinning their personal development are the important attachments that shape their social world. Strong, warm and supportive relationships with adults enable children to learn how to understand their own feelings and those of others.\n\nChildren should be supported to manage emotions, develop a positive sense of self, set themselves simple goals, have confidence in their own abilities, to persist and wait for what they want and direct attention as necessary.\n\nThrough adult modelling and guidance, they will learn how to look after their bodies, including healthy eating, and manage personal needs independently.\n\nThrough supported interaction with other children, they learn how to make good friendships, co-operate and resolve conflicts peaceably.\n\nThese attributes will provide a secure platform from which children can achieve at school and in later life.",
         "age_group": {
             "0-3": {
                 "learning_goals": [
-                    "",
-                    ""
+                    "find ways to calm themselves, through being calmed and comforted by their key person",
+                    "establish their sense of self",
+                    "express preferences and decisions, they also try new things and start establishing their autonomy",
+                    "engage with others through gestures, gaze and talk",
+                    "use that engagement to achieve a goal, for example, gesture towards their cup to say they want a drink",
+                    "find ways of managing transitions, for example, from their parent to their key person",
+                    "thrive as they develop self-assurance",
+                    "look back as they crawl or walk away from their key person",
+                    "look for clues about how to respond to something interesting",
+                    "play with increasing confidence on their own and with other children, because they know their key person is nearby and available",
+                    "feel confident when taken out around the local neighbourhood and enjoy exploring new places with their key person",
+                    "feel strong enough to express a range of emotions",
+                    "grow in independence, rejecting help (“me do it”) - sometimes this leads to feelings of frustration and tantrums",
+                    "begin to show ‘effortful control’, for example, waiting for a turn and resisting the strong impulse to grab what they want or push their way to the front",
+                    "learn to use the toilet with help, and then independently",
+                    "be increasingly able to talk about and manage their emotions",
+                    "notice and ask questions about differences, such as skin colour, types of hair, gender, special needs and disabilities, religion and so on",
+                    "safely explore emotions beyond their normal range through play and stories",
+                    "develop friendships with other children",
+                    "talk about their feelings in more elaborated ways: “I’m sad because…” or “I love it when …”"
                 ],
                 "examples": [
-                    "",
-                    ""
+                    "When settling a baby or toddler into nursery, the top priority is for the key person to develop a strong and loving relationship with the young child. Learn from the family about what they do to soothe their child and what to look out for – for example, a baby who scratches at their head when they are getting tired.",
+                    "Find out what calms a baby – rocking, cuddling or singing. Make sure babies and toddlers can get hold of their comfort object when they need it.",
+                    "Explain to parents that once babies establish ‘object permanence’, they become more aware of the presence or absence of their parents. Object permanence means knowing that something continues to exist even when out of sight. This can make separations much more distressing and difficult between 6 to 24 months.",
+                    "Babies develop a sense of self by interacting with others, and by exploring their bodies and objects around them, inside and outdoors.",
+                    "Respond and build on babies’ expressions and gestures, playfully exploring the idea of self and other. Point to your own nose, eyes and mouth, point to the baby’s.",
+                    "Be positive and interested in what babies do as they develop their confidence in trying new things.",
+                    "Help toddlers and young children to make informed choices from a limited range of options. Enable children to choose which song to sing from a set of 4 song cards, by pointing. Enable children to choose whether they want milk or water at snack time.",
+                    "Support children as they find their own different ways to manage feelings of sadness when their parents leave them. Some children might need to hold onto a special object from home to feel strong and confident in the setting. Some might need to snuggle in and be comforted by their key person. Some might get busy straight away in their favourite play or with another child they feel close to.",
+                    "Young children need to feel secure as they manage difficult emotions. Provide consistent and predictable routines, with flexibility when needed.",
+                    "Provide consistent, warm and responsive care. At first, centre this on the key person. In time, children can develop positive relationships with other adults.",
+                    "When the key person is not available, make sure that someone familiar provides comfort and support, and carries out intimate care routines.",
+                    "Acknowledge babies’ and toddlers’ brief need for reassurance as they move away from their key person. Encourage babies and toddlers to explore, indoors and outside. Help them to become more independent by smiling and looking encouraging, for example when a baby keeps crawling towards a rattle.",
+                    "Arrange resources inside and outdoors to encourage children’s independence and growing self-confidence. Treasure basket play allows babies who can sit up to choose what to play with. Store resources so that children can access them freely, without needing help.",
+                    "Help children to feel emotionally safe with a key person and, gradually, with other members of staff. Show warmth and affection, combined with clear and appropriate boundaries and routines. Develop a spirit of friendly co-operation amongst children and adults.",
+                    "Encourage children to express their feelings through words like ‘sad’, ‘upset’ or ‘angry’. Toddlers and young children may have periods of time when their favourite word is ‘no’ and when they want to carry out their wishes straight away. Maintain sensible routines and boundaries for children during these testing times. Negative or harsh responses can cause children to feel unduly anxious and emotionally vulnerable.",
+                    "Offer supervision or work discussion sessions to staff. Staff will need to talk about the strong feelings that children may express. How are practitioners feeling about these and developing their understanding of the children’s feelings?",
+                    "When appropriate, notice and talk about children’s feelings. For example: “I can see it’s hard to wait, just a minute and then it’s your turn to go down the slide.” Model useful phrases like “Can I have a turn?” or “My turn next.”",
+                    "You cannot force a child to use the potty or toilet. You need to establish friendly co-operation with the child. That will help them take this important step. Children can generally control their bowels before their bladder.",
+                    "Notice when young children are ready to begin toilet training and discuss this with their parents",
+                    "Be open to what children say about differences and answer their questions straightforwardly. Help children develop positive attitudes towards diversity and inclusion.",
+                    "Help all children to feel that they are valued, and they belong.",
+                    "Support children to find ways into the play and friendship groups of others. For example, encourage them to stand and watch from the side with you. Talk about what you see, and suggest ways for the child to join in.",
+                    "Story times with props can engage children in a range of emotions. They can feel the family’s fear as the bear chases them at the end of ‘We’re Going on a Bear Hunt’. They can feel relief when the Gruffalo is scared away by the mouse.",
+                    "Recognise, talk about and expand on children’s emotions. For example, you might say: “Sara is smiling. She really wanted a turn with the truck.”"
                 ]
             },
             "3-4": {
                 "learning_goals": [
-                    "",
-                    ""
+                    "select and use activities and resources, with help when needed - this helps them to achieve a goal they have chosen or one which is suggested to them",
+                    "develop their sense of responsibility and membership of a community",
+                    "become more outgoing with unfamiliar people, in the safe context of their setting",
+                    "show more confidence in new social situations",
+                    "play with one or more other children, extending and elaborating play ideas",
+                    "find solutions to conflicts and rivalries, for example, accepting that not everyone can be Spider-Man in the game, and suggesting other ideas",
+                    "increasingly follow rules, understanding why they are important",
+                    "remember rules without needing an adult to remind them",
+                    "develop appropriate ways of being assertive",
+                    "talk with others to solve conflicts",
+                    "talk about their feelings using words like ‘happy’, ‘sad’, ‘angry’ or ‘worried’",
+                    "understand gradually how others might be feeling",
+                    "be increasingly independent in meeting their own care needs, for example, brushing teeth, using the toilet, washing and drying their hands thoroughly",
+                    "make healthy choices about food, drink, activity and toothbrushing"
                 ],
                 "examples": [
-                    "",
-                    ""
+                    "Respond to children’s increasing independence and sense of responsibility. As the year proceeds, increase the range of resources and challenges, outdoors and inside. One example of this might be starting the year with light hammers, plastic golf tees and playdough. This equipment will offer children a safe experience of hammering. Wait until the children are ready to follow instructions and use tools safely. Then you could introduce hammers with short handles, nails with large heads, and soft blocks of wood.",
+                    "Widen the range of activities that children feel confident to take part in, outdoors and inside. Model inviting new activities that encourage children to come over and join in, such as folding paper to make animals, sewing or weaving.",
+                    "Give children appropriate tasks to carry out such as they can fetch milk cartons or fruit. They can wash up their own plates after their snack.",
+                    "Invite trusted people into the setting to talk about and show the work they do.",
+                    "Take children out on short walks around the neighbourhood. When ready, take them on trips to interesting places like a local museum, theatre or place of worship.",
+                    "Involve children in making decisions about room layout and resources. You could set up a special role-play area in response to children’s fascination with space. Support children to carry out decisions, respecting the wishes of the rest of the group.",
+                    "Further resource and enrich children’s play, based on their interests. Children often like to talk about their trips to hairdressers and barbers. You could provide items that reflect different ethnicities, such as combs and brushes to stimulate pretend play around their interests.",
+                    "Notice children who find it difficult to play. They may need extra help to share and manage conflicts. You could set up play opportunities in quiet spaces for them, with just one or 2 other children. You may need to model positive play and cooperation.",
+                    "Teach children ways of solving conflicts. Model how to listen to someone else and agree a compromise.",
+                    "Explain why we have rules and display a small number of necessary rules visually as reminders. Display a photo showing a child taking just one piece of fruit at the snack table.",
+                    "Children who often express angry or destructive feelings need clear boundaries and routines. They also need practitioners to interact calmly and sensitively with them.",
+                    "Model ways that you calm yourself down, such as stopping and taking a few deep breaths. This can help children to learn ways to calm themselves. If adults are excessively challenging or controlling, children can become more aggressive in the group. They may increasingly ‘act out’ their feelings. For example, when they feel sad, they might hit another child to make that child feel sad as well.",
+                    "Help children explore situations from different points of view. Talk together about how others might be feeling. Bring these ideas into children’s pretend play: “I wonder how the chicken is feeling, now the fox is creeping up on her?”",
+                    "Talk to children about the importance of eating healthily and brushing their teeth. Consider how to support oral health. For example, some settings use a toothbrushing programme.",
+                    "Talk to children about why it’s important to wash their hands carefully and throughout the day, including before they eat and after they’ve used the toilet."
                 ]
             },
             "4-5": {
                 "learning_goals": [
-                    "",
-                    ""
+                    "see themselves as a valuable individual",
+                    "build constructive and respectful relationships",
+                    "express their feelings and consider the feelings of others",
+                    "show resilience and perseverance in the face of challenge",
+                    "identify and moderate their own feelings socially and emotionally",
+                    "think about the perspectives of others",
+                    "manage their own needs and personal hygiene",
+                    "know and talk about the different factors that support their overall health and wellbeing including: regular physical activity, healthy eating, toothbrushing, sensible amounts of ‘screen time’, having a good sleep routine, being a safe pedestrian"
                 ],
                 "examples": [
-                    "",
-                    ""
+                    "Make time to get to know the child and their family. Ask parents about the child’s history, likes, dislikes, family members and culture.",
+                    "Take opportunities in class to highlight a child’s interests, showing you know them and about them.",
+                    "Make sure children are encouraged to listen to each other as well as the staff.",
+                    "Ensure children’s play regularly involves sharing and cooperating with friends and other peers. Congratulate children for their kindness to others and express your approval when they help, listen and support each other.",
+                    "Allow children time in friendship groups as well as other groupings.",
+                    "Have high expectations for children following instructions, with high levels of support when necessary.",
+                    "Model positive behaviour and highlight exemplary behaviour of children in class, narrating what was kind and considerate about the behaviour.",
+                    "Encourage children to express their feelings if they feel hurt or upset using descriptive vocabulary. Help and reassure them when they are distressed, upset or confused.",
+                    "Undertake specific activities that encourage talk about feelings and their opinions.",
+                    "Offer constructive support and recognition of the child’s personal achievements.",
+                    "Provide opportunities for children to tell each other about their work and play. Help them reflect and self-evaluate their own work.",
+                    "Help them to develop problem-solving skills by talking through how they, you and others resolved a problem or difficulty. Show that mistakes are an important part of learning and going back is trial and error, not failure.",
+                    "Help children to set their own goals and to achieve them.",
+                    "Give children strategies for staying calm in the face of frustration. Talk them through why we take turns, wait politely, tidy up after ourselves and so on.",
+                    "Encourage them to think about their own feelings and those of others by giving explicit examples of how others might feel in particular scenarios. Give children space to calm down and return to an activity.",
+                    "Support all children to recognise when their behaviour was not in accordance with the rules and why it is important to respect class rules and behave correctly towards others.",
+                    "Use dialogic storytime (talking about the ideas arising from the story whilst reading aloud) to discuss books that deal with challenges, explaining how the different characters feel about these challenges and overcome them.",
+                    "Ask children to explain to others how they thought about a problem or an emotion and how they dealt with it.",
+                    "Model practices that support good hygiene, such as insisting on washing hands before snack time.",
+                    "Narrate your own decisions about healthy foods, highlighting the importance of eating plenty of fruits and vegetables.",
+                    "Help individual children to develop good personal hygiene. Acknowledge and praise their efforts. Provide regular reminders about thorough handwashing and toileting.",
+                    "Work with parents and health visitors or the school nurse to help children who are not usually clean and dry through the day.",
+                    "Talk with children about exercise, healthy eating and the importance of sleep.",
+                    "Use picture books and other resources to explain the importance of the different aspects of a healthy lifestyle.",
+                    "Explain to children and model how to travel safely in their local environment, including: staying on the pavement, holding hands and crossing the road when walking, stopping quickly when scootering and cycling, being sensitive to other pedestrians"
                 ]
             }
         }

@@ -1,11 +1,8 @@
-import json
-
 from typing import List
 
 import pinecone
 import streamlit as st
 
-from genai import FunctionTemplate
 from genai import MessageTemplate
 from genai.eyfs import ActivityGenerator
 from genai.eyfs import get_embedding
@@ -101,7 +98,7 @@ def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
 
     elif choice == "Describe a learning goal":
         if age_groups:
-            text_input = st.text_input(label="Describe a learning goal")
+            text_input = st.text_input(label="**Describe a learning goal**")
             if st.button("Search for learning goals"):
                 results = query_pinecone(
                     index=index,
@@ -120,9 +117,10 @@ def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
                 st.session_state["learning_goals"] = "\n\n".join(results)
 
             if st.session_state["learning_goals"]:
-                st.write("### Development Matters guidance: Learning Goals")
-                for result in st.session_state["learning_goals"].split("\n\n"):
-                    st.write(f"- {result}\n")
+                st.write("## Development Matters guidance: Learning Goals")
+                with st.expander("**Learning Goals**", expanded=True):
+                    for result in st.session_state["learning_goals"].split("\n\n"):
+                        st.write(f"- {result}\n")
 
                 results = []
                 for learning_goal in st.session_state["learning_goals"].split("\n\n"):
@@ -144,11 +142,12 @@ def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
                 st.session_state["examples"] = "\n\n".join(results)
 
     if st.session_state["examples"]:
-        st.write("### Development Matters guidance: Examples")
-        for result in st.session_state["examples"].split("\n\n"):
-            st.write(f"- {result}\n")
+        st.write("## Development Matters guidance: Examples")
+        with st.expander("**Examples**", expanded=True):
+            for result in st.session_state["examples"].split("\n\n"):
+                st.write(f"- {result}\n")
 
-        text_input = st.text_input(label="Describe a theme for the activity")
+        text_input = st.text_input(label="**Describe a theme for the activity**")
         if st.button("Generate activities"):
             st.session_state["full_response"] = llm_call(
                 selected_model=selected_model,
@@ -162,40 +161,25 @@ def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
                 },
             )
 
-        if st.session_state["full_response"] and st.button("**Pick an activity and ask follow-up questions**"):
+    if st.session_state["examples"] and st.session_state["full_response"]:
+        with st.expander("**Suggested activities**"):
             st.write(st.session_state["full_response"])
-
-            # Select an activity
-            msg = MessageTemplate(
-                role="user",
-                content="Extract all activity names from the text. Activity names always start with three hashtags. \n\n{text}",
-            )
-            message_kwargs = {
-                "text": st.session_state["full_response"],
-            }
-            f = FunctionTemplate.load("src/genai/eyfs/prompts/choices_function.json")
-            r = ActivityGenerator.generate(
-                messages=[msg],
-                model=selected_model,
+        text_input = st.text_input(
+            "**Ask a follow-up question**",
+            help="You can ask for details on how to play one of the games!",
+        )
+        if text_input:
+            _ = llm_call(
+                selected_model=selected_model,
                 temperature=temperature,
-                message_kwargs=message_kwargs,
-                functions=[f.to_prompt()],
-                function_call={"name": "extract_activity_names"},
+                message=MessageTemplate(
+                    role="user", content="###Activities###\n{activities} ###Task###\n{text_input}"
+                ),
+                messages_placeholders={
+                    "text_input": text_input,
+                    "activities": st.session_state["full_response"],
+                },
             )
-
-            st.session_state["choices"] = json.loads(r["choices"][0]["message"]["function_call"]["arguments"])[
-                "activity_names"
-            ]
-
-            st.session_state["choice"] = st.multiselect(
-                "Select",
-                options=st.session_state["choices"],
-            )
-
-            text_input = st.text_input("Ask a follow-up question")
-            if st.button("Generate response"):
-                st.write("TESTTEST")
-                st.write(st.session_state["choice"])
 
 
 def get_data(path: str, type_: str, areas_of_learning: List[str], age_groups: List[str]) -> List[str]:

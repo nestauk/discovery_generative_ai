@@ -28,38 +28,12 @@ def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
     message = MessageTemplate.load("src/genai/dm/prompts/dm_prompt_2.json")
 
     with st.sidebar:
-        # Select a model, temperature and number of results
-        selected_model = st.radio(
-            label="**OpenAI model**",
-            options=["gpt-3.5-turbo", "gpt-4"],
-            index=1,
-            on_change=reset_state,
-        )
-
-        temperature = st.slider(
-            label="**Temperature**",
-            min_value=0.0,
-            max_value=2.0,
-            value=0.6,
-            step=0.1,
-            on_change=reset_state,
-        )
-
-        n_examples = st.slider(
-            label="**Examples**",
-            help="Number of search results. Those are added to the prompt.",
-            min_value=1,
-            max_value=10,
-            value=5,
-            step=1,
-            on_change=reset_state,
-        )
-
-        st.button("Reset chat", on_click=reset_state, type="primary", help="Reset the chat history")
+        selected_model, temperature, n_examples = sidebar()
 
     choice = st.radio(
         label="**Select a learning goal**",
         options=["Pick a predefined learning goal", "Describe a learning goal"],
+        on_change=reset_state,
     )
 
     age_groups = st.selectbox(
@@ -113,35 +87,6 @@ def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
                 results = [results[i] for i in idx]
                 st.session_state["examples"] = "\n\n".join(results)
 
-            if st.session_state["examples"]:
-                st.write("### Development Matters guidance: Examples")
-                for result in st.session_state["examples"].split("\n\n"):
-                    st.write(f"- {result}\n")
-
-            # LLM call
-            text_input = st.text_input(label="Describe a theme for the activity")
-            if st.button("**Generate activities**"):
-                messages_placeholders = {
-                    "description": text_input,
-                    "areas_of_learning": areas_of_learning,
-                    "examples": st.session_state["examples"],
-                    "age_groups": age_groups,
-                }
-
-                message_placeholder = st.empty()
-                full_response = ""
-                for response in ActivityGenerator.generate(
-                    model=selected_model,
-                    temperature=temperature,
-                    messages=[message],
-                    message_kwargs=messages_placeholders,
-                    stream=True,
-                ):
-                    full_response += response.choices[0].delta.get("content", "")
-                    message_placeholder.markdown(full_response + "▌")
-
-                message_placeholder.markdown(full_response)
-
     elif choice == "Describe a learning goal":
         if age_groups:
             text_input = st.text_input(label="Describe a learning goal")
@@ -186,34 +131,24 @@ def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
                 results = [results[i] for i in idx]
                 st.session_state["examples"] = "\n\n".join(results)
 
-            if st.session_state["examples"]:
-                st.write("### Development Matters guidance: Examples")
-                for result in st.session_state["examples"].split("\n\n"):
-                    st.write(f"- {result}\n")
+    if st.session_state["examples"]:
+        st.write("### Development Matters guidance: Examples")
+        for result in st.session_state["examples"].split("\n\n"):
+            st.write(f"- {result}\n")
 
-            # LLM call
-            text_input = st.text_input(label="Describe a theme for the activity")
-            if st.button("Generate activities"):
-                messages_placeholders = {
+        text_input = st.text_input(label="Describe a theme for the activity")
+        if st.button("Generate activities"):
+            llm_call(
+                selected_model=selected_model,
+                temperature=temperature,
+                message=message,
+                messages_placeholders={
                     "description": text_input,
                     "areas_of_learning": areas_of_learning,
                     "examples": st.session_state["examples"],
                     "age_groups": age_groups,
-                }
-
-                message_placeholder = st.empty()
-                full_response = ""
-                for response in ActivityGenerator.generate(
-                    model=selected_model,
-                    temperature=temperature,
-                    messages=[message],
-                    message_kwargs=messages_placeholders,
-                    stream=True,
-                ):
-                    full_response += response.choices[0].delta.get("content", "")
-                    message_placeholder.markdown(full_response + "▌")
-
-                message_placeholder.markdown(full_response)
+                },
+            )
 
 
 def get_data(path: str, type_: str, areas_of_learning: List[str], age_groups: List[str]) -> List[str]:
@@ -275,3 +210,53 @@ def query_pinecone(
     )
 
     return results["matches"]
+
+
+def sidebar() -> tuple:
+    """Select a model, temperature and number of results."""
+    selected_model = st.radio(
+        label="**OpenAI model**",
+        options=["gpt-3.5-turbo", "gpt-4"],
+        index=1,
+        on_change=reset_state,
+    )
+
+    temperature = st.slider(
+        label="**Temperature**",
+        min_value=0.0,
+        max_value=2.0,
+        value=0.6,
+        step=0.1,
+        on_change=reset_state,
+    )
+
+    n_examples = st.slider(
+        label="**Examples**",
+        help="Number of search results. Those are added to the prompt.",
+        min_value=1,
+        max_value=10,
+        value=5,
+        step=1,
+        on_change=reset_state,
+    )
+
+    st.button("Reset chat", on_click=reset_state, type="primary", help="Reset the chat history")
+
+    return selected_model, temperature, n_examples
+
+
+def llm_call(selected_model: str, temperature: float, message: MessageTemplate, messages_placeholders: dict) -> None:
+    """Call the LLM."""
+    message_placeholder = st.empty()
+    full_response = ""
+    for response in ActivityGenerator.generate(
+        model=selected_model,
+        temperature=temperature,
+        messages=[message],
+        message_kwargs=messages_placeholders,
+        stream=True,
+    ):
+        full_response += response.choices[0].delta.get("content", "")
+        message_placeholder.markdown(full_response + "▌")
+
+    message_placeholder.markdown(full_response)

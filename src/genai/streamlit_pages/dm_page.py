@@ -28,12 +28,6 @@ def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
     if "full_response" not in st.session_state:
         st.session_state["full_response"] = None
 
-    if "choices" not in st.session_state:
-        st.session_state["choices"] = []
-
-    if "choice" not in st.session_state:
-        st.session_state["choice"] = None
-
     message = MessageTemplate.load("src/genai/dm/prompts/dm_prompt_2.json")
 
     with st.sidebar:

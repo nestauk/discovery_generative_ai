@@ -6,10 +6,15 @@ resources:
   # if this is specified.
   region: eu-west-2
 
-  instance_type: r6g.xlarge
+  memory: 30+
+  cpus: 4+
 
 file_mounts:
-  ~/.qdrant_bge-base-en: s3://discovery-generative-ai/indexes/nesta_way/qdrant_bge-base-en
+  /qdrant_bge-base-en:
+    source: s3://discovery-gen-ai/indexes/nesta_way/qdrant_bge-base-en
+    store: s3
+    persistent: True
+    mode: COPY
 
 setup: |
   conda activate slackbot
@@ -47,7 +52,8 @@ run: |
   echo 'Starting nginx service...'
   sudo service nginx restart
   echo 'Starting slackbot app...'
-  python -u -m genai.slackbot.serve_vdb 2>&1 | tee api_server.log &
+  cd ~/sky_workdir/discovery_generative_ai/src/slackbot
+  python -u -m serve_vdb 2>&1 | tee api_server.log &
 
   echo 'Waiting for slackbot to start...'
   while ! `cat api_server.log | grep -q 'Uvicorn running on'`; do sleep 1; done

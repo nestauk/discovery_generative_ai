@@ -1,3 +1,4 @@
+from .dm_page import eyfs_dm_kb
 from .eli3_page import eli3
 from .eyfs_compare_page import eyfs_compare
 from .eyfs_kb_bbc_page import eyfs_kb_bbc

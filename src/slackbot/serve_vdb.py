@@ -23,7 +23,7 @@ hf_bge_base = HuggingFaceBgeEmbeddings(
 )
 
 db = Qdrant(
-    client=QdrantClient(path="/qdrant_bge-base-en", url="http://localhost:6333"),
+    client=QdrantClient(url="http://localhost:6334", prefer_grpc=True),
     collection_name="nesta_way_bge-base-en",
     embeddings=hf_bge_base,
 )

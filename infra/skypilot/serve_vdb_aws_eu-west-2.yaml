@@ -30,6 +30,9 @@ setup: |
 
   cd discovery_generative_ai
   make init
+  pip install sentence-transformers fastapi -y
+  sudo docker info
+  docker pull qdrant/qdrant
 
   echo 'Setting up nginx with public ipv4 at...'
   export ADDRESS=`ec2metadata --public-ipv4`
@@ -48,6 +51,11 @@ setup: |
   " | sudo tee fastapi_nginx
 
 run: |
+  echo 'Starting qdrant service...'
+  docker run -p 6333:6333 \
+    -v /qdrant_bge-base-en:/qdrant/storage \
+    qdrant/qdrant
+
   conda activate slackbot
   echo 'Starting nginx service...'
   sudo service nginx restart

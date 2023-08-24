@@ -30,7 +30,7 @@ setup: |
 
   cd discovery_generative_ai
   make init
-  pip install sentence-transformers fastapi -y
+  pip install sentence-transformers fastapi
   sudo docker info
   docker pull qdrant/qdrant
 
@@ -52,10 +52,10 @@ setup: |
 
 run: |
   echo 'Starting qdrant service...'
-  docker run -p 6333:6333 \
+  docker run -d -p 6333:6333 \
     -v /qdrant_bge-base-en:/qdrant/storage \
     qdrant/qdrant
-
+  conda deactivate
   conda activate slackbot
   echo 'Starting nginx service...'
   sudo service nginx restart

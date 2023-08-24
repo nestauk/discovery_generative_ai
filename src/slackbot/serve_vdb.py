@@ -1,7 +1,5 @@
 import os
 
-from typing import Dict
-
 from fastapi import FastAPI
 from langchain.embeddings import HuggingFaceBgeEmbeddings
 from langchain.vectorstores import Qdrant
@@ -29,16 +27,9 @@ db = Qdrant(
 )
 
 
-# Define FastAPI endpoints
-@app.get("/")  # noqa: E302
-async def root() -> Dict[str, str]:
-    """Root endpoint for FastAPI."""
-    return {"message": "Hello, World!"}
-
-
 # Create an instance of AsyncSlackRequestHandler and add it as a route to FastAPI
 handler = AsyncSlackRequestHandler(bolt)
-app.add_route("/slack/events", handler, methods=["POST"])
+app.add_route("/slack/events", handler.handle, methods=["POST"])
 
 
 # Define Slash command

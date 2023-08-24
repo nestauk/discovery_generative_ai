@@ -71,7 +71,12 @@ def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
                     on_change=reset_state,
                 )
             except IndexError:
-                st.write("**ERROR**: You can only pick `Communication and Language` or `Mathematics` for now.")
+                st.write(
+                    """**ERROR**: You can only pick one of the following Areas of Learning for now:
+                    - `Communication and Language`
+                    - `Mathematics`
+                    - `Personal, Social and Emotional Development`  """
+                )
 
             if st.button("**Search for activity examples**"):
                 results = []

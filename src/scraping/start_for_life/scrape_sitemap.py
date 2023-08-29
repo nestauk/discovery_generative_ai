@@ -52,37 +52,34 @@ def scrape_urls(base_url: str, csv_filename: str, timeout: float = 10) -> None:
     # Create a set to hold Titles and URLs
     unique_urls = []
     url_titles = []
-    try:
-        # Make a request to the website
-        response = requests.get(
-            base_url,
-            timeout=timeout,
-            headers=HEADERS,
-        )
-        # Check if the request was successful
-        if response.status_code == 200:
-            # Parse the HTML content of the page using Beautiful Soup
-            soup = BeautifulSoup(response.text, "html.parser")
-            # Find all anchor tags (<a>) in the HTML
-            for link in soup.find_all("a"):
-                # Get the href attribute (the URL)
-                url = link.get("href")
-                # Check if the URL starts with 'http' or 'https' to ignore relative URLs
-                if url and (url.startswith("http") or url.startswith("https") or url.startswith("/")):
-                    unique_urls.append(url)
-                    url_titles.append(link.text)
-        # Write the unique URLs to a CSV file
-        with open(csv_filename, "w", newline="") as csvfile:
-            csv_writer = csv.writer(csvfile)
-            csv_writer.writerow(["Title", "URL"])  # Header row
+    # Make a request to the website
+    response = requests.get(
+        base_url,
+        timeout=timeout,
+        headers=HEADERS,
+    )
+    # Check if the request was successful
+    if response.status_code == 200:
+        # Parse the HTML content of the page using Beautiful Soup
+        soup = BeautifulSoup(response.text, "html.parser")
+        # Find all anchor tags (<a>) in the HTML
+        for link in soup.find_all("a"):
+            # Get the href attribute (the URL)
+            url = link.get("href")
+            # Check if the URL starts with 'http' or 'https' to ignore relative URLs
+            if url and (url.startswith("http") or url.startswith("https") or url.startswith("/")):
+                unique_urls.append(url)
+                url_titles.append(link.text)
 
-            for url in unique_urls:
-                csv_writer.writerow([url_titles.pop(), url])
+    # Write the unique URLs to a CSV file
+    with open(csv_filename, "w", newline="") as csvfile:
+        csv_writer = csv.writer(csvfile)
+        csv_writer.writerow(["Title", "URL"])  # Header row
 
-        logging.INFO(f"Scraping complete. {len(unique_urls)} unique URLs have been saved to {csv_filename}.")
+        for url in unique_urls:
+            csv_writer.writerow([url_titles.pop(), url])
 
-    except Exception as e:
-        logging.ERROR(f"An error occurred: {e}")
+    logging.info(f"Scraping complete. {len(unique_urls)} unique URLs have been saved to {csv_filename}.")
 
 
 if __name__ == "__main__":

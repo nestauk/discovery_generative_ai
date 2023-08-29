@@ -1,7 +1,25 @@
 import os
 
+from langchain.embeddings import HuggingFaceBgeEmbeddings
+from langchain.vectorstores import Qdrant
+from qdrant_client import QdrantClient
 from slack_bolt.adapter.socket_mode.async_handler import AsyncSocketModeHandler
 from slack_bolt.app.async_app import AsyncApp
+
+
+# Initiate qdrant client and embeddings
+model_kwargs = {"device": "cpu"}  # unchanged
+encode_kwargs = {"normalize_embeddings": False}  # unchanged
+
+hf_bge_base = HuggingFaceBgeEmbeddings(
+    model_name="BAAI/bge-base-en", model_kwargs=model_kwargs, encode_kwargs=encode_kwargs
+)
+
+db = Qdrant(
+    client=QdrantClient(url="http://localhost:6334", prefer_grpc=True),
+    collection_name="nesta_way_bge-base-en",
+    embeddings=hf_bge_base,
+)
 
 
 # Initializes your app with your bot token and socket mode handler
@@ -36,13 +54,13 @@ async def action_button_click(body, ack, say):  # noqa: ANN001, ANN201
     await say(f"<@{body['user']['id']}> clicked the button")
 
 
-# @app.command("/nw_search")  # noqa: E302
-# async def nw_search(ack, respond, command):  # noqa: ANN001, ANN201
-#    """Slash command to search Nesta Way."""
-#    await ack()
-#    docs = await db.asimilarity_search(command["text"], top_k=4)
-#    # can structure responses using markdown blocks
-#    await respond(f"""Slash command received! {command['text']}\nResult:\n{docs}""")
+@app.command("/nw_search")  # noqa: E302
+async def nw_search(ack, respond, command):  # noqa: ANN001, ANN201
+    """Slash command to search Nesta Way."""
+    await ack()
+    docs = await db.asimilarity_search(command["text"], top_k=4)
+    # can structure responses using markdown blocks
+    await respond(f"""Slash command received! {command['text']}\nResult(s):\n{docs}""")
 
 
 @app.command("/test_command")

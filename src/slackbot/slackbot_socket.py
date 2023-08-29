@@ -15,11 +15,14 @@ hf_bge_base = HuggingFaceBgeEmbeddings(
     model_name="BAAI/bge-base-en", model_kwargs=model_kwargs, encode_kwargs=encode_kwargs
 )
 
-db = Qdrant.from_documents(
-    documents=[],
-    embedding=hf_bge_base,
+client = QdrantClient(
     url="http://localhost:6334",
     prefer_grpc=True,
+)
+
+db = Qdrant(
+    client=client,
+    embeddings=hf_bge_base,
     collection_name="nesta_way_bge-base-en",
 )
 # (

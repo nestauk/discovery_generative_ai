@@ -9,7 +9,7 @@ The relevant urls were found in [this spreadsheet](https://docs.google.com/sprea
 
 First navigate to the scraping folder from repo's root
 ```
-cd src/scraping
+cd src/scraping/activities
 ```
 
 Then run the script

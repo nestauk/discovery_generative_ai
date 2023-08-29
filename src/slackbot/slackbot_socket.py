@@ -2,7 +2,7 @@ import os
 
 from langchain.embeddings import HuggingFaceBgeEmbeddings
 from langchain.vectorstores import Qdrant
-from qdrant_client import QdrantClient
+from qdrant_client import QdrantClient  # noqa: F401
 from slack_bolt.adapter.socket_mode.async_handler import AsyncSocketModeHandler
 from slack_bolt.app.async_app import AsyncApp
 
@@ -15,11 +15,17 @@ hf_bge_base = HuggingFaceBgeEmbeddings(
     model_name="BAAI/bge-base-en", model_kwargs=model_kwargs, encode_kwargs=encode_kwargs
 )
 
-db = Qdrant(
-    client=QdrantClient(url="http://localhost:6334", prefer_grpc=True),
+db = Qdrant.from_documents(
+    embedding=hf_bge_base,
+    url="http://localhost:6334",
+    prefer_grpc=True,
     collection_name="nesta_way_bge-base-en",
-    embeddings=hf_bge_base,
 )
+# (
+#    client=QdrantClient(url="http://localhost:6334", prefer_grpc=True),
+#    collection_name="nesta_way_bge-base-en",
+#    embeddings=hf_bge_base,
+# )
 
 
 # Initializes your app with your bot token and socket mode handler

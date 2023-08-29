@@ -49,7 +49,7 @@ async def action_button_click(body, ack, say):  # noqa: ANN001, ANN201
 async def test_command(ack, respond, command):  # noqa: ANN001, ANN201
     """Slash command to test Slack Bolt."""
     await ack()
-    await respond(f"test command received body: {command}")
+    await respond(f"test command received body: {command['text']}")
 
 
 async def main():  # noqa: ANN001, ANN201

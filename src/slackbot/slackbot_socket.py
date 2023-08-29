@@ -58,7 +58,7 @@ async def action_button_click(body, ack, say):  # noqa: ANN001, ANN201
 async def nw_search(ack, respond, command):  # noqa: ANN001, ANN201
     """Slash command to search Nesta Way."""
     await ack()
-    docs = await db.asimilarity_search(command["text"], top_k=4)
+    docs = await db.asimilarity_search_with_score(command["text"], k=3)
     # can structure responses using markdown blocks
     await respond(f"""Slash command received! {command['text']}\nResult(s):\n{docs}""")
 

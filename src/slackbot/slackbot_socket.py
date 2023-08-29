@@ -16,7 +16,8 @@ hf_bge_base = HuggingFaceBgeEmbeddings(
 )
 
 client = QdrantClient(
-    url="http://localhost:6334",
+    url=os.environ.get("QDRANT_URL"),
+    api_key=os.environ.get("QDRANT_API_KEY"),
     prefer_grpc=True,
 )
 

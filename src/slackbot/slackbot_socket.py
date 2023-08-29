@@ -16,6 +16,7 @@ hf_bge_base = HuggingFaceBgeEmbeddings(
 )
 
 db = Qdrant.from_documents(
+    documents=[],
     embedding=hf_bge_base,
     url="http://localhost:6334",
     prefer_grpc=True,

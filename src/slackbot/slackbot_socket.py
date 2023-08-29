@@ -1,18 +1,18 @@
 import os
 
-from slack_bolt import App
-from slack_bolt.adapter.socket_mode import SocketModeHandler
+from slack_bolt.adapter.socket_mode.async_handler import AsyncSocketModeHandler
+from slack_bolt.app.async_app import AsyncApp
 
 
 # Initializes your app with your bot token and socket mode handler
-app = App(token=os.environ.get("SLACK_BOT_TOKEN"))
+app = AsyncApp(token=os.environ.get("SLACK_BOT_TOKEN"))
 
 
 # Listens to incoming messages that contain "hello"
 @app.message("hello")
-def message_hello(message, say):  # noqa: ANN001, ANN201
+async def message_hello(message, say):  # noqa: ANN001, ANN201
     """Send a message to the channel where the event was triggered"""
-    say(
+    await say(
         blocks=[
             {
                 "type": "section",
@@ -29,11 +29,11 @@ def message_hello(message, say):  # noqa: ANN001, ANN201
 
 
 @app.action("button_click")
-def action_button_click(body, ack, say):  # noqa: ANN001, ANN201
+async def action_button_click(body, ack, say):  # noqa: ANN001, ANN201
     """Listen for button_click ation from message_hello"""
     # Acknowledge the action
-    ack()
-    say(f"<@{body['user']['id']}> clicked the button")
+    await ack()
+    await say(f"<@{body['user']['id']}> clicked the button")
 
 
 # @app.command("/nw_search")  # noqa: E302
@@ -44,6 +44,22 @@ def action_button_click(body, ack, say):  # noqa: ANN001, ANN201
 #    # can structure responses using markdown blocks
 #    await respond(f"""Slash command received! {command['text']}\nResult:\n{docs}""")
 
+
+@app.command("/test_command")
+async def test_command(ack, respond, command):  # noqa: ANN001, ANN201
+    """Slash command to test Slack Bolt."""
+    await ack()
+    await respond(f"test command received body: {command}")
+
+
+async def main():  # noqa: ANN001, ANN201
+    """App entry point."""
+    handler = AsyncSocketModeHandler(app, os.environ["SLACK_APP_TOKEN"])
+    await handler.start_async()
+
+
 # Start your app
 if __name__ == "__main__":
-    SocketModeHandler(app, os.environ["SLACK_APP_TOKEN"]).start()
+    import asyncio
+
+    asyncio.run(main())

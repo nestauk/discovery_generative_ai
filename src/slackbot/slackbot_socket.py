@@ -1,6 +1,6 @@
 import os
 
-from langchain.chains import RetrievalQAWithSourcesChain
+from langchain.chains import RetrievalQA
 from langchain.embeddings import HuggingFaceBgeEmbeddings
 from langchain.llms import VLLMOpenAI
 from langchain.vectorstores import Qdrant
@@ -102,7 +102,7 @@ async def nw_ask(ack, respond, command):  # noqa: ANN001, ANN201
 
     retriever = db_inner.as_retriever()
 
-    qa_chain = RetrievalQAWithSourcesChain.from_chain_type(llm=llm, retriever=retriever, return_source_documents=True)
+    qa_chain = RetrievalQA.from_chain_type(llm=llm, retriever=retriever, return_source_documents=True)
 
     res = qa_chain({"question": command["text"]})
     await respond(

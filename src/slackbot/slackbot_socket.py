@@ -86,8 +86,8 @@ async def nw_ask(ack, respond, command):  # noqa: ANN001, ANN201
     """Slash command to RAG the Nesta Way."""
     # TODO: Handle offline LLM
     await ack()
-    res = qa_chain({"question": command["text"]})
-    respond(
+    res = await qa_chain({"question": command["text"]})
+    await respond(
         f"""You asked: {res['question']}\n
         Answer: {res['answer']}\n\n
         Sources: {res['source_documents']}

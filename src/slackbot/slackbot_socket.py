@@ -13,22 +13,6 @@ from slack_bolt.app.async_app import AsyncApp
 model_kwargs = {"device": "cpu"}  # unchanged
 encode_kwargs = {"normalize_embeddings": False}  # unchanged
 
-hf_bge_base = HuggingFaceBgeEmbeddings(
-    model_name="BAAI/bge-base-en", model_kwargs=model_kwargs, encode_kwargs=encode_kwargs
-)
-
-client = QdrantClient(
-    url=os.environ.get("QDRANT_URL"),
-    api_key=os.environ.get("QDRANT_API_KEY"),
-    prefer_grpc=True,
-)
-
-db = Qdrant(
-    client=client,
-    embeddings=hf_bge_base,
-    collection_name="nesta_way_bge-base-en",
-)
-
 # Initializes your app with your bot token and socket mode handler
 app = AsyncApp(token=os.environ.get("SLACK_BOT_TOKEN"))
 
@@ -65,6 +49,23 @@ async def action_button_click(body, ack, say):  # noqa: ANN001, ANN201
 async def nw_search(ack, respond, command):  # noqa: ANN001, ANN201
     """Slash command to search Nesta Way."""
     await ack()
+
+    hf_bge_base = HuggingFaceBgeEmbeddings(
+        model_name="BAAI/bge-base-en", model_kwargs=model_kwargs, encode_kwargs=encode_kwargs
+    )
+
+    client = QdrantClient(
+        url=os.environ.get("QDRANT_URL"),
+        api_key=os.environ.get("QDRANT_API_KEY"),
+        prefer_grpc=True,
+    )
+
+    db = Qdrant(
+        client=client,
+        embeddings=hf_bge_base,
+        collection_name="nesta_way_bge-base-en",
+    )
+
     docs = await db.asimilarity_search_with_score(command["text"], k=3)
     # can structure responses using markdown blocks
     await respond(f"""Slash command received! {command['text']}\nResult(s):\n{docs}""")

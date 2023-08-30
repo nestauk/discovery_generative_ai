@@ -24,6 +24,7 @@ def reset_state(key: Optional[str] = None) -> None:
         "examples",
         "learning_goals",
         "full_response",
+        "memory",
     ]
     for key in keys:
         try:

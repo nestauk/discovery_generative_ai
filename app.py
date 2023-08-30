@@ -13,6 +13,7 @@ from genai.streamlit_pages import eli3
 from genai.streamlit_pages import eyfs_compare
 from genai.streamlit_pages import eyfs_dm_kb
 from genai.streamlit_pages import eyfs_kb_bbc
+from genai.streamlit_pages import parenting_chatbot
 from genai.streamlit_pages.utils import reset_state
 
 
@@ -66,6 +67,7 @@ def main() -> None:
                 "EYFS-based activities + BBC activities",
                 "EYFS prototypes comparison",
                 "Development Matters prototype",
+                "Parenting Chatbot",
             ],
             default_index=0,
             on_change=reset_state,
@@ -84,7 +86,10 @@ def main() -> None:
         eyfs_compare()
     elif selected == "Development Matters prototype":
         eyfs_dm_kb()
+    elif selected == "Parenting Chatbot":
+        parenting_chatbot()
 
 
-if check_password():
-    main()
+# if check_password():
+# main()
+main()

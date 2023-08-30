@@ -100,9 +100,9 @@ async def nw_ask(ack, respond, command):  # noqa: ANN001, ANN201
         model_kwargs={"stop": ["."]},
     )
 
-    qa_chain = RetrievalQAWithSourcesChain.from_chain_type(
-        llm=llm, retriever=db_inner.as_retriever(), return_source_documents=True
-    )
+    retriever = await db_inner.as_retriever()
+
+    qa_chain = RetrievalQAWithSourcesChain.from_chain_type(llm=llm, retriever=retriever, return_source_documents=True)
 
     res = qa_chain({"question": command["text"]})
     await respond(

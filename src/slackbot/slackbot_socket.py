@@ -64,7 +64,7 @@ async def action_button_click(body, ack, say):  # noqa: ANN001, ANN201
 @app.command("/nw_search")  # noqa: E302
 async def nw_search(ack, respond, command):  # noqa: ANN001, ANN201
     """Slash command to search Nesta Way."""
-    ack()
+    await ack()
     docs = await db.asimilarity_search_with_score(command["text"], k=3)
     # can structure responses using markdown blocks
     await respond(f"""Slash command received! {command['text']}\nResult(s):\n{docs}""")
@@ -74,7 +74,7 @@ async def nw_search(ack, respond, command):  # noqa: ANN001, ANN201
 async def nw_ask(ack, respond, command):  # noqa: ANN001, ANN201
     """Slash command to RAG the Nesta Way."""
     # TODO: Handle offline LLM
-    ack()
+    await ack()
 
     hf_bge_base_inner = HuggingFaceBgeEmbeddings(
         model_name="BAAI/bge-base-en", model_kwargs=model_kwargs, encode_kwargs=encode_kwargs
@@ -103,7 +103,7 @@ async def nw_ask(ack, respond, command):  # noqa: ANN001, ANN201
         llm=llm, retriever=db_inner.as_retriever(), return_source_documents=True
     )
 
-    res = await qa_chain.acall({"question": command["text"]})
+    res = qa_chain({"question": command["text"]})
     await respond(
         f"""You asked: {res['question']}\n
         Answer: {res['answer']}\n\n

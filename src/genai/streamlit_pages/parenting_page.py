@@ -11,6 +11,8 @@ def parenting_chatbot() -> None:
 
     with st.sidebar:
         st.button("Reset chat", on_click=reset_state, type="primary", help="Reset the chat history")
+        if st.button("Clear memory", type="primary", help="Reset the chat history"):
+            st.session_state["memory"].clear_messages()
 
     system_message = MessageTemplate(role="system", content="You are a good bot.")
 
@@ -22,8 +24,6 @@ def parenting_chatbot() -> None:
     if "messages" not in st.session_state:
         # instantiate the memory instead of None
         st.session_state["messages"] = [{"role": "assistant", "content": "You are a good bot."}]
-
-    # st.write(f"Messages: {st.session_state['messages']}")
 
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
@@ -37,6 +37,7 @@ def parenting_chatbot() -> None:
             st.markdown(prompt)
         # Add user message to chat history
         st.session_state.messages.append({"role": "user", "content": prompt})
+        st.session_state["memory"].add_message({"role": "user", "content": prompt})
 
         with st.chat_message("assistant"):
             message_placeholder = st.empty()
@@ -53,6 +54,7 @@ def parenting_chatbot() -> None:
             #     message_placeholder.markdown(full_response + "▌")
             message_placeholder.markdown(full_response)
         st.session_state.messages.append({"role": "assistant", "content": full_response})
+        st.session_state["memory"].add_message({"role": "assistant", "content": full_response})
 
     # st.write(f"Messages: {st.session_state['messages']}")
     st.write(st.session_state["memory"].get_messages())

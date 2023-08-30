@@ -64,7 +64,7 @@ async def action_button_click(body, ack, say):  # noqa: ANN001, ANN201
 @app.command("/nw_search")  # noqa: E302
 async def nw_search(ack, respond, command):  # noqa: ANN001, ANN201
     """Slash command to search Nesta Way."""
-    await ack()
+    ack()
     docs = await db.asimilarity_search_with_score(command["text"], k=3)
     # can structure responses using markdown blocks
     await respond(f"""Slash command received! {command['text']}\nResult(s):\n{docs}""")
@@ -74,7 +74,7 @@ async def nw_search(ack, respond, command):  # noqa: ANN001, ANN201
 async def nw_ask(ack, respond, command):  # noqa: ANN001, ANN201
     """Slash command to RAG the Nesta Way."""
     # TODO: Handle offline LLM
-    await ack()
+    ack()
 
     llm = VLLMOpenAI(
         openai_api_key="EMPTY",

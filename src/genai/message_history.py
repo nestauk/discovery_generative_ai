@@ -49,7 +49,9 @@ class TokenCounter:
     ):
         """Returns the number of tokens in a list of messages.
 
-        TODO: Keep system message.
+        TODO:
+        - Keep system message.
+        - Refactor `messages.pop(0)`, do not modify the object.
 
         """
         num_tokens = cls._count_tokens_from_messages(messages, model_name)

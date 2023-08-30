@@ -9,6 +9,9 @@ from genai.streamlit_pages.utils import reset_state
 def parenting_chatbot() -> None:
     st.title("Parenting Chatbot")
 
+    model_name = "gpt-3.5-turbo"
+    max_tokens = 100
+
     with st.sidebar:
         st.button("Reset chat", on_click=reset_state, type="primary", help="Reset the chat history")
         if st.button("Clear memory", type="primary", help="Reset the chat history"):
@@ -57,4 +60,4 @@ def parenting_chatbot() -> None:
         st.session_state["memory"].add_message({"role": "assistant", "content": full_response})
 
     # st.write(f"Messages: {st.session_state['messages']}")
-    st.write(st.session_state["memory"].get_messages())
+    st.write(st.session_state["memory"].get_messages(model_name=model_name, max_tokens=max_tokens))

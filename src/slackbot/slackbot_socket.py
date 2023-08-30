@@ -1,5 +1,6 @@
 import os
 
+from langchain.chains import RetrievalQAWithSourcesChain
 from langchain.embeddings import HuggingFaceBgeEmbeddings
 from langchain.llms import VLLMOpenAI
 from langchain.vectorstores import Qdrant
@@ -11,6 +12,30 @@ from slack_bolt.app.async_app import AsyncApp
 # Initiate qdrant client and embeddings
 model_kwargs = {"device": "cpu"}  # unchanged
 encode_kwargs = {"normalize_embeddings": False}  # unchanged
+
+hf_bge_base = HuggingFaceBgeEmbeddings(
+    model_name="BAAI/bge-base-en", model_kwargs=model_kwargs, encode_kwargs=encode_kwargs
+)
+
+client = QdrantClient(
+    url=os.environ.get("QDRANT_URL"),
+    api_key=os.environ.get("QDRANT_API_KEY"),
+    prefer_grpc=True,
+)
+
+db = Qdrant(
+    client=client,
+    embeddings=hf_bge_base,
+    collection_name="nesta_way_bge-base-en",
+)
+
+# Initialize LLM
+llm = VLLMOpenAI(
+    openai_api_key="EMPTY",
+    openai_api_base=os.environ.get("OPENAI_API_BASE"),
+    model_name=os.environ.get("MODEL_NAME"),
+    model_kwargs={"stop": ["."]},
+)
 
 # Initializes your app with your bot token and socket mode handler
 app = AsyncApp(token=os.environ.get("SLACK_BOT_TOKEN"))
@@ -49,22 +74,6 @@ async def nw_search(ack, respond, command):  # noqa: ANN001, ANN201
     """Slash command to search Nesta Way."""
     await ack()
 
-    hf_bge_base = HuggingFaceBgeEmbeddings(
-        model_name="BAAI/bge-base-en", model_kwargs=model_kwargs, encode_kwargs=encode_kwargs
-    )
-
-    client = QdrantClient(
-        url=os.environ.get("QDRANT_URL"),
-        api_key=os.environ.get("QDRANT_API_KEY"),
-        prefer_grpc=True,
-    )
-
-    db = Qdrant(
-        client=client,
-        embeddings=hf_bge_base,
-        collection_name="nesta_way_bge-base-en",
-    )
-
     docs = await db.asimilarity_search_with_score(command["text"], k=3)
     # can structure responses using markdown blocks
     await respond(f"""Slash command received! {command['text']}\nResult(s):\n{docs}""")
@@ -76,40 +85,20 @@ async def nw_ask(ack, respond, command):  # noqa: ANN001, ANN201
     # TODO: Handle offline LLM
     await ack()
 
-    hf_bge_base_inner = HuggingFaceBgeEmbeddings(
-        model_name="BAAI/bge-base-en", model_kwargs=model_kwargs, encode_kwargs=encode_kwargs
+    qa_with_sources = RetrievalQAWithSourcesChain.from_chain_type(
+        llm=llm,
+        retriever=db.as_retriever(),
+        return_source_documents=True,
     )
 
-    client_inner = QdrantClient(
-        url=os.environ.get("QDRANT_URL"),
-        api_key=os.environ.get("QDRANT_API_KEY"),
-        prefer_grpc=True,
-    )
-
-    db_inner = Qdrant(
-        client=client_inner,
-        embeddings=hf_bge_base_inner,
-        collection_name="nesta_way_bge-base-en",
-    )
-
-    llm = VLLMOpenAI(
-        openai_api_key="EMPTY",
-        openai_api_base=os.environ.get("OPENAI_API_BASE"),
-        model_name=os.environ.get("LLM_NAME"),
-        model_kwargs={"stop": ["."]},
-    )
-
-    docs = await db_inner.asimilarity_search_with_score(command["text"], k=5)
-
-    res = await llm.agenerate(
-        f"Answer without making up irrelevant or false facts, given the following pieces of context: {[doc[0].page_content for doc in docs]}, answer the following question: {command['text']}"  # noqa: B950
-    )
+    res = await qa_with_sources({"question": command["text"]})
 
     await respond(
-        f"""You asked: {command['text']}\n
-        Answer: {res}\n\n
-        Sources: {docs}
-        """
+        f"""
+    You asked: {res['question']}\n
+    Answer: {res['answer']}\n\n
+    Sources: {res['source_documents']}
+    """
     )
 
 

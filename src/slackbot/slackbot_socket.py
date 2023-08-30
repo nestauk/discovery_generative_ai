@@ -1,6 +1,5 @@
 import os
 
-from langchain.chains import RetrievalQA
 from langchain.embeddings import HuggingFaceBgeEmbeddings
 from langchain.llms import VLLMOpenAI
 from langchain.vectorstores import Qdrant
@@ -100,15 +99,16 @@ async def nw_ask(ack, respond, command):  # noqa: ANN001, ANN201
         model_kwargs={"stop": ["."]},
     )
 
-    retriever = db_inner.as_retriever()
+    docs = await db_inner.asimilarity_search_with_score(command["text"], k=3)
 
-    qa_chain = RetrievalQA.from_chain_type(llm=llm, retriever=retriever, return_source_documents=True)
+    res = llm(
+        f"Answer without making up irrelevant or false facts, given the following pieces of context: {[doc.page_content for doc in docs]}, answer the following question: {command['text']}"  # noqa: B950
+    )
 
-    res = qa_chain({"question": command["text"]})
     await respond(
-        f"""You asked: {res['question']}\n
-        Answer: {res['answer']}\n\n
-        Sources: {res['source_documents']}
+        f"""You asked: {command['text']}\n
+        Answer: {res}\n\n
+        Sources: {docs}
         """
     )
 

@@ -67,6 +67,9 @@ class BasePromptTemplate(ABC):
         exclude: Optional[List[str]] = None,  # noqa: B006
     ) -> dict:
         """Exclude keys from a dictionary."""
+        if not d["name"]:
+            d.pop("name", None)
+
         if exclude:
             for item in exclude:
                 d.pop(item, None)
@@ -114,17 +117,24 @@ class MessageTemplate(BasePromptTemplate):
 
     role: str
     content: str
+    name: Optional[str] = None
+
+    def __post_init__(self) -> None:
+        """Keep the initial template and error when the role is function but not name was given."""
+        super().__post_init__()
+        if self.role == "function" and not self.name:
+            raise ValueError("The 'name' attribute is required when 'role' is 'function'.")
 
     def _initialize_template(self) -> Dict[str, str]:
-        return {
-            "role": self.role,
-            "content": self.content,
-        }
+        return {"role": self.role, "content": self.content, "name": self.name}
 
     @staticmethod
     def _from_dict(data: Dict) -> "MessageTemplate":
-        """Create a Template instance from a dictionary."""
-        return MessageTemplate(**data)
+        instance = MessageTemplate(**data)
+        # Validate after initialisation
+        if instance.role == "function" and not instance.name:
+            raise ValueError("The 'name' attribute is required when 'role' is 'function'.")
+        return instance
 
 
 @dataclass

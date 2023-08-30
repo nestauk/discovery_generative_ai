@@ -1,6 +1,8 @@
 import os
 
+from langchain.chains import RetrievalQAWithSourcesChain
 from langchain.embeddings import HuggingFaceBgeEmbeddings
+from langchain.llms import VLLMOpenAI
 from langchain.vectorstores import Qdrant
 from qdrant_client import QdrantClient  # noqa: F401
 from slack_bolt.adapter.socket_mode.async_handler import AsyncSocketModeHandler
@@ -26,12 +28,17 @@ db = Qdrant(
     embeddings=hf_bge_base,
     collection_name="nesta_way_bge-base-en",
 )
-# (
-#    client=QdrantClient(url="http://localhost:6334", prefer_grpc=True),
-#    collection_name="nesta_way_bge-base-en",
-#    embeddings=hf_bge_base,
-# )
 
+llm = VLLMOpenAI(
+    openai_api_key="EMPTY",
+    openai_api_base=os.environ.get("OPENAI_API_BASE"),
+    model_name=os.environ.get("LLM_NAME"),
+    model_kwargs={"stop": ["."]},
+)
+
+qa_chain = RetrievalQAWithSourcesChain.from_chain_type(
+    llm=llm, retriever=db.as_retriever(), return_source_documents=True
+)
 
 # Initializes your app with your bot token and socket mode handler
 app = AsyncApp(token=os.environ.get("SLACK_BOT_TOKEN"))
@@ -72,6 +79,20 @@ async def nw_search(ack, respond, command):  # noqa: ANN001, ANN201
     docs = await db.asimilarity_search_with_score(command["text"], k=3)
     # can structure responses using markdown blocks
     await respond(f"""Slash command received! {command['text']}\nResult(s):\n{docs}""")
+
+
+@app.command("/nw_ask")  # noqa: E302
+async def nw_ask(ack, respond, command):  # noqa: ANN001, ANN201
+    """Slash command to RAG the Nesta Way."""
+    # TODO: Handle offline LLM
+    await ack()
+    res = await qa_chain({"question": command["text"]})
+    await respond(
+        f"""You asked: {res['question']}\n
+        Answer: {res['answer']}\n\n
+        Sources: {res['source_documents']}
+        """
+    )
 
 
 @app.command("/test_command")

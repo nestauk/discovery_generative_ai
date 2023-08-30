@@ -91,7 +91,7 @@ async def nw_ask(ack, respond, command):  # noqa: ANN001, ANN201
         return_source_documents=True,
     )
 
-    res = await qa_with_sources({"question": command["text"]})
+    res = await qa_with_sources.acall({"question": command["text"]})
 
     await respond(
         f"""

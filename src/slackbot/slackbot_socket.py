@@ -99,10 +99,10 @@ async def nw_ask(ack, respond, command):  # noqa: ANN001, ANN201
         model_kwargs={"stop": ["."]},
     )
 
-    docs = await db_inner.asimilarity_search_with_score(command["text"], k=3)
+    docs = await db_inner.asimilarity_search_with_score(command["text"], k=5)
 
     res = llm(
-        f"Answer without making up irrelevant or false facts, given the following pieces of context: {[doc.page_content for doc in docs]}, answer the following question: {command['text']}"  # noqa: B950
+        f"Answer without making up irrelevant or false facts, given the following pieces of context: {[doc[0].page_content for doc in docs]}, answer the following question: {command['text']}"  # noqa: B950
     )
 
     await respond(

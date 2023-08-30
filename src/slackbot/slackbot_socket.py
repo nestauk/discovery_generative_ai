@@ -76,6 +76,22 @@ async def nw_ask(ack, respond, command):  # noqa: ANN001, ANN201
     # TODO: Handle offline LLM
     ack()
 
+    hf_bge_base_inner = HuggingFaceBgeEmbeddings(
+        model_name="BAAI/bge-base-en", model_kwargs=model_kwargs, encode_kwargs=encode_kwargs
+    )
+
+    client_inner = QdrantClient(
+        url=os.environ.get("QDRANT_URL"),
+        api_key=os.environ.get("QDRANT_API_KEY"),
+        prefer_grpc=True,
+    )
+
+    db_inner = Qdrant(
+        client=client_inner,
+        embeddings=hf_bge_base_inner,
+        collection_name="nesta_way_bge-base-en",
+    )
+
     llm = VLLMOpenAI(
         openai_api_key="EMPTY",
         openai_api_base=os.environ.get("OPENAI_API_BASE"),
@@ -84,7 +100,7 @@ async def nw_ask(ack, respond, command):  # noqa: ANN001, ANN201
     )
 
     qa_chain = RetrievalQAWithSourcesChain.from_chain_type(
-        llm=llm, retriever=db.as_retriever(), return_source_documents=True
+        llm=llm, retriever=db_inner.as_retriever(), return_source_documents=True
     )
 
     res = await qa_chain.acall({"question": command["text"]})

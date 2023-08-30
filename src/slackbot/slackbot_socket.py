@@ -72,10 +72,10 @@ async def nw_search(ack, respond, command):  # noqa: ANN001, ANN201
 
 
 @app.command("/nw_ask")  # noqa: E302
-def nw_ask(ack, respond, command):  # noqa: ANN001, ANN201
+async def nw_ask(ack, respond, command):  # noqa: ANN001, ANN201
     """Slash command to RAG the Nesta Way."""
     # TODO: Handle offline LLM
-    ack()
+    await ack()
 
     hf_bge_base_inner = HuggingFaceBgeEmbeddings(
         model_name="BAAI/bge-base-en", model_kwargs=model_kwargs, encode_kwargs=encode_kwargs
@@ -105,7 +105,7 @@ def nw_ask(ack, respond, command):  # noqa: ANN001, ANN201
     qa_chain = RetrievalQAWithSourcesChain.from_chain_type(llm=llm, retriever=retriever, return_source_documents=True)
 
     res = qa_chain({"question": command["text"]})
-    respond(
+    await respond(
         f"""You asked: {res['question']}\n
         Answer: {res['answer']}\n\n
         Sources: {res['source_documents']}

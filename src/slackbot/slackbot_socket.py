@@ -29,17 +29,6 @@ db = Qdrant(
     collection_name="nesta_way_bge-base-en",
 )
 
-llm = VLLMOpenAI(
-    openai_api_key="EMPTY",
-    openai_api_base=os.environ.get("OPENAI_API_BASE"),
-    model_name=os.environ.get("LLM_NAME"),
-    model_kwargs={"stop": ["."]},
-)
-
-qa_chain = RetrievalQAWithSourcesChain.from_chain_type(
-    llm=llm, retriever=db.as_retriever(), return_source_documents=True
-)
-
 # Initializes your app with your bot token and socket mode handler
 app = AsyncApp(token=os.environ.get("SLACK_BOT_TOKEN"))
 
@@ -86,6 +75,18 @@ async def nw_ask(ack, respond, command):  # noqa: ANN001, ANN201
     """Slash command to RAG the Nesta Way."""
     # TODO: Handle offline LLM
     await ack()
+
+    llm = VLLMOpenAI(
+        openai_api_key="EMPTY",
+        openai_api_base=os.environ.get("OPENAI_API_BASE"),
+        model_name=os.environ.get("LLM_NAME"),
+        model_kwargs={"stop": ["."]},
+    )
+
+    qa_chain = RetrievalQAWithSourcesChain.from_chain_type(
+        llm=llm, retriever=db.as_retriever(), return_source_documents=True
+    )
+
     res = await qa_chain.acall({"question": command["text"]})
     await respond(
         f"""You asked: {res['question']}\n

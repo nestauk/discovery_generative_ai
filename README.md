@@ -307,3 +307,7 @@ heroku ps:scale web=1
 ```
 
 ## TODO
+
+- Remove items from overflow memory in the parenting chatbot
+- Keep the system message in memory buffer
+- Refactor `messages.pop(0)` in memory buffer, do not modify the object.

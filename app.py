@@ -28,6 +28,20 @@ def auth_openai() -> None:
         openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 
+def s3_creds() -> None:
+    """Get s3 creds."""
+    try:
+        aws_key = os.environ["AWS_ACCESS_KEY_ID"]
+        aws_secret = os.environ["AWS_SECRET_ACCESS_KEY"]
+        s3_path = os.environ["S3_BUCKET"]
+    except Exception:
+        aws_key = st.secrets["AWS_ACCESS_KEY_ID"]
+        aws_secret = st.secrets["AWS_SECRET_ACCESS_KEY"]
+        s3_path = st.secrets["S3_BUCKET"]
+
+    return aws_key, aws_secret, s3_path
+
+
 def check_password() -> bool:
     """Return `True` if the user had the correct password."""
 
@@ -57,6 +71,7 @@ def check_password() -> bool:
 def main() -> None:
     """Run the app."""
     auth_openai()
+    aws_key, aws_secret, s3_path = s3_creds()
     with st.sidebar:
         selected = option_menu(
             "Prototypes",
@@ -87,7 +102,7 @@ def main() -> None:
     elif selected == "Development Matters prototype":
         eyfs_dm_kb()
     elif selected == "Parenting Chatbot":
-        parenting_chatbot()
+        parenting_chatbot(aws_key, aws_secret, s3_path)
 
 
 # if check_password():

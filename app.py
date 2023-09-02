@@ -13,6 +13,7 @@ from genai.streamlit_pages import eli3
 from genai.streamlit_pages import eyfs_compare
 from genai.streamlit_pages import eyfs_dm_kb
 from genai.streamlit_pages import eyfs_kb_bbc
+from genai.streamlit_pages import parenting_chatbot
 from genai.streamlit_pages.utils import reset_state
 
 
@@ -25,6 +26,20 @@ def auth_openai() -> None:
         openai.api_key = os.environ["OPENAI_API_KEY"]
     except Exception:
         openai.api_key = st.secrets["OPENAI_API_KEY"]
+
+
+def s3_creds() -> None:
+    """Get s3 creds."""
+    try:
+        aws_key = os.environ["AWS_ACCESS_KEY_ID"]
+        aws_secret = os.environ["AWS_SECRET_ACCESS_KEY"]
+        s3_path = os.environ["S3_BUCKET"]
+    except Exception:
+        aws_key = st.secrets["AWS_ACCESS_KEY_ID"]
+        aws_secret = st.secrets["AWS_SECRET_ACCESS_KEY"]
+        s3_path = st.secrets["S3_BUCKET"]
+
+    return aws_key, aws_secret, s3_path
 
 
 def check_password() -> bool:
@@ -56,6 +71,7 @@ def check_password() -> bool:
 def main() -> None:
     """Run the app."""
     auth_openai()
+    aws_key, aws_secret, s3_path = s3_creds()
     with st.sidebar:
         selected = option_menu(
             "Prototypes",
@@ -66,6 +82,7 @@ def main() -> None:
                 "EYFS-based activities + BBC activities",
                 "EYFS prototypes comparison",
                 "Development Matters prototype",
+                "Parenting Chatbot",
             ],
             default_index=0,
             on_change=reset_state,
@@ -84,7 +101,10 @@ def main() -> None:
         eyfs_compare()
     elif selected == "Development Matters prototype":
         eyfs_dm_kb()
+    elif selected == "Parenting Chatbot":
+        parenting_chatbot(aws_key, aws_secret, s3_path)
 
 
-if check_password():
-    main()
+# if check_password():
+# main()
+main()

@@ -16,7 +16,7 @@ load_dotenv()
 
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
-PATH_TO_DM = "data/dm/dm.json"
+PATH_TO_DM = "src/genai/dm/dm.json"
 INDEX_NAME = "eyfs-index"
 ENCODER_NAME = "text-embedding-ada-002"
 

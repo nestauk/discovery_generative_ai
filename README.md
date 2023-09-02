@@ -200,10 +200,10 @@ Install/update a few dependencies
 brew install openssl readline sqlite3 xz zlib
 ```
 
-Install Python 3.9.17
+Install Python 3.9.18
 
 ```bash
-pyenv install 3.9.17
+pyenv install 3.9.18
 ```
 
 Confirm you've installed it correctly by running:
@@ -212,10 +212,10 @@ Confirm you've installed it correctly by running:
 pyenv versions
 ```
 
-Run the following commands to set the global Python version to 3.9.17.
+Run the following commands to set the global Python version to 3.9.18.
 
 ```bash
-pyenv global 3.9.17
+pyenv global 3.9.18
 ```
 
 Close and reopen your terminal so that the changed take effect.

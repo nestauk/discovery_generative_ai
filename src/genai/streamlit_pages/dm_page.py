@@ -4,7 +4,7 @@ import pinecone
 import streamlit as st
 
 from genai import MessageTemplate
-from genai.eyfs import ActivityGenerator
+from genai.eyfs import TextGenerator
 from genai.eyfs import get_embedding
 from genai.streamlit_pages.utils import get_index
 from genai.streamlit_pages.utils import reset_state
@@ -283,7 +283,7 @@ def llm_call(selected_model: str, temperature: float, message: MessageTemplate, 
     """Call the LLM."""
     message_placeholder = st.empty()
     full_response = ""
-    for response in ActivityGenerator.generate(
+    for response in TextGenerator.generate(
         model=selected_model,
         temperature=temperature,
         messages=[message],

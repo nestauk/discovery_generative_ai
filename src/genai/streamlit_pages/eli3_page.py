@@ -1,7 +1,7 @@
 import streamlit as st
 
 from genai import MessageTemplate
-from genai.eyfs import ActivityGenerator
+from genai.eyfs import TextGenerator
 from genai.streamlit_pages.utils import reset_state
 
 
@@ -51,7 +51,7 @@ def eli3() -> None:
         with st.chat_message("assistant"):
             message_placeholder = st.empty()
             full_response = ""
-            for response in ActivityGenerator.generate(
+            for response in TextGenerator.generate(
                 model=selected_model,
                 temperature=temperature,
                 messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages],

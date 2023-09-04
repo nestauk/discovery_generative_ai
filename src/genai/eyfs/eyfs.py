@@ -28,7 +28,7 @@ from genai import MessageTemplate
 logger = logging.getLogger(__name__)
 
 
-class ActivityGenerator:
+class TextGenerator:
     """Generate tokens using OpenAI's API."""
 
     @classmethod

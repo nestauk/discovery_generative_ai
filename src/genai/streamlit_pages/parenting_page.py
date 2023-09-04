@@ -76,7 +76,7 @@ def parenting_chatbot(aws_key: str, aws_secret: str, s3_path: str) -> None:
                 key="feedback",
             )
 
-            # for response in ActivityGenerator.generate(
+            # for response in TextGenerator.generate(
             #     model=selected_model,
             #     temperature=temperature,
             #     messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages],

@@ -2,7 +2,7 @@ import pinecone
 import streamlit as st
 
 from genai import MessageTemplate
-from genai.eyfs import ActivityGenerator
+from genai.eyfs import TextGenerator
 from genai.eyfs import get_embedding
 from genai.streamlit_pages.utils import get_index
 from genai.streamlit_pages.utils import reset_state
@@ -124,7 +124,7 @@ def eyfs_kb_bbc(index_name: str = "eyfs-index") -> None:
                 ),
             }
 
-            r = ActivityGenerator.generate(
+            r = TextGenerator.generate(
                 model=selected_model,
                 temperature=temperature,
                 messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages],

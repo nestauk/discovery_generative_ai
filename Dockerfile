@@ -7,7 +7,7 @@ ENV PYTHONUNBUFFERED 1
 
 # Install system dependencies
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends gcc
+    && apt-get install -y --no-install-recommends gcc python3-dev
 
 # Install poetry
 RUN pip install "poetry==1.5.1"

@@ -37,7 +37,7 @@ document_prompt = PromptTemplate(
 title: {title},\n
 source: {source},\n
 referenced_link_md: {md},\n
-referenced_link_parent_md: {parent_md}\n}
+referenced_link_parent_md: {parent_md}\n
 """,
 )
 

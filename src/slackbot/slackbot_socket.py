@@ -1,5 +1,6 @@
 import os
 
+from langchain import PromptTemplate
 from langchain.chains import RetrievalQAWithSourcesChain
 from langchain.embeddings import HuggingFaceBgeEmbeddings
 from langchain.llms import VLLMOpenAI
@@ -27,6 +28,17 @@ db = Qdrant(
     client=client,
     embeddings=hf_bge_base,
     collection_name=os.environ.get("QDRANT_COLLECTION_NAME"),
+)
+
+# Custom prompt templates
+document_prompt = PromptTemplate(
+    input_variables=["page_content", "title", "source", "md", "parent_md"],
+    template="""{page_content},\n
+title: {title},\n
+source: {source},\n
+referenced_link_md: {md},\n
+referenced_link_parent_md: {parent_md}\n}
+""",
 )
 
 # Initialize LLM
@@ -89,6 +101,7 @@ async def nw_ask(ack, respond, command):  # noqa: ANN001, ANN201
         llm=llm,
         retriever=db.as_retriever(),
         return_source_documents=True,
+        chain_type_kwargs={"document_prompt": document_prompt},
     )
 
     res = await qa_with_sources.acall({"question": command["text"]})

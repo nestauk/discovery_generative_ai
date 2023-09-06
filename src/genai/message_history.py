@@ -53,7 +53,10 @@ class TokenCounter:
         num_tokens = cls._count_tokens_from_messages(messages, model_name)
         print(num_tokens)  # noqa: T001
         if cls._forget_messages(num_tokens, max_tokens):
-            messages.pop(0)
+            if keep_system_message:
+                messages.pop(1)
+            else:
+                messages.pop(0)
             cls.buffer(messages, model_name=model_name, max_tokens=max_tokens)
 
         return messages

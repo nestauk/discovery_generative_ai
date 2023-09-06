@@ -26,7 +26,7 @@ client = QdrantClient(
 db = Qdrant(
     client=client,
     embeddings=hf_bge_base,
-    collection_name="nesta_way_bge-base-en",
+    collection_name=os.environ.get("QDRANT_COLLECTION_NAME"),
 )
 
 # Initialize LLM

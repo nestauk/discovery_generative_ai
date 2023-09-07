@@ -14,14 +14,14 @@ from genai import FunctionTemplate
 from genai import MessageTemplate
 from genai.eyfs import EYFSClassifier
 from genai.utils import batch
+from genai.utils import create_directory_if_not_exists
 from genai.utils import read_json
 
 
 load_dotenv()
 
 # You need to create this manually before running the script
-# TODO: Create the subdir if not exists
-OUTPUT_FILENAME = "data/eyfs_labels/"
+OUTPUT_FILENAME = "data/"
 PATH_TO_AREAS_OF_LEARNING = "src/genai/eyfs/areas_of_learning.json"
 PATH_TO_MESSAGE_PROMPT = "src/genai/eyfs/prompts/classifier.json"
 PATH_TO_FUNCTION = "src/genai/eyfs/prompts/classifier_function.json"
@@ -99,6 +99,9 @@ async def main() -> None:
 
 
 if "__main__" == __name__:
+    # create data/ directory if it doesn't exist
+    create_directory_if_not_exists(OUTPUT_FILENAME)
+
     start = time.time()
     s = time.perf_counter()
     loop = asyncio.new_event_loop()

@@ -14,15 +14,14 @@ from genai import FunctionTemplate
 from genai import MessageTemplate
 from genai.eyfs import EYFSClassifier
 from genai.utils import batch
+from genai.utils import create_directory_if_not_exists
 from genai.utils import read_json
 
 
 load_dotenv()
 
 # You need to create this manually before running the script
-# TODO: Create the subdir if not exists
-OUTPUT_FILENAME = "data/eyfs_labels/"
-PATH_TO_BBC_ACTIVITIES = "data/eyfs/tiny_happy_people - final - tiny_happy_people - final.csv"
+OUTPUT_FILENAME = "data/"
 PATH_TO_AREAS_OF_LEARNING = "src/genai/eyfs/areas_of_learning.json"
 PATH_TO_MESSAGE_PROMPT = "src/genai/eyfs/prompts/classifier.json"
 PATH_TO_FUNCTION = "src/genai/eyfs/prompts/classifier_function.json"
@@ -58,7 +57,7 @@ async def main() -> None:
     openai.aiosession.set(ClientSession())
 
     # Fetch the BBC activities
-    activities_df = get_bbc_activities(PATH_TO_BBC_ACTIVITIES)
+    activities_df = get_bbc_activities(os.environ["PATH_TO_BBC_ACTIVITIES_DATA"])
 
     # Fetch the EYFS areas of learning
     _, areas_of_learning_text = get_areas_of_learning(PATH_TO_AREAS_OF_LEARNING)
@@ -100,6 +99,9 @@ async def main() -> None:
 
 
 if "__main__" == __name__:
+    # create data/ directory if it doesn't exist
+    create_directory_if_not_exists(OUTPUT_FILENAME)
+
     start = time.time()
     s = time.perf_counter()
     loop = asyncio.new_event_loop()

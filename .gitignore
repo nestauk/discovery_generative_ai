@@ -164,4 +164,6 @@ data/
 notebooks/
 .DS_Store
 .vscode/
-src/scraping/data/*
+src/scraping/activities/*
+src/scraping/start_for_life/data/*
+src/scraping/nesta/data/*

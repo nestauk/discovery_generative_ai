@@ -17,8 +17,6 @@ load_dotenv()
 
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
-PATH_TO_LABELLED_ACTIVITIES = "data/eyfs_labels/parsed_json.jsonl"
-PATH_TO_BBC_ACTIVITIES = "data/eyfs/tiny_happy_people - final - tiny_happy_people - final.csv"
 INDEX_NAME = "eyfs-index"
 ENCODER_NAME = "text-embedding-ada-002"
 
@@ -48,8 +46,8 @@ def get_bbc_activities(path: str) -> pd.DataFrame:
 def main() -> None:
     """Run the script."""
     # Read and merge dataframes
-    labels = get_labelled_bbc_activities(PATH_TO_LABELLED_ACTIVITIES)
-    bbc = get_bbc_activities(PATH_TO_BBC_ACTIVITIES)
+    labels = get_labelled_bbc_activities(os.environ["PATH_TO_LABELLED_BBC_DATA"])
+    bbc = get_bbc_activities(os.environ["PATH_TO_BBC_ACTIVITIES_DATA"])
 
     df = labels.merge(bbc[["SHORT DESCRIPTION", "text", "URL", "title"]], how="left", left_on="URL", right_on="URL")
 

@@ -16,12 +16,11 @@ load_dotenv()
 
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
-PATH_TO_DM = "data/nhs/start_for_life.csv"
 INDEX_NAME = "eyfs-index"
 ENCODER_NAME = "text-embedding-ada-002"
 
 if "__main__" == __name__:
-    df = pd.read_csv(PATH_TO_DM)
+    df = pd.read_csv(os.environ["PATH_TO_NHS_DATA"])
     df = df.drop_duplicates(subset=["header", "content", "content_no"], keep="last")
 
     # Format the data to what pinecone needs and generate a temp uuid

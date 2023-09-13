@@ -172,14 +172,14 @@ def parenting_chatbot(aws_key: str, aws_secret: str, s3_path: str) -> None:
             how="a",
         )
 
-        write_to_s3(
-            aws_key,
-            aws_secret,
-            f"{s3_path}/session-logs/{st.session_state['session_uuid']}",
-            "messages",
-            st.session_state["messages"],
-            how="w",
-        )
+    write_to_s3(
+        aws_key,
+        aws_secret,
+        f"{s3_path}/session-logs/{st.session_state['session_uuid']}",
+        "messages",
+        st.session_state["messages"],
+        how="w",
+    )
 
 
 def write_to_s3(key: str, secret: str, s3_path: str, filename: str, data: dict, how: str = "a") -> None:

@@ -12,6 +12,7 @@ from streamlit_feedback import streamlit_feedback
 from genai.eyfs import TextGenerator
 from genai.eyfs import get_embedding
 from genai.message_history import InMemoryMessageHistory
+from genai.prompt_template import FunctionTemplate
 from genai.prompt_template import MessageTemplate
 from genai.streamlit_pages.utils import get_index
 from genai.streamlit_pages.utils import query_pinecone
@@ -38,6 +39,9 @@ def parenting_chatbot(aws_key: str, aws_secret: str, s3_path: str) -> None:
         #     st.write(st.session_state["user_feedback"])
 
     system_message = MessageTemplate.load("src/genai/parenting_chatbot/prompts/system.json")
+    filter_refs_function = FunctionTemplate.load("src/genai/parenting_chatbot/prompts/filter_refs_function.json")
+    filter_refs_user_message = MessageTemplate.load("src/genai/parenting_chatbot/prompts/filter_refs_user.json")
+    filter_refs_system_message = MessageTemplate.load("src/genai/parenting_chatbot/prompts/filter_refs_system.json")
 
     if "session_uuid" not in st.session_state:
         st.session_state["session_uuid"] = f"{current_time()}-{str(uuid.uuid4())}"
@@ -71,28 +75,47 @@ def parenting_chatbot(aws_key: str, aws_secret: str, s3_path: str) -> None:
         with st.chat_message("user"):
             st.markdown(prompt)
 
-        # TODO: Decide whether we need a function here to control the flow of the conversation (pinecone or not?)
         # Search the vector index
         search_results = query_pinecone(
             index=pinecone_index,
             encoded_query=get_embedding(prompt),
-            top_n=2,
+            top_n=3,
             filters={
                 "source": {"$eq": "nhs_full_page"},
             },
         )
 
-        nhs_text = "\n===\n".join([result["metadata"]["text"] for result in search_results])
-        nhs_urls = [result["metadata"]["url"] for result in search_results]
+        nhs_texts = []
+        nhs_urls = []
+        for result in search_results:
+            pred = TextGenerator.generate(
+                temperature=0.0,
+                messages=[filter_refs_system_message, filter_refs_user_message],
+                message_kwargs={"text": result["metadata"]["text"], "question": prompt},
+                functions=[filter_refs_function.to_prompt()],
+                function_call={"name": filter_refs_function.name},
+            )
+
+            pred = json.loads(pred["choices"][0]["message"]["function_call"]["arguments"])["prediction"]
+
+            # st.text(pred)
+            # st.text(result["metadata"]["text"])
+
+            if pred:
+                nhs_texts.append(result["metadata"]["text"])
+                nhs_urls.append(result["metadata"]["url"])
+
+        if nhs_texts:
+            nhs_texts = "\n===\n".join(nhs_texts)
 
         # Log message for the UI before adding the references
         st.session_state["messages"].append({"role": "user", "content": prompt})
         # Add user message to chat history
-        prompt = f"""###NHS Start for Life references###\n{nhs_text}\n\n###User message###\n{prompt}"""
+        prompt = f"""###NHS Start for Life references###\n{nhs_texts}\n\n###User message###\n{prompt}"""
         # st.session_state["messages"].append({"role": "user", "content": prompt})
         st.session_state["memory"].add_message({"role": "user", "content": prompt})
 
-        st.text(prompt)
+        # st.text(prompt)
 
         with st.chat_message("assistant"):
             message_placeholder = st.empty()
@@ -102,7 +125,7 @@ def parenting_chatbot(aws_key: str, aws_secret: str, s3_path: str) -> None:
             for response in TextGenerator.generate(
                 model=selected_model,
                 temperature=temperature,
-                messages=st.session_state["memory"].messages,
+                messages=st.session_state["memory"].get_messages(),
                 message_kwargs=None,
                 stream=True,
             ):
@@ -120,41 +143,43 @@ def parenting_chatbot(aws_key: str, aws_secret: str, s3_path: str) -> None:
             message_placeholder.markdown(full_response)
 
             # Display NHS URLs in chat message container
-            with st.expander("NHS Start for Life references"):
-                for url in nhs_urls:
-                    st.markdown(f"[{url}]({url})")
+            if nhs_urls:
+                with st.expander("NHS Start for Life references"):
+                    for url in nhs_urls:
+                        st.markdown(f"[{url}]({url})")
 
         st.session_state["messages"].append({"role": "assistant", "content": full_response})
         st.session_state["memory"].add_message({"role": "assistant", "content": full_response})
 
-    # st.write(f"Messages: {st.session_state['messages']}")
-    # st.write(st.session_state["memory"].get_messages(model_name=model_name, max_tokens=max_tokens))
+        # st.write(f"Messages: {st.session_state['messages']}")
+        # st.write(st.session_state["memory"].get_messages(model_name=model_name, max_tokens=max_tokens))
 
     # Log feedback and messages
-    # if st.session_state["feedback"]:
-    #     user_feedback = {
-    #         "user_message": st.session_state["messages"][-2],
-    #         "assistant_message": st.session_state["messages"][-1],
-    #         "feedback_score": st.session_state["feedback"]["score"],
-    #         "feedback_text": st.session_state["feedback"]["text"],
-    #     }
+    if st.session_state["feedback"]:
+        user_feedback = {
+            "user_message": st.session_state["messages"][-2],
+            "assistant_message": st.session_state["messages"][-1],
+            "feedback_score": st.session_state["feedback"]["score"],
+            "feedback_text": st.session_state["feedback"]["text"],
+        }
 
-    # write_to_s3(
-    #     aws_key,
-    #     aws_secret,
-    #     f"{s3_path}/{st.session_state['session_uuid']}",
-    #     "feedback",
-    #     user_feedback,
-    # )
+        write_to_s3(
+            aws_key,
+            aws_secret,
+            f"{s3_path}/session-logs/{st.session_state['session_uuid']}",
+            "feedback",
+            user_feedback,
+            how="a",
+        )
 
-    # write_to_s3(
-    #     aws_key,
-    #     aws_secret,
-    #     f"{s3_path}/{st.session_state['session_uuid']}",
-    #     "messages",
-    #     st.session_state["memory"].messages,
-    #     how="w",
-    # )
+        write_to_s3(
+            aws_key,
+            aws_secret,
+            f"{s3_path}/session-logs/{st.session_state['session_uuid']}",
+            "messages",
+            st.session_state["messages"],
+            how="w",
+        )
 
 
 def write_to_s3(key: str, secret: str, s3_path: str, filename: str, data: dict, how: str = "a") -> None:

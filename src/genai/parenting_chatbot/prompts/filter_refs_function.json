@@ -1,0 +1,16 @@
+{
+    "name": "is_this_text_relevant_to_the_question",
+    "description": "Determine whether the provided text contains information that is DIRECTLY related to the question",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "prediction": {
+                "type": "boolean",
+                "description": "Determine whether the provided text contains information relevant to the question"
+            }
+        },
+        "required": [
+            "prediction"
+        ]
+    }
+}

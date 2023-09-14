@@ -51,7 +51,6 @@ class TokenCounter:
     ) -> List[dict]:
         """Return the number of tokens in a list of messages."""
         num_tokens = cls._count_tokens_from_messages(messages, model_name)
-        print(num_tokens)  # noqa: T001
         if cls._forget_messages(num_tokens, max_tokens):
             if keep_system_message:
                 messages.pop(1)

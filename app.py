@@ -105,6 +105,5 @@ def main() -> None:
         parenting_chatbot(aws_key, aws_secret, s3_path)
 
 
-# if check_password():
-# main()
-main()
+if check_password():
+    main()

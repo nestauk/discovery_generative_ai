@@ -28,15 +28,10 @@ def parenting_chatbot(aws_key: str, aws_secret: str, s3_path: str) -> None:
 
     selected_model = "gpt-3.5-turbo"
     temperature = 0.6
-    # max_tokens = 100
-
     pinecone_index = get_index(index_name="eyfs-index")
 
     with st.sidebar:
         st.button("Reset chat", on_click=reset_state, type="primary", help="Reset the chat history")
-
-        # if st.button("Show feedback", type="primary"):
-        #     st.write(st.session_state["user_feedback"])
 
     system_message = MessageTemplate.load("src/genai/parenting_chatbot/prompts/system.json")
     filter_refs_function = FunctionTemplate.load("src/genai/parenting_chatbot/prompts/filter_refs_function.json")
@@ -45,9 +40,6 @@ def parenting_chatbot(aws_key: str, aws_secret: str, s3_path: str) -> None:
 
     if "session_uuid" not in st.session_state:
         st.session_state["session_uuid"] = f"{current_time()}-{str(uuid.uuid4())}"
-
-    # if "user_feedback" not in st.session_state:
-    #     st.session_state["user_feedback"] = []
 
     # Single submitted feedback
     if "feedback" not in st.session_state:
@@ -61,12 +53,12 @@ def parenting_chatbot(aws_key: str, aws_secret: str, s3_path: str) -> None:
     # st.session_state["messages"] shows the conversation in the UI
     if "messages" not in st.session_state:
         # instantiate the memory instead of None
-        # st.session_state["messages"] = [{"role": "assistant", "content": "You are a good bot."}]
         st.session_state["messages"] = [system_message.to_prompt()]
 
     for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
+        if message["role"] in ["user", "assistant"]:
+            with st.chat_message(message["role"]):
+                st.markdown(message["content"])
 
     # Accept user input
     prompt = st.chat_input("What's on your mind?")
@@ -98,9 +90,6 @@ def parenting_chatbot(aws_key: str, aws_secret: str, s3_path: str) -> None:
 
             pred = json.loads(pred["choices"][0]["message"]["function_call"]["arguments"])["prediction"]
 
-            # st.text(pred)
-            # st.text(result["metadata"]["text"])
-
             if pred:
                 nhs_texts.append(result["metadata"]["text"])
                 nhs_urls.append(result["metadata"]["url"])
@@ -110,17 +99,23 @@ def parenting_chatbot(aws_key: str, aws_secret: str, s3_path: str) -> None:
 
         # Log message for the UI before adding the references
         st.session_state["messages"].append({"role": "user", "content": prompt})
+
         # Add user message to chat history
         prompt = f"""###NHS Start for Life references###\n{nhs_texts}\n\n###User message###\n{prompt}"""
-        # st.session_state["messages"].append({"role": "user", "content": prompt})
         st.session_state["memory"].add_message({"role": "user", "content": prompt})
 
-        # st.text(prompt)
+        write_to_s3(
+            aws_key,
+            aws_secret,
+            f"{s3_path}/session-logs/{st.session_state['session_uuid']}",
+            "messages",
+            st.session_state["memory"].messages[-1],
+            how="a",
+        )
 
         with st.chat_message("assistant"):
             message_placeholder = st.empty()
             full_response = ""
-            # full_response = "I'm a confused bot."
 
             for response in TextGenerator.generate(
                 model=selected_model,
@@ -151,8 +146,14 @@ def parenting_chatbot(aws_key: str, aws_secret: str, s3_path: str) -> None:
         st.session_state["messages"].append({"role": "assistant", "content": full_response})
         st.session_state["memory"].add_message({"role": "assistant", "content": full_response})
 
-        # st.write(f"Messages: {st.session_state['messages']}")
-        # st.write(st.session_state["memory"].get_messages(model_name=model_name, max_tokens=max_tokens))
+        write_to_s3(
+            aws_key,
+            aws_secret,
+            f"{s3_path}/session-logs/{st.session_state['session_uuid']}",
+            "messages",
+            st.session_state["memory"].messages[-1],
+            how="a",
+        )
 
     # Log feedback and messages
     if st.session_state["feedback"]:
@@ -171,15 +172,6 @@ def parenting_chatbot(aws_key: str, aws_secret: str, s3_path: str) -> None:
             user_feedback,
             how="a",
         )
-
-    write_to_s3(
-        aws_key,
-        aws_secret,
-        f"{s3_path}/session-logs/{st.session_state['session_uuid']}",
-        "messages",
-        st.session_state["messages"],
-        how="w",
-    )
 
 
 def write_to_s3(key: str, secret: str, s3_path: str, filename: str, data: dict, how: str = "a") -> None:

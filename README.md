@@ -13,6 +13,7 @@ Collection of generative AI prototypes, mainly using LLMs.
     - [Suggest early-years activities anchored to the Development Matters guidance](#suggest-early-years-activities-anchored-to-the-development-matters-guidance)
       - [Vectorise the Development Matters learning goals and examples](#vectorise-the-development-matters-learning-goals-and-examples)
       - [Generate activities based on the user's query and the Development Matters learning goals and examples](#generate-activities-based-on-the-users-query-and-the-development-matters-learning-goals-and-examples)
+    - [Build a parenting chatbot](#build-a-parenting-chatbot)
   - [Templating messages and functions](#templating-messages-and-functions)
     - [MessageTemplate](#messagetemplate)
     - [FunctionTemplate](#functiontemplate)
@@ -77,6 +78,20 @@ This prototype generates early-years activities that are anchored to the [Develo
 #### Generate activities based on the user's query and the Development Matters learning goals and examples
 
 ![dm-app](charts/dm-app.png)
+
+### Build a parenting chatbot
+
+We built a parenting chatbot that can answer questions related to pregnancy, babies and toddlers. We used RAG to contextualise our responses based on the [NHS Start for Life](https://www.nhs.uk/start-for-life/) website.
+
+Firstly, we indexed the NHS Start for Life website using Pinecone.
+
+![parenting-chatbot-index](charts/parenting-chatbot-index.png)
+
+Then, we built a chatbot in streamlit. The chatbot queries the Pinecone index with the user's input and fetches the top N most similar documents from the Pinecone index. We then pass those documents through an LLM that classifies them as "relevant" or "not relevant" to the user query. We do this as we always get documents, even if they are not relevant to the user query.
+
+Finally, we add the relevant documents to a prompt along with the user question and call an LLM to generate a response.
+
+![parenting-chatbot-app](charts/parenting-chatbot-app.png)
 
 ## Templating messages and functions
 

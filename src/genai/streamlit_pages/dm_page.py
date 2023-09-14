@@ -1,12 +1,12 @@
 from typing import List
 
-import pinecone
 import streamlit as st
 
 from genai import MessageTemplate
 from genai.eyfs import TextGenerator
 from genai.eyfs import get_embedding
 from genai.streamlit_pages.utils import get_index
+from genai.streamlit_pages.utils import query_pinecone
 from genai.streamlit_pages.utils import reset_state
 from genai.streamlit_pages.utils import sample_docs
 from genai.utils import read_json
@@ -202,48 +202,6 @@ def get_data(path: str, type_: str, areas_of_learning: List[str], age_groups: Li
                         predefined_learning_goals.append(item)
 
     return predefined_learning_goals
-
-
-def query_pinecone(
-    index: pinecone.index.Index,
-    encoded_query: list,
-    filters: dict,
-    top_n: int = 5,
-    max_n: int = 10,
-) -> list:
-    """Query the pinecone index.
-
-    Parameters
-    ----------
-    index
-        Pinecone index.
-
-    query
-        Query vector to search for.
-
-    areas_of_learning
-        Areas of learning to filter by.
-
-    top_n
-        Number of results to return.
-
-    max_n
-        Maximum number of results to keep as prompt examples.
-
-    Returns
-    -------
-    docs
-        List of documents.
-
-    """
-    results = index.query(
-        vector=encoded_query,
-        top_k=top_n,
-        include_metadata=True,
-        filter=filters,
-    )
-
-    return results["matches"]
 
 
 def sidebar() -> tuple:

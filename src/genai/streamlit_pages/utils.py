@@ -53,3 +53,45 @@ def sample_docs(num_docs: int, n: int) -> Union[List[int], ValueError]:
             return random.sample(range(num_docs), num_docs)
         except ValueError as e:
             raise ValueError(f"Cannot sample docs: {e}")
+
+
+def query_pinecone(
+    index: pinecone.index.Index,
+    encoded_query: list,
+    filters: dict,
+    top_n: int = 5,
+    max_n: int = 10,
+) -> list:
+    """Query the pinecone index.
+
+    Parameters
+    ----------
+    index
+        Pinecone index.
+
+    query
+        Query vector to search for.
+
+    areas_of_learning
+        Areas of learning to filter by.
+
+    top_n
+        Number of results to return.
+
+    max_n
+        Maximum number of results to keep as prompt examples.
+
+    Returns
+    -------
+    docs
+        List of documents.
+
+    """
+    results = index.query(
+        vector=encoded_query,
+        top_k=top_n,
+        include_metadata=True,
+        filter=filters,
+    )
+
+    return results["matches"]

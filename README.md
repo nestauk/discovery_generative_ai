@@ -330,7 +330,7 @@ You can use the [Dockerfile](Dockerfile) to launch the streamlit app without ins
 2. Assuming Docker is install on your local machine, you can build the image with:
 
 ```bash
-docker build -t <USERNAME>/<YOUR_IMAGE_NAME> .
+docker build -t <USERNAME>/<YOUR_IMAGE_NAME> -f Dockerfile .
 ```
 
 3. Then run the image with:

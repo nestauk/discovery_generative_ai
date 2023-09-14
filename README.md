@@ -17,6 +17,7 @@ Collection of generative AI prototypes, mainly using LLMs.
   - [Templating messages and functions](#templating-messages-and-functions)
     - [MessageTemplate](#messagetemplate)
     - [FunctionTemplate](#functiontemplate)
+  - [Message history](#message-history)
   - [Setup](#setup)
     - [Generic setup for working with `pyenv` and `poetry`](#generic-setup-for-working-with-pyenv-and-poetry)
     - [How to install this project](#how-to-install-this-project)
@@ -181,6 +182,50 @@ prompt = FunctionTemplate.load("prompt.json")
 prompt = FunctionTemplate.load({"name": my_name, "description": my_description, "parameters": my_parameters})
 ```
 
+## Message history
+
+```python
+from genai.message_history import InMemoryMessageHistory
+
+# Instantiate empty history
+history = InMemoryMessageHistory()
+
+# Create a bunch of messages
+msg1 = {"role": "system", "content": "You are a helpful assistant."}
+msg2 = {"role": "user", "content": "Hi bot, I need help."}
+msg3 = {"role": "assistant", "content": "Hi human, what do you need?"}
+msg4 = {"role": "user", "content": "I need you to tell me a joke."}
+msg5 = {"role": "assistant", "content": "What do you call a fish without eyes?"}
+msg6 = {"role": "user", "content": "I don't know."}
+msg7 = {"role": "assistant", "content": "A fsh."}
+messages = [msg1, msg2, msg3, msg4, msg5, msg6, msg7]
+
+# Add them to history
+for message in messages:
+    history.add_message(message)
+
+history.messages
+# [{'role': 'system', 'content': 'You are a helpful assistant.'},
+#  {'role': 'assistant', 'content': 'What do you call a fish without eyes?'},
+#  {'role': 'user', 'content': "I don't know."},
+#  {'role': 'assistant', 'content': 'A fsh.'},
+#  {'role': 'system', 'content': 'You are a helpful assistant.'},
+#  {'role': 'user', 'content': 'Hi bot, I need help.'},
+#  {'role': 'assistant', 'content': 'Hi human, what do you need?'},
+#  {'role': 'user', 'content': 'I need you to tell me a joke.'},
+#  {'role': 'assistant', 'content': 'What do you call a fish without eyes?'},
+#  {'role': 'user', 'content': "I don't know."},
+#  {'role': 'assistant', 'content': 'A fsh.'}]
+
+# Buffer history by max_tokens. Keep the system message.
+history.get_messages(model_name="gpt-3.5-turbo", max_tokens=60, keep_system_message=True)
+# [{'role': 'system', 'content': 'You are a helpful assistant.'},
+#  {'role': 'user', 'content': 'I need you to tell me a joke.'},
+#  {'role': 'assistant', 'content': 'What do you call a fish without eyes?'},
+#  {'role': 'user', 'content': "I don't know."},
+#  {'role': 'assistant', 'content': 'A fsh.'}]
+```
+
 ## Setup
 
 ### Generic setup for working with `pyenv` and `poetry`
@@ -285,7 +330,7 @@ You can use the [Dockerfile](Dockerfile) to launch the streamlit app without ins
 2. Assuming Docker is install on your local machine, you can build the image with:
 
 ```bash
-docker build -t <USERNAME>/<YOUR_IMAGE_NAME> .
+docker build -t <USERNAME>/<YOUR_IMAGE_NAME> -f Dockerfile .
 ```
 
 3. Then run the image with:

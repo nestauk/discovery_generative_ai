@@ -49,7 +49,25 @@ class TokenCounter:
         max_tokens: int = 4096,
         keep_system_message: bool = True,
     ) -> List[dict]:
-        """Return the number of tokens in a list of messages."""
+        """Return the number of tokens in a list of messages.
+
+        Parameters
+        ----------
+        model_name
+            The name of the model to use for token counting.
+
+        max_tokens
+            The maximum number of tokens to keep in the history.
+
+        keep_system_message
+            Whether to keep the system message in the history.
+
+        Returns
+        -------
+        messages
+            List of messages.
+
+        """
         num_tokens = cls._count_tokens_from_messages(messages, model_name)
         if cls._forget_messages(num_tokens, max_tokens):
             if keep_system_message:
@@ -100,6 +118,22 @@ class InMemoryMessageHistory(BaseMessageHistory):
         """Get all messages from history.
 
         Filter messages when the number of tokens exceeds max_tokens.
+
+        Parameters
+        ----------
+        model_name
+            The name of the model to use for token counting.
+
+        max_tokens
+            The maximum number of tokens to keep in the history.
+
+        keep_system_message
+            Whether to keep the system message in the history.
+
+        Returns
+        -------
+        messages
+            List of messages.
 
         """
         return TokenCounter.buffer(

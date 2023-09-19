@@ -18,7 +18,7 @@ If you would like a summary of the selection you made for each question, run `py
 
 ## Troubleshooting
 
-** I just started a new session in Prodigy, but it says there are already some examples. **
+**I just started a new session in Prodigy, but it says there are already some examples.**
 
 Prodigy has its own mysterious SQLite database. Whenever you want to see the data, you run
 ```

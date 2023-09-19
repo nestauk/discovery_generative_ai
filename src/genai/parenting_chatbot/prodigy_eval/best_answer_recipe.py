@@ -31,5 +31,6 @@ def best_answer(dataset: str, file_path: str) -> dict:
             "choice_style": "single",
             "task_description": "Choose the best answer",  # Only allow one choice
             "choice_auto_accept": True,
+            "buttons": ["accept", "ignore"],
         },
     }

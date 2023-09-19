@@ -18,8 +18,8 @@ def best_answer(dataset: str, file_path: str) -> dict:
     def format_stream(stream: list) -> dict:
         for item in stream:
             question = item["question"]
-            options = [{"id": key, "text": value} for key, value in item["answers"].items()]
-            yield {"text": question, "options": options}
+            options = [{"id": key, "html": value} for key, value in item["answers"].items()]
+            yield {"html": question, "options": options}
 
     stream = format_stream(stream)
 

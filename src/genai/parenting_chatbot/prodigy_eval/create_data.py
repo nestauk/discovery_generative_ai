@@ -1,10 +1,48 @@
+import argparse
 import json
+import os
+
+from dotenv import load_dotenv
+
+from genai.streamlit_pages import parenting_page
 
 
-FILEPATH = "src/genai/parenting_chatbot/prodigy_eval/data/training_data.jsonl"
+parser = argparse.ArgumentParser(description="Name and location of output file")
+parser.add_argument(
+    "--out_dir",
+    type=str,
+    dest="out_dir",
+    help="What value house are you trying to buy?",
+    default="src/genai/parenting_chatbot/prodigy_eval/data/",
+)
+
+args, unknown = parser.parse_known_args()
+
+FILEPATH = os.path.join(args.out_dir, "training_data.jsonl")
+
+load_dotenv()
+
+aws_key = os.environ["AWS_ACCESS_KEY_ID"]
+aws_secret = os.environ["AWS_SECRET_ACCESS_KEY"]
+s3_path = os.environ["S3_BUCKET"]
 
 # Sample data
 data = [
+    {
+        "question": "How to baby-proof?",
+        "answers": {
+            "human": """
+            <p>Baby-proofing your house is recommended for when your baby begins to explore, often when they’re beginning to crawl. Some baby-proofing precautions you can take include:</p>
+             <ol>
+        <li><strong>Secure Furniture</strong>: Anchor heavy furniture, like bookshelves and dressers, to the wall to prevent them from tipping over. Babies often try to pull themselves up using these items.</li>
+        <li><strong>Outlet Covers</strong>: Use plastic covers for electrical outlets to prevent curious fingers from poking into them.</li>
+        <li><strong>Cabinet and Drawer Latches</strong>: Install latches on cabinets and drawers, especially those containing cleaning products, chemicals, or small objects that can be swallowed.</li>
+    </ol>
+            """,
+            "gpt4": "If a newborn has a fever, it's crucial to keep them hydrated and monitor their temperature. Seek medical attention promptly.",
+            "rag": "Fever in a newborn can be concerning. It's recommended to consult with a healthcare professional right away.",
+        },
+    },
     {
         "question": "What should you do if a newborn has a fever?",
         "answers": {
@@ -91,3 +129,12 @@ data = [
 with open(FILEPATH, "w") as file:
     for entry in data:
         file.write(json.dumps(entry) + "\n")
+
+parenting_page.write_to_s3(
+    aws_key,
+    aws_secret,
+    f"{s3_path}/prototypes/parenting-chatbot/prodigy_evaluation",
+    "prodigy_training_data",
+    data,
+    how="w",
+)

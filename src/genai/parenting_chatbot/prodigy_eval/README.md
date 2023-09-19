@@ -2,13 +2,25 @@
 
 ## Setup instructions
 
-To install prodigy, you will need to run `python -m pip install --upgrade prodigy -f https://XXXX-XXXX-XXXX-XXXX@download.prodi.gy`, replacing 'XXXX' with your key (see the docs [here](https://prodi.gy/docs/install)).
+To install prodigy, you will need to run
+```
+python -m pip install --upgrade prodigy -f https://XXXX-XXXX-XXXX-XXXX@download.prodi.gy
+```
+Replace 'XXXX' with your key (see the docs [here](https://prodi.gy/docs/install)).
 
 Create a directory `src/genai/parenting_chatbot/prodigy_eval/data/` (this is temporary - we will store files on s3 in future).
 
-Run `python src/genai/parenting_chatbot/prodigy_eval/create_data.py`. This will save data to `src/genai/parenting_chatbot/prodigy_eval/data/training_data.jsonl` and this will be the training data that your annotators annotate via the Prodigy app.
+Run
+```
+python src/genai/parenting_chatbot/prodigy_eval/create_data.py
+```
+This will save data to `src/genai/parenting_chatbot/prodigy_eval/data/training_data.jsonl` and this will be the training data that your annotators annotate via the Prodigy app.
 
-Next, run `prodigy best_answer answer_data src/genai/parenting_chatbot/prodigy_eval/data/training_data.jsonl -F src/genai/parenting_chatbot/prodigy_eval/best_answer_recipe.py`. Once you run this line, a URL should be given to you in the command line. Visit this URL to access the Prodigy app.
+Next, run 
+```
+prodigy best_answer answer_data src/genai/parenting_chatbot/prodigy_eval/data/training_data.jsonl -F src/genai/parenting_chatbot/prodigy_eval/best_answer_recipe.py
+```
+Once you run this line, a URL should be given to you in the command line. Visit this URL to access the Prodigy app.
 
 Select an answer to each question, click the green tick button at the bottom, and when you're done, click the "save" icon at the top left.
 

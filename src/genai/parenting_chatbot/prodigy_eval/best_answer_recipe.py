@@ -23,11 +23,13 @@ def best_answer(dataset: str, file_path: str) -> dict:
 
     stream = format_stream(stream)
 
-    stream = list(stream)  # to show the percentage already annotated
-
     return {
         "view_id": "choice",  # Use the choice interface
         "dataset": dataset,  # Name of the dataset
         "stream": stream,  # The data stream
-        "config": {"choice_style": "single", "task_description": "Choose the best answer"},  # Only allow one choice
+        "config": {
+            "choice_style": "single",
+            "task_description": "Choose the best answer",  # Only allow one choice
+            "choice_auto_accept": True,
+        },
     }

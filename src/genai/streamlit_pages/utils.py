@@ -14,6 +14,7 @@ from genai.vector_index import PineconeIndex
 def reset_state(key: Optional[str] = None) -> None:
     """Delete the message placeholder state."""
     keys = [
+        "similar_docs",
         "areas_of_learning_text",
         "areas_of_learning",
         "n_results",

@@ -57,5 +57,5 @@ if "__main__" == __name__:
         metric="euclidean",
         docs=docs,
         metadata_config={"indexed": ["areas_of_learning", "source", "type_", "age_group"]},
-        batch_size=80,
+        batch_size=40,
     )

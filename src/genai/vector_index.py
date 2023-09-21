@@ -8,7 +8,7 @@ from genai.utils import batch
 class PineconeIndex:
     """Wrap the Pinecone API.
 
-    Note that this is a very thing and untest wrapper. It is not intended for production use.
+    Note that this is a very thin and untested wrapper. It is not intended for production use.
     Its main purpose is to support this repo's prototypes and tiny indexes.
     """
 
@@ -90,7 +90,7 @@ class PineconeIndex:
     @staticmethod
     def delete(index_name: str) -> None:
         """Delete the index."""
-        if index_name in pinecone.list_indexes():
+        try:
             pinecone.delete_index(index_name)
-        else:
-            raise ValueError(f"Index {index_name} does not exist.")
+        except ValueError:
+            pass

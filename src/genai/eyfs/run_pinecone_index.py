@@ -1,4 +1,7 @@
-"""Join the BBC activities with the labelled activities and build a pinecone index."""
+"""Join the BBC activities with the labelled activities and build a pinecone index.
+
+Note: Running this script will delete the existing index and build a new one.
+"""
 
 import os
 
@@ -9,7 +12,7 @@ import pandas as pd
 from dotenv import load_dotenv
 
 from genai.eyfs import get_embedding
-from genai.utils import read_json
+from genai.utils import read_jsonl_from_s3
 from genai.vector_index import PineconeIndex
 
 
@@ -23,7 +26,7 @@ ENCODER_NAME = "text-embedding-ada-002"
 
 def get_labelled_bbc_activities(path: str) -> pd.DataFrame:
     """Read and clean the labelled BBC activities file and return a dataframe."""
-    data = read_json(path, lines=True)
+    data = read_jsonl_from_s3(path)
     df = pd.concat([pd.DataFrame([line]) for line in data])
     df["prediction"] = df["prediction"].apply(lambda row: row if row else np.nan)
     df = df[~df.prediction.isnull()]
@@ -72,7 +75,8 @@ def main() -> None:
         metric="euclidean",
         docs=items,
         metadata_config={"indexed": ["areas_of_learning", "source", "type_", "age_group"]},
-        batch_size=80,
+        batch_size=40,
+        delete_if_exists=True,
     )
 
 

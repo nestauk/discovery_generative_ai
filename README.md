@@ -22,6 +22,7 @@ Collection of generative AI prototypes, mainly using LLMs.
     - [Generic setup for working with `pyenv` and `poetry`](#generic-setup-for-working-with-pyenv-and-poetry)
     - [How to install this project](#how-to-install-this-project)
   - [Launch the prototypes](#launch-the-prototypes)
+    - [(Optional) Rebuilding the Pinecone database](#optional-rebuilding-the-pinecone-database)
     - [Running the prototypes locally with Docker](#running-the-prototypes-locally-with-docker)
     - [Deploying the prototypes on Streamlit Cloud](#deploying-the-prototypes-on-streamlit-cloud)
     - [Deploying the WhatsApp bot with Heroku](#deploying-the-whatsapp-bot-with-heroku)
@@ -322,6 +323,14 @@ source .venv/bin/activate
    2. The streamlit app is password-protected. You can either remove the password requirement from `app.py` or create a `.streamlit/secrets.toml` file and add `password='<MYPASSWORD>'`.
 
 ## Launch the prototypes
+
+### (Optional) Rebuilding the Pinecone database
+
+Three of the prototypes use the pinecone database to store and retrieve data. To rebuild the database:
+1. Create a `.env` file in the root of the project and add all keys listed in the `.env.examples`.
+2. Run `make build-pinecone`. This will delete the index if it exists and rebuild it from scratch.
+
+**Note:** We are using a free Pinecone database which is deleted after seven days of inactivity. If you get any errors like "this index does not exist", you might need to rebuild it.
 
 ### Running the prototypes locally with Docker
 

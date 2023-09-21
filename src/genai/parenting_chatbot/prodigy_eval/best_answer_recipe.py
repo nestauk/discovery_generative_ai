@@ -1,6 +1,18 @@
+from typing import Dict
+from typing import List
+
 import prodigy
 
 from prodigy.components.loaders import JSONL
+
+
+GLOBAL_CSS = (
+    ".prodigy-content{font-size: 15px}"
+    " .prodigy-option{width: 49%}"
+    " .prodigy-option{align-items:flex-start}"
+    " .prodigy-option{margin-right: 3px}"
+    " .prodigy-container{max-width: 1200px}"
+)
 
 
 @prodigy.recipe(
@@ -8,14 +20,24 @@ from prodigy.components.loaders import JSONL
     dataset=("The dataset to save to", "positional", None, str),
     file_path=("Path to the questions and answers file", "positional", None, str),
 )
-def best_answer(dataset: str, file_path: str) -> dict:
-    """Choose the best answer out of three given options."""
+def best_answer(dataset: str, file_path: str) -> Dict:
+    """
+    Choose the best answer out of the given options.
+
+    Arguments:
+        dataset: The dataset to save to.
+        file_path: Path to the questions and answers file.
+
+    Returns:
+        A dictionary containing the recipe configuration.
+
+    """
 
     # Load the data
     stream = JSONL(file_path)
 
     # Process the stream to format for Prodigy
-    def format_stream(stream: list) -> dict:
+    def format_stream(stream: List) -> Dict:
         for item in stream:
             question = item["question"]
             options = [{"id": key, "html": value} for key, value in item["answers"].items()]
@@ -24,13 +46,18 @@ def best_answer(dataset: str, file_path: str) -> dict:
     stream = format_stream(stream)
 
     return {
-        "view_id": "choice",  # Use the choice interface
-        "dataset": dataset,  # Name of the dataset
-        "stream": stream,  # The data stream
+        # Use the choice interface
+        "view_id": "choice",
+        # Name of the dataset
+        "dataset": dataset,
+        # The data stream
+        "stream": stream,
         "config": {
+            # Only allow one choice
             "choice_style": "single",
-            "task_description": "Choose the best answer",  # Only allow one choice
-            "choice_auto_accept": True,
+            "task_description": "Choose the best answer",
+            "choice_auto_accept": False,
             "buttons": ["accept", "ignore"],
+            "global_css": GLOBAL_CSS,
         },
     }

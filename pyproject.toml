@@ -31,8 +31,8 @@ aiofiles = "^23.1.0"
 gunicorn = "^21.2.0"
 pinecone-client = "^2.2.2"
 streamlit-feedback = "^0.0.9"
-s3fs = "^2023.6.0"
-
+boto3= "1.28.17"
+s3fs = "^2023.9.0"
 
 [tool.poetry.group.test]
 optional = true

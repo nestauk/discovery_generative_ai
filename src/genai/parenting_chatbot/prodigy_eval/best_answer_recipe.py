@@ -60,5 +60,7 @@ def best_answer(dataset: str, file_path: str) -> Dict:
             "buttons": ["accept", "ignore"],
             "global_css": GLOBAL_CSS,
             "feed_overlap": True,
+            "port": 8080,
+            "host": "0.0.0.0",
         },
     }

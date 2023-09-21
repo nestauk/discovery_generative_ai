@@ -59,5 +59,6 @@ def best_answer(dataset: str, file_path: str) -> Dict:
             "choice_auto_accept": False,
             "buttons": ["accept", "ignore"],
             "global_css": GLOBAL_CSS,
+            "feed_overlap": True,
         },
     }

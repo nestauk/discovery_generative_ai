@@ -166,4 +166,4 @@ notebooks/
 .vscode/
 src/scraping/data/*
 
-src/genai/parenting_chatbot/prodigy_eval/data/*.jsonl
+#src/genai/parenting_chatbot/prodigy_eval/data/*.jsonl

@@ -68,7 +68,7 @@ def main() -> None:
         items.append(item)
 
     # Build the index
-    conn = PineconeIndex(api_key=os.environ["PINECONE_API_KEY"], environment="us-west1-gcp")
+    conn = PineconeIndex(api_key=os.environ["PINECONE_API_KEY"], environment=os.environ["PINECONE_REGION"])
     conn.build_and_upsert(
         index_name=INDEX_NAME,
         dimension=len(df["embedding"].iloc[0]),

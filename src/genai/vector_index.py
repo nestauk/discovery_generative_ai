@@ -1,5 +1,7 @@
 import os
 
+from typing import Optional
+
 import pinecone
 
 from genai.utils import batch
@@ -14,16 +16,22 @@ class PineconeIndex:
 
     def __init__(
         self,
-        api_key: str,
-        environment: str = "us-west1-gcp",
+        api_key: Optional[str] = None,
+        environment: Optional[str] = None,
     ) -> None:
         """Initialize the index."""
 
         # Connect to pinecone
-        pinecone.init(
-            api_key=os.environ["PINECONE_API_KEY"],
-            environment=environment,
-        )
+        if api_key and environment:
+            pinecone.init(
+                api_key=api_key,
+                environment=environment,
+            )
+        else:
+            pinecone.init(
+                api_key=os.environ["PINECONE_API_KEY"],
+                environment=os.environ["PINECONE_REGION"],
+            )
 
     def connect(self, index_name: str) -> pinecone.index.Index:
         """Connect to the index."""
@@ -92,5 +100,5 @@ class PineconeIndex:
         """Delete the index."""
         try:
             pinecone.delete_index(index_name)
-        except ValueError:
-            pass
+        except Exception as e:
+            print(e)  # noqa: T001

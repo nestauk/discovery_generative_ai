@@ -124,6 +124,8 @@ def eyfs_kb_bbc(index_name: str = "eyfs-index") -> None:
                 ),
             }
 
+            st.text(messages_placeholders["activity_examples"])
+
             r = TextGenerator.generate(
                 model=selected_model,
                 temperature=temperature,

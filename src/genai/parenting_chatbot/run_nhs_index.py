@@ -1,4 +1,7 @@
-"""Build a pinecone index with the NHS Start for Life data."""
+"""Build a pinecone index with the NHS Start for Life data.
+
+Note: We've opted for indexing full pages instead of individual paragraphs.
+"""
 
 import os
 import uuid

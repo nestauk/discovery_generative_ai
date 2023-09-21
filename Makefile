@@ -29,3 +29,8 @@ lint: ## Apply linters to all files
 .PHONY: clean-poetry-lock
 clean-poetry-lock: ## Removes poetry.lock from all folders except .venv
 	find . -name \poetry.lock -type f -not -path "./.venv/*" -delete
+
+.PHONY: build-pinecone
+build-pinecone:
+	chmod +x build_pinecone_index.sh
+	./build_pinecone_index.sh

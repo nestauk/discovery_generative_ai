@@ -14,6 +14,7 @@ from genai.vector_index import PineconeIndex
 def reset_state(key: Optional[str] = None) -> None:
     """Delete the message placeholder state."""
     keys = [
+        "similar_docs",
         "areas_of_learning_text",
         "areas_of_learning",
         "n_results",
@@ -37,9 +38,9 @@ def reset_state(key: Optional[str] = None) -> None:
 
 
 @st.cache_resource
-def get_index(index_name: str, environment: str = "us-west1-gcp") -> pinecone.index.Index:
+def get_index(index_name: str) -> pinecone.index.Index:
     """Return and persist the pinecone index."""
-    conn = PineconeIndex(api_key=os.environ["PINECONE_API_KEY"], environment=environment)
+    conn = PineconeIndex(api_key=os.environ["PINECONE_API_KEY"], environment=os.environ["PINECONE_REGION"])
     index = conn.connect(index_name=index_name)
     return index
 

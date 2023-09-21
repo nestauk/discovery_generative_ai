@@ -21,8 +21,10 @@ Collection of generative AI prototypes, mainly using LLMs.
   - [Setup](#setup)
     - [Generic setup for working with `pyenv` and `poetry`](#generic-setup-for-working-with-pyenv-and-poetry)
     - [How to install this project](#how-to-install-this-project)
-  - [Launch the streamlit app](#launch-the-streamlit-app)
-    - [Deploying the app with Heroku](#deploying-the-app-with-heroku)
+  - [Launch the prototypes](#launch-the-prototypes)
+    - [Running the prototypes locally with Docker](#running-the-prototypes-locally-with-docker)
+    - [Deploying the prototypes on Streamlit Cloud](#deploying-the-prototypes-on-streamlit-cloud)
+    - [Deploying the WhatsApp bot with Heroku](#deploying-the-whatsapp-bot-with-heroku)
   - [TODO](#todo)
 
 ## Prototypes
@@ -319,7 +321,9 @@ source .venv/bin/activate
    1. Add your OpenAI API key to the `.env` file. See `.env.example` for an example.
    2. The streamlit app is password-protected. You can either remove the password requirement from `app.py` or create a `.streamlit/secrets.toml` file and add `password='<MYPASSWORD>'`.
 
-## Launch the streamlit app
+## Launch the prototypes
+
+### Running the prototypes locally with Docker
 
 You can use the [Dockerfile](Dockerfile) to launch the streamlit app without installing the repo and its dependencies.
 
@@ -329,9 +333,9 @@ You can use the [Dockerfile](Dockerfile) to launch the streamlit app without ins
 
 2. Assuming Docker is install on your local machine, you can build the image with:
 
-```bash
-docker build -t <USERNAME>/<YOUR_IMAGE_NAME> -f Dockerfile .
-```
+  ```bash
+  docker build -t <USERNAME>/<YOUR_IMAGE_NAME> -f Dockerfile .
+  ```
 
 3. Then run the image with:
 
@@ -341,8 +345,31 @@ docker run -p 8501:8501 <USERNAME>/<YOUR_IMAGE_NAME>
 
 4. You can now access the app at `http://localhost:8501`.
 
+### Deploying the prototypes on Streamlit Cloud
 
-### Deploying the app with Heroku
+Assuming you are not an admin of this repo, you would need to fork it and deploy the app on Streamlit Cloud using your Streamlit account. Let's see how you can do that.
+
+1. [Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this repo.
+2. Create a [Streamlit Cloud account](https://share.streamlit.io/) and connect it to your GitHub account.
+3. Click on the **New app** button on Streamlit Cloud to create a new app and set the following fields:
+   1. **Repository**: `<your-githubuser-name>/discovery_generative_ai`
+   2. **Branch**: `dev`
+   3. **Main file path**: `app.py`.
+4. Click on **Advanced settings** and:
+   1. Set **Python version** to 3.9.
+   2. Add your **Secrets** using TOML format:
+
+      ```toml
+      OPENAI_API_KEY='<api-key>'
+      PINECONE_API_KEY='<api-key>'
+      password='<streamlit-password-as-stored-in-.streamlit/secrets.toml>'
+      ```
+
+5. Click on **Deploy!**.
+
+**Note:** Streamlit Cloud has a pretty obnoxious requirement; it's only looking for the latest patch release of a Python version. This might lead to errors as the project works with `python==3.9.18` and Streamlit Cloud will try to install `python==3.9.19` once that's available. To fix that, you would need to update the python version of the project, there's no way around it.
+
+### Deploying the WhatsApp bot with Heroku
 
 Alternatively, if you would like to deploy the app on a public server, you can use the `Dockerfile.heroku` file, which has a few modifications to make it work with Heroku.
 
@@ -367,7 +394,3 @@ heroku ps:scale web=1
 ```
 
 ## TODO
-
-- Remove items from overflow memory in the parenting chatbot
-- Keep the system message in memory buffer
-- Refactor `messages.pop(0)` in memory buffer, do not modify the object.

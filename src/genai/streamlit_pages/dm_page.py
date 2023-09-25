@@ -12,7 +12,7 @@ from genai.streamlit_pages.utils import sample_docs
 from genai.utils import read_json
 
 
-def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
+def eyfs_dm_kb(index_name: str = "eyfs-index", sidebar: bool = True) -> None:
     """Run the Development Matters app."""
     st.title("Generate activities anchored to the Development Matters guidance")
     areas_of_learning_desc = read_json("src/genai/eyfs/areas_of_learning.json")
@@ -30,8 +30,13 @@ def eyfs_dm_kb(index_name: str = "eyfs-index") -> None:
 
     message = MessageTemplate.load("src/genai/dm/prompts/dm_prompt_2.json")
 
-    with st.sidebar:
-        selected_model, temperature, n_examples = sidebar()
+    if sidebar:
+        with st.sidebar:
+            selected_model, temperature, n_examples = sidebar()
+    else:
+        selected_model = "gpt-4"
+        temperature = 0.6
+        n_examples = 5
 
     choice = st.radio(
         label="**Select a learning goal**",

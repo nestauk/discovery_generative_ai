@@ -24,9 +24,9 @@ load_dotenv()
 
 def parenting_chatbot(aws_key: str, aws_secret: str, s3_path: str, sidebar: bool = True) -> None:
     """Parenting chatbot."""
-    st.title("NHS Start for Life chatbot")
+    st.title("Parenting chatbot")
     st.write(
-        "This is a chatbot for the [NHS Start for Life](https://www.nhs.uk/start-for-life/) website. "
+        "This is a chatbot based on the [NHS Start for Life](https://www.nhs.uk/start-for-life/) website. "
         "You can ask it questions about pregnancy, birth and parenthood. "
         "Please note that this is a prototype and the answers are not intended to be used as medical advice."
     )

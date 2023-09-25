@@ -1,4 +1,7 @@
+import random
+
 from typing import Dict
+from typing import Generator
 from typing import List
 
 import prodigy
@@ -34,7 +37,12 @@ def best_answer(dataset: str, file_path: str) -> Dict:
     """
 
     # Load the data
-    stream = JSONL(file_path)
+    stream = list(JSONL(file_path))
+
+    def get_shuffled_stream(stream: List) -> Generator:
+        random.shuffle(stream)
+        for eg in stream:
+            yield eg
 
     # Process the stream to format for Prodigy
     def format_stream(stream: List) -> Dict:
@@ -43,7 +51,7 @@ def best_answer(dataset: str, file_path: str) -> Dict:
             options = [{"id": key, "html": value} for key, value in item["answers"].items()]
             yield {"html": question, "options": options}
 
-    stream = format_stream(stream)
+    stream = format_stream(get_shuffled_stream(stream))
 
     return {
         # Use the choice interface
@@ -61,6 +69,7 @@ def best_answer(dataset: str, file_path: str) -> Dict:
             "global_css": GLOBAL_CSS,
             "feed_overlap": True,
             "port": 8080,
+            # imporant to set host to 0.0.0.0 for running on ec2
             "host": "0.0.0.0",
         },
     }

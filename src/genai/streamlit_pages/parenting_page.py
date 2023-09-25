@@ -22,16 +22,23 @@ from genai.streamlit_pages.utils import reset_state
 load_dotenv()
 
 
-def parenting_chatbot(aws_key: str, aws_secret: str, s3_path: str) -> None:
+def parenting_chatbot(aws_key: str, aws_secret: str, s3_path: str, sidebar: bool = True) -> None:
     """Parenting chatbot."""
-    st.title("Parenting Chatbot")
+    st.title("NHS Start for Life chatbot")
+    st.write(
+        "This is a chatbot for the [NHS Start for Life](https://www.nhs.uk/start-for-life/) website. "
+        "You can ask it questions about pregnancy, birth and parenthood. "
+        "Please note that this is a prototype and the answers are not intended to be used as medical advice."
+    )
+    st.write("---")
 
     selected_model = "gpt-3.5-turbo"
     temperature = 0.6
     pinecone_index = get_index(index_name="eyfs-index")
 
-    with st.sidebar:
-        st.button("Reset chat", on_click=reset_state, type="primary", help="Reset the chat history")
+    if sidebar:
+        with st.sidebar:
+            st.button("Reset chat", on_click=reset_state, type="primary", help="Reset the chat history")
 
     system_message = MessageTemplate.load("src/genai/parenting_chatbot/prompts/system.json")
     filter_refs_function = FunctionTemplate.load("src/genai/parenting_chatbot/prompts/filter_refs_function.json")

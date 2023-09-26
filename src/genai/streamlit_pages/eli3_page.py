@@ -27,7 +27,7 @@ def eli3() -> None:
 
         st.button("Reset chat", on_click=reset_state, type="primary", help="Reset the chat history")
 
-    prompt_template = MessageTemplate.load("src/genai/eli3/prompts/eli3_chat.json")
+    prompt_template = MessageTemplate.load("src/genai/eli3/prompts/eli3_chat_2.json")
 
     # Initialize chat history
     if "messages" not in st.session_state:

@@ -31,7 +31,7 @@ def eli3(sidebar: bool = True) -> None:
         selected_model = "gpt-4"
         temperature = 0.6
 
-    prompt_template = MessageTemplate.load("src/genai/eli3/prompts/eli3_chat.json")
+    prompt_template = MessageTemplate.load("src/genai/eli3/prompts/eli3_chat_2.json")
 
     # Initialize chat history
     if "messages" not in st.session_state:

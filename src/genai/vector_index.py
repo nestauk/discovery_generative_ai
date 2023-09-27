@@ -1,4 +1,5 @@
 import os
+import time
 
 from typing import Optional
 
@@ -91,6 +92,9 @@ class PineconeIndex:
             )
 
             index = self.connect(index_name)
+
+        # Potential fix to avoid error 403
+        time.sleep(30)
 
         for batched_docs in batch(docs, batch_size):
             index.upsert(batched_docs)

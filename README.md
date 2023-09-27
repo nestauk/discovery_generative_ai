@@ -328,9 +328,12 @@ source .venv/bin/activate
 
 Three of the prototypes use the pinecone database to store and retrieve data. To rebuild the database:
 1. Create a `.env` file in the root of the project and add all keys listed in the `.env.examples`.
-2. Run `make build-pinecone`. This will delete the index if it exists and rebuild it from scratch.
+2. Run `make build-pinecone`. This will delete the index if it exists (this happens as part of the first python script it calls) and rebuild it from scratch.
 
-**Note:** We are using a free Pinecone database which is deleted after seven days of inactivity. If you get any errors like "this index does not exist", you might need to rebuild it.
+**Notes**
+
+- We are using a free Pinecone database which is deleted after seven days of inactivity. If you get any errors like "this index does not exist", you might need to rebuild it.
+- The Pinecone database indexes the docs for all prototypes and distinguishes them using the `source` metadata field.
 
 ### Running the prototypes locally with Docker
 
@@ -366,13 +369,7 @@ Assuming you are not an admin of this repo, you would need to fork it and deploy
    3. **Main file path**: `app.py`.
 4. Click on **Advanced settings** and:
    1. Set **Python version** to 3.9.
-   2. Add your **Secrets** using TOML format:
-
-      ```toml
-      OPENAI_API_KEY='<api-key>'
-      PINECONE_API_KEY='<api-key>'
-      password='<streamlit-password-as-stored-in-.streamlit/secrets.toml>'
-      ```
+   2. Add your **Secrets** using TOML format. You can find the required secrets in the section above, basically all the variables in `.env.example` as well as the password in `.streamlit/secrets.toml`.
 
 5. Click on **Deploy!**.
 

@@ -14,14 +14,14 @@ from itertools import combinations
 import pandas as pd
 
 
-# Constants
+# Path constants
 DATA_DIR = "src/genai/parenting_chatbot/prodigy_eval/data/"
 QUESTION_FILE = DATA_DIR + "questions.jsonl"
 ANSWER_FILE = DATA_DIR + "answers_{}.jsonl"
 OUTPUT_FILE = DATA_DIR + "answers.jsonl"
-# Define answer types and load corresponding answers
+# Define answer types, for loading corresponding answers
 ANSWER_TYPES = ["human", "rag", "gpt4"]
-# html formatting prefix and suffix for questions
+# html formatting of prefix and suffix for questions
 QUESTION_PREFIX = "Which one is a better answer to this question:\n\n<span style='font-weight: bold; font-size:30px'>"
 QUESTION_SUFFIX = "</span>"
 

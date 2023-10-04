@@ -65,12 +65,17 @@ def best_answer(dataset: str, file_path: str) -> Dict:
             "choice_style": "single",
             "task_description": "Choose the best answer",
             "choice_auto_accept": False,
+            # Define which buttons to show
             "buttons": ["accept", "ignore"],
+            # Add custom css
             "global_css": GLOBAL_CSS,
+            # If feed_overlap is True, the same example can be sent out to multiple users at the same time
             "feed_overlap": True,
+            # Port to run the server on
             "port": 8080,
-            # imporant to set host to 0.0.0.0 for running on ec2
+            # Important to set host to 0.0.0.0 when running on ec2
             "host": "0.0.0.0",
+            # Setting instant_submit as True means that the user doesn't have to click the "save" button
             "instant_submit": True,
         },
     }

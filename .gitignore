@@ -168,3 +168,4 @@ src/scraping/data/*
 
 src/evals/parenting_chatbot/*
 src/genai/parenting_chatbot/prodigy_eval/_scrap/*
+!src/genai/parenting_chatbot/prodigy_eval/data/

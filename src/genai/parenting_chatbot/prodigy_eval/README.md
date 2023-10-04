@@ -174,7 +174,7 @@ To make the platform available to multiple annotators, we can run Prodigy on an 
 
 We first spin up an ec2 instance (t2.micro, which is quite cheap at around [$0.0116 per hour](https://aws.amazon.com/ec2/instance-types/t2/)) and used ssh to connect to it.
 
-Once connected to the instance, we cloned this repo (to get the recipe code) and installed prodigy on the instance using the instructions above.
+Once connected to the instance, we cloned this repo (to get the recipe code and answer data) and installed prodigy on the instance using the instructions above.
 
 To make the Prodigy instance run in the background and when we've disconnected from instance, we used `screen` by first simply running screen in the terminal
 ```shell

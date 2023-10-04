@@ -71,5 +71,6 @@ def best_answer(dataset: str, file_path: str) -> Dict:
             "port": 8080,
             # imporant to set host to 0.0.0.0 for running on ec2
             "host": "0.0.0.0",
+            "instant_submit": True,
         },
     }

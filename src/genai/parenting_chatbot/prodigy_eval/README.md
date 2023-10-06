@@ -9,7 +9,9 @@
     - [Running prodigy on an ec2 instance](#running-prodigy-on-an-ec2-instance)
 - [Troubleshooting](#troubleshooting)
 
-## Overview
+
+
+## Overview
 
 This is an experiment to test [Prodigy](https://prodi.gy/) as a platform for evaluating the quality of answers from our early-years parenting chatbot prototype. The prototype uses GPT-4 (OpenAI API) as its large language model, and leverages retrieval-augmented generation (RAG) to ground the answers in a trusted knowledge base: in this case, text on the NHS Start for Life website.
 
@@ -58,7 +60,7 @@ The human annotators are presented with a question and two answers at a time, an
 
 ![prodigy-screenshot](figures/prodigy_screenshot.png)
 
-### Prodigy recipe
+### Prodigy recipe
 
 Prodigy uses a "recipe" to define the annotation task. The recipe for this evaluation can be found in `best_answer_recipe.py`.
 

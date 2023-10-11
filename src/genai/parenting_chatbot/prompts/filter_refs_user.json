@@ -1,0 +1,1 @@
+{"role": "user", "content": "###Instructions###\nPlease read the following text and determine whether is relevant to the question.\n###Text###\n{text}\n###Question###\n{question}", "name": null}

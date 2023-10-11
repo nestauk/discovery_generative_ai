@@ -1,4 +1,7 @@
-"""Join the BBC activities with the labelled activities and build a pinecone index."""
+"""Join the BBC activities with the labelled activities and build a pinecone index.
+
+Note: Running this script will delete the existing index and build a new one.
+"""
 
 import os
 
@@ -9,7 +12,7 @@ import pandas as pd
 from dotenv import load_dotenv
 
 from genai.eyfs import get_embedding
-from genai.utils import read_json
+from genai.utils import read_jsonl_from_s3
 from genai.vector_index import PineconeIndex
 
 
@@ -17,15 +20,13 @@ load_dotenv()
 
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
-PATH_TO_LABELLED_ACTIVITIES = "data/eyfs_labels/parsed_json.jsonl"
-PATH_TO_BBC_ACTIVITIES = "data/eyfs/tiny_happy_people - final - tiny_happy_people - final.csv"
 INDEX_NAME = "eyfs-index"
 ENCODER_NAME = "text-embedding-ada-002"
 
 
 def get_labelled_bbc_activities(path: str) -> pd.DataFrame:
     """Read and clean the labelled BBC activities file and return a dataframe."""
-    data = read_json(path, lines=True)
+    data = read_jsonl_from_s3(path)
     df = pd.concat([pd.DataFrame([line]) for line in data])
     df["prediction"] = df["prediction"].apply(lambda row: row if row else np.nan)
     df = df[~df.prediction.isnull()]
@@ -48,8 +49,8 @@ def get_bbc_activities(path: str) -> pd.DataFrame:
 def main() -> None:
     """Run the script."""
     # Read and merge dataframes
-    labels = get_labelled_bbc_activities(PATH_TO_LABELLED_ACTIVITIES)
-    bbc = get_bbc_activities(PATH_TO_BBC_ACTIVITIES)
+    labels = get_labelled_bbc_activities(os.environ["PATH_TO_LABELLED_BBC_DATA"])
+    bbc = get_bbc_activities(os.environ["PATH_TO_BBC_ACTIVITIES_DATA"])
 
     df = labels.merge(bbc[["SHORT DESCRIPTION", "text", "URL", "title"]], how="left", left_on="URL", right_on="URL")
 
@@ -67,14 +68,15 @@ def main() -> None:
         items.append(item)
 
     # Build the index
-    conn = PineconeIndex(api_key=os.environ["PINECONE_API_KEY"], environment="us-west1-gcp")
+    conn = PineconeIndex(api_key=os.environ["PINECONE_API_KEY"], environment=os.environ["PINECONE_REGION"])
     conn.build_and_upsert(
         index_name=INDEX_NAME,
         dimension=len(df["embedding"].iloc[0]),
         metric="euclidean",
         docs=items,
-        metadata_config={"indexed": ["areas_of_learning", "source"]},
-        batch_size=80,
+        metadata_config={"indexed": ["areas_of_learning", "source", "type_", "age_group"]},
+        batch_size=40,
+        delete_if_exists=True,
     )
 
 

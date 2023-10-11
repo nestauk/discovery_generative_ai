@@ -10,14 +10,22 @@ Collection of generative AI prototypes, mainly using LLMs.
       - [Categorise "Tiny Happy People" activities to the EYFS areas of learning and build a vector index](#categorise-tiny-happy-people-activities-to-the-eyfs-areas-of-learning-and-build-a-vector-index)
       - [Generate activities based on the user's query and the "Tiny Happy People" activities](#generate-activities-based-on-the-users-query-and-the-tiny-happy-people-activities)
     - [WhatsApp interface to early-years prompts](#whatsapp-interface-to-early-years-prompts)
+    - [Suggest early-years activities anchored to the Development Matters guidance](#suggest-early-years-activities-anchored-to-the-development-matters-guidance)
+      - [Vectorise the Development Matters learning goals and examples](#vectorise-the-development-matters-learning-goals-and-examples)
+      - [Generate activities based on the user's query and the Development Matters learning goals and examples](#generate-activities-based-on-the-users-query-and-the-development-matters-learning-goals-and-examples)
+    - [Build a parenting chatbot](#build-a-parenting-chatbot)
   - [Templating messages and functions](#templating-messages-and-functions)
     - [MessageTemplate](#messagetemplate)
     - [FunctionTemplate](#functiontemplate)
+  - [Message history](#message-history)
   - [Setup](#setup)
     - [Generic setup for working with `pyenv` and `poetry`](#generic-setup-for-working-with-pyenv-and-poetry)
     - [How to install this project](#how-to-install-this-project)
-  - [Launch the streamlit app](#launch-the-streamlit-app)
-    - [Deploying the app with Heroku](#deploying-the-app-with-heroku)
+  - [Launch the prototypes](#launch-the-prototypes)
+    - [(Optional) Rebuilding the Pinecone database](#optional-rebuilding-the-pinecone-database)
+    - [Running the prototypes locally with Docker](#running-the-prototypes-locally-with-docker)
+    - [Deploying the prototypes on Streamlit Cloud](#deploying-the-prototypes-on-streamlit-cloud)
+    - [Deploying the WhatsApp bot with Heroku](#deploying-the-whatsapp-bot-with-heroku)
   - [TODO](#todo)
 
 ## Prototypes
@@ -63,6 +71,31 @@ Note that to run this prototype, you need to:
 This prototype uses a text messaging app (WhatsApp) as an accessible front end to a large language model (LLM), which can explain simple concepts or generate personalised activity ideas. More information can be found [here](src/genai/whatsapp_bot/).
 
 ![whatsapp](charts/whatsapp_bot.png)
+
+### Suggest early-years activities anchored to the Development Matters guidance
+This prototype generates early-years activities that are anchored to the [Development Matters guidance](https://www.gov.uk/government/publications/development-matters--2/development-matters).
+
+#### Vectorise the Development Matters learning goals and examples
+
+![dm-pinecone](charts/dm-pinecone.png)
+
+#### Generate activities based on the user's query and the Development Matters learning goals and examples
+
+![dm-app](charts/dm-app.png)
+
+### Build a parenting chatbot
+
+We built a parenting chatbot that can answer questions related to pregnancy, babies and toddlers. We used RAG to contextualise our responses based on the [NHS Start for Life](https://www.nhs.uk/start-for-life/) website.
+
+Firstly, we indexed the NHS Start for Life website using Pinecone.
+
+![parenting-chatbot-index](charts/parenting-chatbot-index.png)
+
+Then, we built a chatbot in streamlit. The chatbot queries the Pinecone index with the user's input and fetches the top N most similar documents from the Pinecone index. We then pass those documents through an LLM that classifies them as "relevant" or "not relevant" to the user query. We do this as we always get documents, even if they are not relevant to the user query.
+
+Finally, we add the relevant documents to a prompt along with the user question and call an LLM to generate a response.
+
+![parenting-chatbot-app](charts/parenting-chatbot-app.png)
 
 ## Templating messages and functions
 
@@ -152,6 +185,50 @@ prompt = FunctionTemplate.load("prompt.json")
 prompt = FunctionTemplate.load({"name": my_name, "description": my_description, "parameters": my_parameters})
 ```
 
+## Message history
+
+```python
+from genai.message_history import InMemoryMessageHistory
+
+# Instantiate empty history
+history = InMemoryMessageHistory()
+
+# Create a bunch of messages
+msg1 = {"role": "system", "content": "You are a helpful assistant."}
+msg2 = {"role": "user", "content": "Hi bot, I need help."}
+msg3 = {"role": "assistant", "content": "Hi human, what do you need?"}
+msg4 = {"role": "user", "content": "I need you to tell me a joke."}
+msg5 = {"role": "assistant", "content": "What do you call a fish without eyes?"}
+msg6 = {"role": "user", "content": "I don't know."}
+msg7 = {"role": "assistant", "content": "A fsh."}
+messages = [msg1, msg2, msg3, msg4, msg5, msg6, msg7]
+
+# Add them to history
+for message in messages:
+    history.add_message(message)
+
+history.messages
+# [{'role': 'system', 'content': 'You are a helpful assistant.'},
+#  {'role': 'assistant', 'content': 'What do you call a fish without eyes?'},
+#  {'role': 'user', 'content': "I don't know."},
+#  {'role': 'assistant', 'content': 'A fsh.'},
+#  {'role': 'system', 'content': 'You are a helpful assistant.'},
+#  {'role': 'user', 'content': 'Hi bot, I need help.'},
+#  {'role': 'assistant', 'content': 'Hi human, what do you need?'},
+#  {'role': 'user', 'content': 'I need you to tell me a joke.'},
+#  {'role': 'assistant', 'content': 'What do you call a fish without eyes?'},
+#  {'role': 'user', 'content': "I don't know."},
+#  {'role': 'assistant', 'content': 'A fsh.'}]
+
+# Buffer history by max_tokens. Keep the system message.
+history.get_messages(model_name="gpt-3.5-turbo", max_tokens=60, keep_system_message=True)
+# [{'role': 'system', 'content': 'You are a helpful assistant.'},
+#  {'role': 'user', 'content': 'I need you to tell me a joke.'},
+#  {'role': 'assistant', 'content': 'What do you call a fish without eyes?'},
+#  {'role': 'user', 'content': "I don't know."},
+#  {'role': 'assistant', 'content': 'A fsh.'}]
+```
+
 ## Setup
 
 ### Generic setup for working with `pyenv` and `poetry`
@@ -186,10 +263,10 @@ Install/update a few dependencies
 brew install openssl readline sqlite3 xz zlib
 ```
 
-Install Python 3.9.17
+Install Python 3.9.18
 
 ```bash
-pyenv install 3.9.17
+pyenv install 3.9.18
 ```
 
 Confirm you've installed it correctly by running:
@@ -198,10 +275,10 @@ Confirm you've installed it correctly by running:
 pyenv versions
 ```
 
-Run the following commands to set the global Python version to 3.9.17.
+Run the following commands to set the global Python version to 3.9.18.
 
 ```bash
-pyenv global 3.9.17
+pyenv global 3.9.18
 ```
 
 Close and reopen your terminal so that the changed take effect.
@@ -245,7 +322,20 @@ source .venv/bin/activate
    1. Add your OpenAI API key to the `.env` file. See `.env.example` for an example.
    2. The streamlit app is password-protected. You can either remove the password requirement from `app.py` or create a `.streamlit/secrets.toml` file and add `password='<MYPASSWORD>'`.
 
-## Launch the streamlit app
+## Launch the prototypes
+
+### (Optional) Rebuilding the Pinecone database
+
+Three of the prototypes use the pinecone database to store and retrieve data. To rebuild the database:
+1. Create a `.env` file in the root of the project and add all keys listed in the `.env.examples`.
+2. Run `make build-pinecone`. This will delete the index if it exists (this happens as part of the first python script it calls) and rebuild it from scratch.
+
+**Notes**
+
+- We are using a free Pinecone database which is deleted after seven days of inactivity. If you get any errors like "this index does not exist", you might need to rebuild it.
+- The Pinecone database indexes the docs for all prototypes and distinguishes them using the `source` metadata field.
+
+### Running the prototypes locally with Docker
 
 You can use the [Dockerfile](Dockerfile) to launch the streamlit app without installing the repo and its dependencies.
 
@@ -255,9 +345,9 @@ You can use the [Dockerfile](Dockerfile) to launch the streamlit app without ins
 
 2. Assuming Docker is install on your local machine, you can build the image with:
 
-```bash
-docker build -t <USERNAME>/<YOUR_IMAGE_NAME> .
-```
+  ```bash
+  docker build -t <USERNAME>/<YOUR_IMAGE_NAME> -f Dockerfile .
+  ```
 
 3. Then run the image with:
 
@@ -267,8 +357,25 @@ docker run -p 8501:8501 <USERNAME>/<YOUR_IMAGE_NAME>
 
 4. You can now access the app at `http://localhost:8501`.
 
+### Deploying the prototypes on Streamlit Cloud
 
-### Deploying the app with Heroku
+Assuming you are not an admin of this repo, you would need to fork it and deploy the app on Streamlit Cloud using your Streamlit account. Let's see how you can do that.
+
+1. [Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this repo.
+2. Create a [Streamlit Cloud account](https://share.streamlit.io/) and connect it to your GitHub account.
+3. Click on the **New app** button on Streamlit Cloud to create a new app and set the following fields:
+   1. **Repository**: `<your-githubuser-name>/discovery_generative_ai`
+   2. **Branch**: `dev`
+   3. **Main file path**: `app.py`.
+4. Click on **Advanced settings** and:
+   1. Set **Python version** to 3.9.
+   2. Add your **Secrets** using TOML format. You can find the required secrets in the section above, basically all the variables in `.env.example` as well as the password in `.streamlit/secrets.toml`.
+
+5. Click on **Deploy!**.
+
+**Note:** Streamlit Cloud has a pretty obnoxious requirement; it's only looking for the latest patch release of a Python version. This might lead to errors as the project works with `python==3.9.18` and Streamlit Cloud will try to install `python==3.9.19` once that's available. To fix that, you would need to update the python version of the project, there's no way around it.
+
+### Deploying the WhatsApp bot with Heroku
 
 Alternatively, if you would like to deploy the app on a public server, you can use the `Dockerfile.heroku` file, which has a few modifications to make it work with Heroku.
 

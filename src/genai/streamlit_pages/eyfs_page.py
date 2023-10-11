@@ -1,7 +1,7 @@
 import streamlit as st
 
 from genai import MessageTemplate
-from genai.eyfs.eyfs import ActivityGenerator
+from genai.eyfs.eyfs import TextGenerator
 from genai.streamlit_pages.utils import reset_state
 from genai.utils import read_json
 
@@ -92,7 +92,7 @@ def early_year_activity_plan() -> None:
             message_placeholder = st.empty()
             full_response = ""
 
-            for response in ActivityGenerator.generate(
+            for response in TextGenerator.generate(
                 model=selected_model,
                 temperature=temperature,
                 messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages],

@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM python:3.9.17-slim
+FROM python:3.9.18-slim
 
 # Set environment varibles
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -7,7 +7,7 @@ ENV PYTHONUNBUFFERED 1
 
 # Install system dependencies
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends gcc
+    && apt-get install -y --no-install-recommends gcc python3-dev
 
 # Install poetry
 RUN pip install "poetry==1.5.1"

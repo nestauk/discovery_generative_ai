@@ -1,4 +1,7 @@
 import os
+import time
+
+from typing import Optional
 
 import pinecone
 
@@ -8,22 +11,28 @@ from genai.utils import batch
 class PineconeIndex:
     """Wrap the Pinecone API.
 
-    Note that this is a very thing and untest wrapper. It is not intended for production use.
+    Note that this is a very thin and untested wrapper. It is not intended for production use.
     Its main purpose is to support this repo's prototypes and tiny indexes.
     """
 
     def __init__(
         self,
-        api_key: str,
-        environment: str = "us-west1-gcp",
+        api_key: Optional[str] = None,
+        environment: Optional[str] = None,
     ) -> None:
         """Initialize the index."""
 
         # Connect to pinecone
-        pinecone.init(
-            api_key=os.environ["PINECONE_API_KEY"],
-            environment=environment,
-        )
+        if api_key and environment:
+            pinecone.init(
+                api_key=api_key,
+                environment=environment,
+            )
+        else:
+            pinecone.init(
+                api_key=os.environ["PINECONE_API_KEY"],
+                environment=os.environ["PINECONE_REGION"],
+            )
 
     def connect(self, index_name: str) -> pinecone.index.Index:
         """Connect to the index."""
@@ -84,13 +93,16 @@ class PineconeIndex:
 
             index = self.connect(index_name)
 
+        # Potential fix to avoid error 403
+        time.sleep(30)
+
         for batched_docs in batch(docs, batch_size):
             index.upsert(batched_docs)
 
     @staticmethod
     def delete(index_name: str) -> None:
         """Delete the index."""
-        if index_name in pinecone.list_indexes():
+        try:
             pinecone.delete_index(index_name)
-        else:
-            raise ValueError(f"Index {index_name} does not exist.")
+        except Exception as e:
+            print(e)  # noqa: T001

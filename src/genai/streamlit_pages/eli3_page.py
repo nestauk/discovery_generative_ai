@@ -1,33 +1,37 @@
 import streamlit as st
 
 from genai import MessageTemplate
-from genai.eyfs import ActivityGenerator
+from genai.eyfs import TextGenerator
 from genai.streamlit_pages.utils import reset_state
 
 
-def eli3() -> None:
+def eli3(sidebar: bool = True) -> None:
     """Explain me a concept like I'm 3."""
     st.title("Explain like I am a three year old")
 
     # Create the generator
-    with st.sidebar:
-        selected_model = st.radio(
-            label="**OpenAI model**",
-            options=["gpt-3.5-turbo", "gpt-4"],
-            on_change=reset_state,
-        )
-        temperature = st.slider(
-            label="**Temperature**",
-            min_value=0.0,
-            max_value=2.0,
-            value=0.6,
-            step=0.1,
-            on_change=reset_state,
-        )
+    if sidebar:
+        with st.sidebar:
+            selected_model = st.radio(
+                label="**OpenAI model**",
+                options=["gpt-3.5-turbo", "gpt-4"],
+                on_change=reset_state,
+            )
+            temperature = st.slider(
+                label="**Temperature**",
+                min_value=0.0,
+                max_value=2.0,
+                value=0.6,
+                step=0.1,
+                on_change=reset_state,
+            )
 
-        st.button("Reset chat", on_click=reset_state, type="primary", help="Reset the chat history")
+            st.button("Reset chat", on_click=reset_state, type="primary", help="Reset the chat history")
+    else:
+        selected_model = "gpt-4"
+        temperature = 0.6
 
-    prompt_template = MessageTemplate.load("src/genai/eli3/prompts/eli3_chat.json")
+    prompt_template = MessageTemplate.load("src/genai/eli3/prompts/eli3_chat_2.json")
 
     # Initialize chat history
     if "messages" not in st.session_state:
@@ -51,7 +55,7 @@ def eli3() -> None:
         with st.chat_message("assistant"):
             message_placeholder = st.empty()
             full_response = ""
-            for response in ActivityGenerator.generate(
+            for response in TextGenerator.generate(
                 model=selected_model,
                 temperature=temperature,
                 messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages],

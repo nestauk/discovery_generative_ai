@@ -16,7 +16,7 @@ generate-setup-file = false
 
 
 [tool.poetry.dependencies]
-python = "3.9.17"
+python = "3.9.18"
 requests = "2.28.1"
 openai = "^0.27.8"
 streamlit = "^1.24.1"
@@ -30,13 +30,9 @@ twilio = "^8.5.0"
 aiofiles = "^23.1.0"
 gunicorn = "^21.2.0"
 pinecone-client = "^2.2.2"
-uvicorn = "^0.23.2"
-fastapi = "^0.101.1"
-langchain = "^0.0.270"
-qdrant-client = "^1.4.0"
-pycookiecheat = "0.5.0"
-slack-bolt = "^1.18.0"
-protobuf = "~4.24.0"
+streamlit-feedback = "^0.0.9"
+boto3= "1.28.17"
+s3fs = "^2023.9.0"
 
 [tool.poetry.group.test]
 optional = true

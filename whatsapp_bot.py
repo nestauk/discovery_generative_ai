@@ -15,7 +15,7 @@ from flask import request
 from twilio.rest import Client
 from twilio.twiml.messaging_response import MessagingResponse
 
-from genai.eyfs.eyfs import ActivityGenerator
+from genai.eyfs.eyfs import TextGenerator
 from genai.utils import read_json
 
 
@@ -95,7 +95,7 @@ def generate_reply(incoming_message: str, sender_contact: str, receiver_contact:
 
     # 'explain' response
     if text_message[0:7] == "explain":
-        response = ActivityGenerator.generate(
+        response = TextGenerator.generate(
             model=LLM,
             temperature=TEMPERATURE,
             messages=[ELI3_MESSAGES.copy()],
@@ -125,14 +125,14 @@ def send_text(messages: List[Dict], message_kwargs: Dict, my_contact: str, recei
         messages:
             List of messages to be used as prompts
         message_kwargs:
-            Dictionary of keyword arguments to be passed to the ActivityGenerator
+            Dictionary of keyword arguments to be passed to the TextGenerator
         my_contact:
             Sender's contact, follows a format 'whatsapp:+<phone number>'
         receiver_contact:
             Receiver's contact (ie, my contact), follows a format 'whatsapp:+<phone number>'
     """
     # Generate response to the message
-    response = ActivityGenerator.generate(
+    response = TextGenerator.generate(
         model=LLM,
         temperature=TEMPERATURE,
         messages=messages,

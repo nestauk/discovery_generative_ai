@@ -4,7 +4,7 @@ Get text data from the BBC's Tiny Happy People website about kids activities
 Usage:
 
 First navigate to the scraping folder
-$ cd src/scraping
+$ cd src/scraping/activities
 
 Then run the script
 $ poetry run python scrape_activities.py

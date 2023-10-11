@@ -1,6 +1,6 @@
 import streamlit as st
 
-from genai.eyfs import ActivityGenerator
+from genai.eyfs import TextGenerator
 from genai.eyfs import get_embedding
 from genai.streamlit_pages.eyfs_kb_bbc_page import get_index
 from genai.streamlit_pages.eyfs_kb_bbc_page import query_pinecone
@@ -66,7 +66,7 @@ def eyfs_compare() -> None:
                     "areas_of_learning_text": areas_of_learning_text,
                 }
 
-                r = ActivityGenerator.generate(
+                r = TextGenerator.generate(
                     model=selected_model,
                     temperature=temperature,
                     messages=messages,
@@ -119,7 +119,7 @@ def eyfs_compare() -> None:
                     ),
                 }
 
-                r = ActivityGenerator.generate(
+                r = TextGenerator.generate(
                     model=selected_model,
                     temperature=temperature,
                     messages=messages,

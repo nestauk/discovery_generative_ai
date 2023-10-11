@@ -33,6 +33,9 @@ pinecone-client = "^2.2.2"
 streamlit-feedback = "^0.0.9"
 boto3= "1.28.17"
 s3fs = "^2023.9.0"
+langchain = "^0.0.312"
+qdrant-client = "^1.6.0"
+slack-bolt = "^1.18.0"
 
 [tool.poetry.group.test]
 optional = true

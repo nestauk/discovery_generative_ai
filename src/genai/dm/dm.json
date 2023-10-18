@@ -480,5 +480,43 @@
                 ]
             }
         }
+    },
+
+
+
+{ "area_of_learning": "",
+        "description": "",
+        "age_group": {
+            "0-3": {
+                "learning_goals": [
+                    "",
+                    ""
+                ],
+                "examples": [
+                    "",
+                    ""
+                ]
+            },
+            "3-4": {
+                "learning_goals": [
+                    "",
+                    ""
+                ],
+                "examples": [
+                    "",
+                    ""
+                ]
+            },
+            "4-5": {
+                "learning_goals": [
+                    "",
+                    ""
+                ],
+                "examples": [
+                    "",
+                    ""
+                ]
+            }
+        }
     }
 ]

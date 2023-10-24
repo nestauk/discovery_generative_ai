@@ -474,7 +474,6 @@
                     "start eating independently and learning how to use a knife and fork",
                     "develop manipulation and control",
                     "explore different materials and tools"
-
                 ],
                 "examples": [
                     "Some babies need constant physical contact, attention and physical intimacy. Respond warmly and patiently to them.",
@@ -583,10 +582,8 @@
             }
         }
     },
-
-
-
-{ "area_of_learning": "Literacy",
+    {
+        "area_of_learning": "Literacy",
         "description": "It is crucial for children to develop a life-long love of reading. Reading consists of 2 dimensions: language comprehension and word reading.\n\nLanguage comprehension (necessary for both reading and writing) starts from birth. It only develops when adults talk with children about the world around them and the books (stories and non-fiction) they read with them and enjoy rhymes, poems and songs together.\n\nSkilled word reading, taught later, involves both the speedy working out of the pronunciation of unfamiliar printed words (decoding) and the speedy recognition of familiar printed words.\n\nWriting involves transcription (spelling and handwriting) and composition (articulating ideas and structuring them in speech, before writing).",
         "age_group": {
             "0-3": {
@@ -679,10 +676,9 @@
                 ]
             }
         }
-    }
-
-
-{ "area_of_learning": "Understanding the world",
+    },
+    {
+        "area_of_learning": "Understanding the world",
         "description": "Understanding the world involves guiding children to make sense of their physical world and their community.\n\nThe frequency and range of children’s personal experiences increases their knowledge and sense of the world around them – from visiting parks, libraries and museums to meeting important members of society such as police officers, nurses and firefighters. In addition, listening to a broad selection of stories, non-fiction, rhymes and poems will foster their understanding of our culturally, socially, technologically and ecologically diverse world.\n\nAs well as building important knowledge, this extends their familiarity with words that support understanding across domains. Enriching and widening children’s vocabulary will support later reading comprehension.",
         "age_group": {
             "0-3": {
@@ -806,10 +802,9 @@
                 ]
             }
         }
-    }
-]
-
-{ "area_of_learning": "Expressive arts and design",
+    },
+    {
+        "area_of_learning": "Expressive arts and design",
         "description": "The development of children’s artistic and cultural awareness supports their imagination and creativity. It is important that children have regular opportunities to engage with the arts, enabling them to explore and play with a wide range of media and materials.\n\nThe quality and variety of what children see, hear and participate in is crucial for developing their understanding, self-expression, vocabulary and ability to communicate through the arts.\n\nThe frequency, repetition and depth of their experiences are fundamental to their progress in interpreting and appreciating what they hear, respond to and observe.",
         "age_group": {
             "0-3": {

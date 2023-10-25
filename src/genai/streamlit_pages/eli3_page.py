@@ -7,7 +7,7 @@ from genai.streamlit_pages.utils import reset_state
 
 def eli3(sidebar: bool = True) -> None:
     """Explain me a concept like I'm 3."""
-    st.title("Explain like I am a three year old")
+    st.title("Explain-Like-I'm-3")
 
     # Create the generator
     if sidebar:

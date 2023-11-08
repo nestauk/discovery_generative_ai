@@ -74,6 +74,7 @@ pycookiecheat = "^0.6.0"
 markdownify = "^0.11.6"
 litellm = "^0.13.2"
 sentence-transformers = "^2.2.2"
+torch = ">=2.0.0,<2.0.1 || >2.0.1,<2.1.0 || >2.1.0"
 
 [build-system]
 requires = ["poetry-core>=1.2.0rc1"]

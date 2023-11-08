@@ -32,7 +32,7 @@ def eyfs_dm_kb(index_name: str = "eyfs-index", sidebar: bool = True) -> None:
 
     if sidebar:
         with st.sidebar:
-            selected_model, temperature, n_examples = sidebar()
+            selected_model, temperature, n_examples = _sidebar()
     else:
         selected_model = "gpt-4"
         temperature = 0.6
@@ -209,7 +209,7 @@ def get_data(path: str, type_: str, areas_of_learning: List[str], age_groups: Li
     return predefined_learning_goals
 
 
-def sidebar() -> tuple:
+def _sidebar() -> tuple:
     """Select a model, temperature and number of results."""
     selected_model = st.radio(
         label="**OpenAI model**",

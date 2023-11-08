@@ -1,20 +1,23 @@
 import os
 
+from dotenv import load_dotenv
 from langchain.chains import RetrievalQA
+from langchain.chat_models import ChatOpenAI
 from langchain.embeddings import HuggingFaceBgeEmbeddings
-from langchain.llms import VLLMOpenAI
-from langchain.vectorstores import Qdrant
-from qdrant_client import QdrantClient  # noqa: F401
+from langchain.vectorstores.qdrant import Qdrant
+from qdrant_client import QdrantClient
 from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
 
+
+load_dotenv()
 
 # Initiate embeddings and qdrant client
 model_kwargs = {"device": "cpu"}  # unchanged
 encode_kwargs = {"normalize_embeddings": False}  # unchanged
 
 hf_bge_base = HuggingFaceBgeEmbeddings(
-    model_name="BAAI/bge-base-en", model_kwargs=model_kwargs, encode_kwargs=encode_kwargs
+    model_name="BAAI/bge-base-en-v1.5", model_kwargs=model_kwargs, encode_kwargs=encode_kwargs
 )
 
 client = QdrantClient(
@@ -26,7 +29,7 @@ client = QdrantClient(
 db = Qdrant(
     client=client,
     embeddings=hf_bge_base,
-    collection_name="nesta_way_bge-base-en",
+    collection_name=os.environ.get("QDRANT_COLLECTION_NAME"),
 )
 
 # Initializes your app with your bot token and socket mode handler
@@ -67,7 +70,7 @@ def nw_search(ack, respond, command):  # noqa: ANN001, ANN201
     ack()
     docs = db.similarity_search_with_score(command["text"], k=3)
     # can structure responses using markdown blocks
-    respond(f"""Slash command received! {command['text']}\nResult(s):\n{docs}""")
+    respond(f"""Searched the Nesta Way for: {command['text']}\nResult(s):\n{docs}""")
 
 
 @app.command("/nw_ask")  # noqa: E302
@@ -76,11 +79,8 @@ def nw_ask(ack, respond, command):  # noqa: ANN001, ANN201
     # TODO: Handle offline LLM
     ack()
 
-    llm = VLLMOpenAI(
-        openai_api_key="EMPTY",
-        openai_api_base=os.environ.get("OPENAI_API_BASE"),
-        model_name=os.environ.get("MODEL_NAME"),
-        model_kwargs={"stop": ["."]},
+    llm = ChatOpenAI(
+        model_name="gpt-3.5-turbo",
         max_tokens=2000,
     )
 
@@ -88,7 +88,7 @@ def nw_ask(ack, respond, command):  # noqa: ANN001, ANN201
 
     res = qa_chain({"query": command["text"]})
 
-    respond(f"""You asked: {res['query']}\nAnswer: {res['result']}\n\nSources: {res['source_documents']}""")
+    respond(f"""You asked: {res['query']}\n\nAnswer:\n{res['result']}\n\nSources:\n{res['source_documents']}""")
 
 
 @app.command("/test_command")

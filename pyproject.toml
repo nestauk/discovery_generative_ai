@@ -37,6 +37,9 @@ seaborn = "^0.13.0"
 langchain = "^0.0.331"
 qdrant-client = "^1.6.4"
 slack-bolt = "^1.18.0"
+pycookiecheat = "^0.6.0"
+markdownify = "^0.11.6"
+sentence-transformers = "^2.2.2"
 
 [tool.poetry.group.test]
 optional = true

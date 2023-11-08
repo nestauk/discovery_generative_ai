@@ -2,7 +2,7 @@ import os
 
 from dotenv import load_dotenv
 from langchain.chains import RetrievalQA
-from langchain.chat_models import ChatOpenAI
+from langchain.chat_models import ChatLiteLLM
 from langchain.embeddings import HuggingFaceBgeEmbeddings
 from langchain.vectorstores.qdrant import Qdrant
 from qdrant_client import QdrantClient
@@ -11,6 +11,7 @@ from slack_bolt.adapter.socket_mode import SocketModeHandler
 
 
 load_dotenv()
+
 
 # Initiate embeddings and qdrant client
 model_kwargs = {"device": "cpu"}  # unchanged
@@ -79,14 +80,14 @@ def nw_ask(ack, respond, command):  # noqa: ANN001, ANN201
     # TODO: Handle offline LLM
     ack()
 
-    llm = ChatOpenAI(
+    llm = ChatLiteLLM(
         model_name="gpt-3.5-turbo",
         max_tokens=2000,
     )
 
-    qa_chain = RetrievalQA.from_chain_type(llm=llm, retriever=db.as_retriever(), return_source_documents=True)
+    qa_with_sources = RetrievalQA.from_chain_type(llm=llm, retriever=db.as_retriever(), return_source_documents=True)
 
-    res = qa_chain({"query": command["text"]})
+    res = qa_with_sources({"query": command["text"]})
 
     respond(f"""You asked: {res['query']}\n\nAnswer:\n{res['result']}\n\nSources:\n{res['source_documents']}""")
 

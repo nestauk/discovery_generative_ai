@@ -1,13 +1,17 @@
 """Async Slackbot meant for cloud deployment, use _sync for local testing."""
 import os
 
-from langchain.chains import RetrievalQAWithSourcesChain
-from langchain.chat_models import ChatOpenAI
+from dotenv import load_dotenv
+from langchain.chains import RetrievalQA
+from langchain.chat_models import ChatLiteLLM
 from langchain.embeddings import HuggingFaceBgeEmbeddings
 from langchain.vectorstores.qdrant import Qdrant
 from qdrant_client import QdrantClient
 from slack_bolt.adapter.socket_mode.async_handler import AsyncSocketModeHandler
 from slack_bolt.app.async_app import AsyncApp
+
+
+load_dotenv()
 
 
 # Initiate qdrant client and embeddings
@@ -78,22 +82,16 @@ async def nw_ask(ack, respond, command):  # noqa: ANN001, ANN201
     # TODO: Handle offline LLM
     await ack()
 
-    llm = ChatOpenAI(
+    llm = ChatLiteLLM(
         model_name="gpt-3.5-turbo",
         max_tokens=2000,
     )
 
-    qa_with_sources = RetrievalQAWithSourcesChain.from_chain_type(
-        llm=llm,
-        retriever=db.as_retriever(),
-        return_source_documents=True,
-    )
+    qa_with_sources = RetrievalQA.from_chain_type(llm=llm, retriever=db.as_retriever(), return_source_documents=True)
 
-    res = await qa_with_sources.acall({"question": command["text"]})
+    res = await qa_with_sources.acall({"query": command["text"]})
 
-    await respond(
-        f"""You asked: {res['question']}\n\nAnswer:\n{res['answer']}\n\nSources:\n{res['source_documents']}"""
-    )
+    await respond(f"""You asked: {res['query']}\n\nAnswer:\n{res['result']}\n\nSources:\n{res['source_documents']}""")
 
 
 @app.command("/test_command")

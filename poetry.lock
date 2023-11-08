@@ -1247,6 +1247,111 @@ gitdb = ">=4.0.1,<5"
 test = ["black", "coverage[toml]", "ddt (>=1.1.1,!=1.4.3)", "mock", "mypy", "pre-commit", "pytest", "pytest-cov", "pytest-instafail", "pytest-subtests", "pytest-sugar"]
 
 [[package]]
+name = "google-ai-generativelanguage"
+version = "0.3.3"
+description = "Google Ai Generativelanguage API client library"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "google-ai-generativelanguage-0.3.3.tar.gz", hash = "sha256:4b59993e0fd63593171cbb089e7f76f71a4333a62741d3929159aeb2e3532a83"},
+    {file = "google_ai_generativelanguage-0.3.3-py3-none-any.whl", hash = "sha256:2696fe952ceea233e1a95b89a428b7dd587eac6687bd20cc62edd5c8abc32b98"},
+]
+
+[package.dependencies]
+google-api-core = {version = ">=1.34.0,<2.0.0 || >=2.11.0,<3.0.0dev", extras = ["grpc"]}
+proto-plus = ">=1.22.0,<2.0.0dev"
+protobuf = ">=3.19.5,<3.20.0 || >3.20.0,<3.20.1 || >3.20.1,<4.21.0 || >4.21.0,<4.21.1 || >4.21.1,<4.21.2 || >4.21.2,<4.21.3 || >4.21.3,<4.21.4 || >4.21.4,<4.21.5 || >4.21.5,<5.0.0dev"
+
+[[package]]
+name = "google-api-core"
+version = "2.13.0"
+description = "Google API client core library"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "google-api-core-2.13.0.tar.gz", hash = "sha256:abc1da067c9026c6cd15dfbd4f6ad07735a62eeadc541d1cc296314447fc3aad"},
+    {file = "google_api_core-2.13.0-py3-none-any.whl", hash = "sha256:44ed591f6c3a0c1ac7a91867d2b3841f92839f860f3d3fe26c464dbd50f97094"},
+]
+
+[package.dependencies]
+google-auth = ">=2.14.1,<3.0.dev0"
+googleapis-common-protos = ">=1.56.2,<2.0.dev0"
+grpcio = {version = ">=1.33.2,<2.0dev", optional = true, markers = "extra == \"grpc\""}
+grpcio-status = {version = ">=1.33.2,<2.0.dev0", optional = true, markers = "extra == \"grpc\""}
+protobuf = ">=3.19.5,<3.20.0 || >3.20.0,<3.20.1 || >3.20.1,<4.21.0 || >4.21.0,<4.21.1 || >4.21.1,<4.21.2 || >4.21.2,<4.21.3 || >4.21.3,<4.21.4 || >4.21.4,<4.21.5 || >4.21.5,<5.0.0.dev0"
+requests = ">=2.18.0,<3.0.0.dev0"
+
+[package.extras]
+grpc = ["grpcio (>=1.33.2,<2.0dev)", "grpcio (>=1.49.1,<2.0dev)", "grpcio-status (>=1.33.2,<2.0.dev0)", "grpcio-status (>=1.49.1,<2.0.dev0)"]
+grpcgcp = ["grpcio-gcp (>=0.2.2,<1.0.dev0)"]
+grpcio-gcp = ["grpcio-gcp (>=0.2.2,<1.0.dev0)"]
+
+[[package]]
+name = "google-auth"
+version = "2.23.4"
+description = "Google Authentication Library"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "google-auth-2.23.4.tar.gz", hash = "sha256:79905d6b1652187def79d491d6e23d0cbb3a21d3c7ba0dbaa9c8a01906b13ff3"},
+    {file = "google_auth-2.23.4-py2.py3-none-any.whl", hash = "sha256:d4bbc92fe4b8bfd2f3e8d88e5ba7085935da208ee38a134fc280e7ce682a05f2"},
+]
+
+[package.dependencies]
+cachetools = ">=2.0.0,<6.0"
+pyasn1-modules = ">=0.2.1"
+rsa = ">=3.1.4,<5"
+
+[package.extras]
+aiohttp = ["aiohttp (>=3.6.2,<4.0.0.dev0)", "requests (>=2.20.0,<3.0.0.dev0)"]
+enterprise-cert = ["cryptography (==36.0.2)", "pyopenssl (==22.0.0)"]
+pyopenssl = ["cryptography (>=38.0.3)", "pyopenssl (>=20.0.0)"]
+reauth = ["pyu2f (>=0.1.5)"]
+requests = ["requests (>=2.20.0,<3.0.0.dev0)"]
+
+[[package]]
+name = "google-generativeai"
+version = "0.2.2"
+description = "Google Generative AI High level API client library and tools."
+category = "dev"
+optional = false
+python-versions = ">=3.9"
+files = [
+    {file = "google_generativeai-0.2.2-py3-none-any.whl", hash = "sha256:0fc3e61fbaeddaca590d30cfa1a4b2945db85d2a782f31eef20982457f4cb31f"},
+]
+
+[package.dependencies]
+google-ai-generativelanguage = "0.3.3"
+google-api-core = "*"
+google-auth = "*"
+protobuf = "*"
+tqdm = "*"
+
+[package.extras]
+dev = ["absl-py", "black", "nose2", "pandas", "pytype", "pyyaml"]
+
+[[package]]
+name = "googleapis-common-protos"
+version = "1.61.0"
+description = "Common protobufs used in Google APIs"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "googleapis-common-protos-1.61.0.tar.gz", hash = "sha256:8a64866a97f6304a7179873a465d6eee97b7a24ec6cfd78e0f575e96b821240b"},
+    {file = "googleapis_common_protos-1.61.0-py2.py3-none-any.whl", hash = "sha256:22f1915393bb3245343f6efe87f6fe868532efc12aa26b391b15132e1279f1c0"},
+]
+
+[package.dependencies]
+protobuf = ">=3.19.5,<3.20.0 || >3.20.0,<3.20.1 || >3.20.1,<4.21.1 || >4.21.1,<4.21.2 || >4.21.2,<4.21.3 || >4.21.3,<4.21.4 || >4.21.4,<4.21.5 || >4.21.5,<5.0.0.dev0"
+
+[package.extras]
+grpc = ["grpcio (>=1.44.0,<2.0.0.dev0)"]
+
+[[package]]
 name = "greenlet"
 version = "3.0.1"
 description = "Lightweight in-process concurrent programming"
@@ -1383,6 +1488,23 @@ files = [
 
 [package.extras]
 protobuf = ["grpcio-tools (>=1.59.2)"]
+
+[[package]]
+name = "grpcio-status"
+version = "1.59.2"
+description = "Status proto mapping for gRPC"
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "grpcio-status-1.59.2.tar.gz", hash = "sha256:a2c2b146e66b73ba80d021ab34fce5db4dd9be67ca4566cda40d36b185ce54f4"},
+    {file = "grpcio_status-1.59.2-py3-none-any.whl", hash = "sha256:24bdf3b3b83b9112f43bd0626f82510d12cc1d919a45028ac20eb6919218e508"},
+]
+
+[package.dependencies]
+googleapis-common-protos = ">=1.5.5"
+grpcio = ">=1.59.2"
+protobuf = ">=4.21.6"
 
 [[package]]
 name = "grpcio-tools"
@@ -1564,14 +1686,14 @@ socks = ["socksio (>=1.0.0,<2.0.0)"]
 
 [[package]]
 name = "huggingface-hub"
-version = "0.18.0"
+version = "0.19.0"
 description = "Client library to download and publish models, datasets and other repos on the huggingface.co hub"
 category = "main"
 optional = false
 python-versions = ">=3.8.0"
 files = [
-    {file = "huggingface_hub-0.18.0-py3-none-any.whl", hash = "sha256:ee0b6b68acbf6aeb6d083ea081e981c277a1104b82ab67fdf6780ff5396830af"},
-    {file = "huggingface_hub-0.18.0.tar.gz", hash = "sha256:10eda12b9c1cfa800b4b7c096b3ace8843734c3f28d69d1c243743fb7d7a2e81"},
+    {file = "huggingface_hub-0.19.0-py3-none-any.whl", hash = "sha256:8cd7ffdb36393ba1c99b4576fbe8900b3496c98a643cde05f355348fe7d89144"},
+    {file = "huggingface_hub-0.19.0.tar.gz", hash = "sha256:7395c9b8053dc8aa0dec2900f367890f66be07bfe46369b95af3f4c1013eb09e"},
 ]
 
 [package.dependencies]
@@ -1584,17 +1706,17 @@ tqdm = ">=4.42.1"
 typing-extensions = ">=3.7.4.3"
 
 [package.extras]
-all = ["InquirerPy (==0.3.4)", "Jinja2", "Pillow", "aiohttp", "black (==23.7)", "gradio", "jedi", "mypy (==1.5.1)", "numpy", "pydantic (<2.0)", "pytest", "pytest-asyncio", "pytest-cov", "pytest-env", "pytest-vcr", "pytest-xdist", "ruff (>=0.0.241)", "soundfile", "types-PyYAML", "types-requests", "types-simplejson", "types-toml", "types-tqdm", "types-urllib3", "urllib3 (<2.0)"]
+all = ["InquirerPy (==0.3.4)", "Jinja2", "Pillow", "aiohttp", "gradio", "jedi", "mypy (==1.5.1)", "numpy", "pydantic (>1.1,<3.0)", "pytest", "pytest-asyncio", "pytest-cov", "pytest-env", "pytest-vcr", "pytest-xdist", "ruff (>=0.1.3)", "soundfile", "types-PyYAML", "types-requests", "types-simplejson", "types-toml", "types-tqdm", "types-urllib3", "typing-extensions (>=4.8.0)", "urllib3 (<2.0)"]
 cli = ["InquirerPy (==0.3.4)"]
-dev = ["InquirerPy (==0.3.4)", "Jinja2", "Pillow", "aiohttp", "black (==23.7)", "gradio", "jedi", "mypy (==1.5.1)", "numpy", "pydantic (<2.0)", "pytest", "pytest-asyncio", "pytest-cov", "pytest-env", "pytest-vcr", "pytest-xdist", "ruff (>=0.0.241)", "soundfile", "types-PyYAML", "types-requests", "types-simplejson", "types-toml", "types-tqdm", "types-urllib3", "urllib3 (<2.0)"]
-docs = ["InquirerPy (==0.3.4)", "Jinja2", "Pillow", "aiohttp", "black (==23.7)", "gradio", "hf-doc-builder", "jedi", "mypy (==1.5.1)", "numpy", "pydantic (<2.0)", "pytest", "pytest-asyncio", "pytest-cov", "pytest-env", "pytest-vcr", "pytest-xdist", "ruff (>=0.0.241)", "soundfile", "types-PyYAML", "types-requests", "types-simplejson", "types-toml", "types-tqdm", "types-urllib3", "urllib3 (<2.0)", "watchdog"]
+dev = ["InquirerPy (==0.3.4)", "Jinja2", "Pillow", "aiohttp", "gradio", "jedi", "mypy (==1.5.1)", "numpy", "pydantic (>1.1,<3.0)", "pytest", "pytest-asyncio", "pytest-cov", "pytest-env", "pytest-vcr", "pytest-xdist", "ruff (>=0.1.3)", "soundfile", "types-PyYAML", "types-requests", "types-simplejson", "types-toml", "types-tqdm", "types-urllib3", "typing-extensions (>=4.8.0)", "urllib3 (<2.0)"]
+docs = ["InquirerPy (==0.3.4)", "Jinja2", "Pillow", "aiohttp", "gradio", "hf-doc-builder", "jedi", "mypy (==1.5.1)", "numpy", "pydantic (>1.1,<3.0)", "pytest", "pytest-asyncio", "pytest-cov", "pytest-env", "pytest-vcr", "pytest-xdist", "ruff (>=0.1.3)", "soundfile", "types-PyYAML", "types-requests", "types-simplejson", "types-toml", "types-tqdm", "types-urllib3", "typing-extensions (>=4.8.0)", "urllib3 (<2.0)", "watchdog"]
 fastai = ["fastai (>=2.4)", "fastcore (>=1.3.27)", "toml"]
-inference = ["aiohttp", "pydantic (<2.0)"]
-quality = ["black (==23.7)", "mypy (==1.5.1)", "ruff (>=0.0.241)"]
+inference = ["aiohttp", "pydantic (>1.1,<3.0)"]
+quality = ["mypy (==1.5.1)", "ruff (>=0.1.3)"]
 tensorflow = ["graphviz", "pydot", "tensorflow"]
-testing = ["InquirerPy (==0.3.4)", "Jinja2", "Pillow", "aiohttp", "gradio", "jedi", "numpy", "pydantic (<2.0)", "pytest", "pytest-asyncio", "pytest-cov", "pytest-env", "pytest-vcr", "pytest-xdist", "soundfile", "urllib3 (<2.0)"]
+testing = ["InquirerPy (==0.3.4)", "Jinja2", "Pillow", "aiohttp", "gradio", "jedi", "numpy", "pydantic (>1.1,<3.0)", "pytest", "pytest-asyncio", "pytest-cov", "pytest-env", "pytest-vcr", "pytest-xdist", "soundfile", "urllib3 (<2.0)"]
 torch = ["torch"]
-typing = ["pydantic (<2.0)", "types-PyYAML", "types-requests", "types-simplejson", "types-toml", "types-tqdm", "types-urllib3"]
+typing = ["pydantic (>1.1,<3.0)", "types-PyYAML", "types-requests", "types-simplejson", "types-toml", "types-tqdm", "types-urllib3", "typing-extensions (>=4.8.0)"]
 
 [[package]]
 name = "hyperframe"
@@ -3012,6 +3134,24 @@ files = [
 wcwidth = "*"
 
 [[package]]
+name = "proto-plus"
+version = "1.22.3"
+description = "Beautiful, Pythonic protocol buffers."
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "proto-plus-1.22.3.tar.gz", hash = "sha256:fdcd09713cbd42480740d2fe29c990f7fbd885a67efc328aa8be6ee3e9f76a6b"},
+    {file = "proto_plus-1.22.3-py3-none-any.whl", hash = "sha256:a49cd903bc0b6ab41f76bf65510439d56ca76f868adf0274e738bfdd096894df"},
+]
+
+[package.dependencies]
+protobuf = ">=3.19.0,<5.0.0dev"
+
+[package.extras]
+testing = ["google-api-core[grpc] (>=1.31.5)"]
+
+[[package]]
 name = "protobuf"
 version = "4.25.0"
 description = ""
@@ -3136,6 +3276,33 @@ files = [
 
 [package.dependencies]
 numpy = ">=1.16.6"
+
+[[package]]
+name = "pyasn1"
+version = "0.5.0"
+description = "Pure-Python implementation of ASN.1 types and DER/BER/CER codecs (X.208)"
+category = "dev"
+optional = false
+python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,>=2.7"
+files = [
+    {file = "pyasn1-0.5.0-py2.py3-none-any.whl", hash = "sha256:87a2121042a1ac9358cabcaf1d07680ff97ee6404333bacca15f76aa8ad01a57"},
+    {file = "pyasn1-0.5.0.tar.gz", hash = "sha256:97b7290ca68e62a832558ec3976f15cbf911bf5d7c7039d8b861c2a0ece69fde"},
+]
+
+[[package]]
+name = "pyasn1-modules"
+version = "0.3.0"
+description = "A collection of ASN.1-based protocols modules"
+category = "dev"
+optional = false
+python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,>=2.7"
+files = [
+    {file = "pyasn1_modules-0.3.0-py2.py3-none-any.whl", hash = "sha256:d3ccd6ed470d9ffbc716be08bd90efbd44d0734bc9303818f7336070984a162d"},
+    {file = "pyasn1_modules-0.3.0.tar.gz", hash = "sha256:5bd01446b736eb9d31512a30d46c1ac3395d676c6f3cafa4c03eb54b9925631c"},
+]
+
+[package.dependencies]
+pyasn1 = ">=0.4.6,<0.6.0"
 
 [[package]]
 name = "pycodestyle"
@@ -4018,6 +4185,21 @@ files = [
     {file = "rpds_py-0.12.0-pp39-pypy39_pp73-musllinux_1_2_x86_64.whl", hash = "sha256:5f1519b080d8ce0a814f17ad9fb49fb3a1d4d7ce5891f5c85fc38631ca3a8dc4"},
     {file = "rpds_py-0.12.0.tar.gz", hash = "sha256:7036316cc26b93e401cedd781a579be606dad174829e6ad9e9c5a0da6e036f80"},
 ]
+
+[[package]]
+name = "rsa"
+version = "4.9"
+description = "Pure-Python RSA implementation"
+category = "dev"
+optional = false
+python-versions = ">=3.6,<4"
+files = [
+    {file = "rsa-4.9-py3-none-any.whl", hash = "sha256:90260d9058e514786967344d0ef75fa8727eed8a7d2e43ce9f4bcf1b536174f7"},
+    {file = "rsa-4.9.tar.gz", hash = "sha256:e38464a49c6c85d7f1351b0126661487a7e0a14a50f1675ec50eb34d4f20ef21"},
+]
+
+[package.dependencies]
+pyasn1 = ">=0.1.3"
 
 [[package]]
 name = "s3fs"
@@ -5537,4 +5719,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "3.9.17"
-content-hash = "1aba5cd76c584c89f4258e737db6da5d8e1c615dcd6fdfdda31ca68a6883079b"
+content-hash = "e2f4724ac99f47fb73226664d6c2a350ef3792bec1157aa2c5513aaf340f96e1"

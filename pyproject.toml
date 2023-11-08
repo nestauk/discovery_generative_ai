@@ -34,12 +34,6 @@ streamlit-feedback = "^0.0.9"
 boto3= "1.28.17"
 s3fs = "^2023.9.0"
 seaborn = "^0.13.0"
-langchain = "^0.0.331"
-qdrant-client = "^1.6.4"
-slack-bolt = "^1.18.0"
-pycookiecheat = "^0.6.0"
-markdownify = "^0.11.6"
-sentence-transformers = "^2.2.2"
 
 [tool.poetry.group.test]
 optional = true
@@ -70,6 +64,15 @@ black = "^22.6.0"                         # Python style checks
 
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.24.0"
+
+
+[tool.poetry.group.slackbot.dependencies]
+google-generativeai = "^0.2.2"
+langchain = "^0.0.331"
+qdrant-client = "^1.6.4"
+slack-bolt = "^1.18.0"
+pycookiecheat = "^0.6.0"
+markdownify = "^0.11.6"
 
 [build-system]
 requires = ["poetry-core>=1.2.0rc1"]

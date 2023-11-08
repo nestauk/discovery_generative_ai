@@ -263,10 +263,10 @@ Install/update a few dependencies
 brew install openssl readline sqlite3 xz zlib
 ```
 
-Install Python 3.9.18
+Install Python 3.9.17
 
 ```bash
-pyenv install 3.9.18
+pyenv install 3.9.17
 ```
 
 Confirm you've installed it correctly by running:
@@ -275,10 +275,10 @@ Confirm you've installed it correctly by running:
 pyenv versions
 ```
 
-Run the following commands to set the global Python version to 3.9.18.
+Run the following commands to set the global Python version to 3.9.17.
 
 ```bash
-pyenv global 3.9.18
+pyenv global 3.9.17
 ```
 
 Close and reopen your terminal so that the changed take effect.
@@ -373,7 +373,7 @@ Assuming you are not an admin of this repo, you would need to fork it and deploy
 
 5. Click on **Deploy!**.
 
-**Note:** Streamlit Cloud has a pretty obnoxious requirement; it's only looking for the latest patch release of a Python version. This might lead to errors as the project works with `python==3.9.18` and Streamlit Cloud will try to install `python==3.9.19` once that's available. To fix that, you would need to update the python version of the project, there's no way around it.
+**Note:** Streamlit Cloud has a pretty obnoxious requirement; it's only looking for the latest patch release of a Python version. This might lead to errors as the project works with `python==3.9.17` and Streamlit Cloud might try to install `python==3.9.18` or `python==3.9.19` once that's available. To fix that, you would need to update the python version of the project, there's no way around it.
 
 ### Deploying the WhatsApp bot with Heroku
 

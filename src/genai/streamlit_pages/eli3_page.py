@@ -7,6 +7,25 @@ from genai.streamlit_pages.utils import reset_state
 
 def eli3(sidebar: bool = True) -> None:
     """Explain me a concept like I'm 3."""
+
+    # Define your custom CSS
+    custom_css = """
+        <style>
+            /* Adjust the selector as needed */
+            .stHeadingContainer {
+                margin-top: -100px; /* Reduce the top margin */
+            }
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {
+                visibility: hidden
+            }
+        </style>
+        """
+
+    # Apply the custom CSS
+    st.markdown(custom_css, unsafe_allow_html=True)
+
     st.title("Explain-Like-I'm-3")
 
     # Create the generator
@@ -44,7 +63,7 @@ def eli3(sidebar: bool = True) -> None:
             st.markdown(message["content"])
 
     # Accept user input
-    prompt = st.chat_input("How do whales breath?")
+    prompt = st.chat_input("How do whales breathe?")
     if prompt:
         # Display user message in chat message container
         with st.chat_message("user"):

@@ -14,6 +14,25 @@ from genai.utils import read_json
 
 def eyfs_dm_kb(index_name: str = "eyfs-index", sidebar: bool = True) -> None:
     """Run the Development Matters app."""
+
+    # Define your custom CSS
+    custom_css = """
+        <style>
+            /* Adjust the selector as needed */
+            .stHeadingContainer {
+                margin-top: -100px; /* Reduce the top margin */
+            }
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {
+                visibility: hidden
+            }
+        </style>
+        """
+
+    # Apply the custom CSS
+    st.markdown(custom_css, unsafe_allow_html=True)
+
     st.title("Generate activities anchored to the Development Matters guidance")
     areas_of_learning_desc = read_json("src/genai/eyfs/areas_of_learning.json")
     aol = list(areas_of_learning_desc.keys())

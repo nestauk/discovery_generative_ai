@@ -8,6 +8,25 @@ from genai.utils import read_json
 
 def early_year_activity_plan() -> None:
     """Come up with activities for children."""
+
+    # Define your custom CSS
+    custom_css = """
+        <style>
+            /* Adjust the selector as needed */
+            .stHeadingContainer {
+                margin-top: -100px; /* Reduce the top margin */
+            }
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {
+                visibility: hidden
+            }
+        </style>
+        """
+
+    # Apply the custom CSS
+    st.markdown(custom_css, unsafe_allow_html=True)
+
     st.title("Generating activity plans grounded in EY foundation stages")
     areas_of_learning_desc = read_json("src/genai/eyfs/areas_of_learning.json")
     aol = list(areas_of_learning_desc.keys())

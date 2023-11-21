@@ -24,6 +24,25 @@ load_dotenv()
 
 def parenting_chatbot(aws_key: str, aws_secret: str, s3_path: str, sidebar: bool = True) -> None:
     """Early-years parenting chatbot."""
+
+    # Define your custom CSS
+    custom_css = """
+        <style>
+            /* Adjust the selector as needed */
+            .stHeadingContainer {
+                margin-top: -100px; /* Reduce the top margin */
+            }
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {
+                visibility: hidden
+            }
+        </style>
+        """
+
+    # Apply the custom CSS
+    st.markdown(custom_css, unsafe_allow_html=True)
+
     st.title("Early-years parenting chatbot")
     st.write(
         "This is a chatbot based on information from the [NHS Start for Life](https://www.nhs.uk/start-for-life/) website. "

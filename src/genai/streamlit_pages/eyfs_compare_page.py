@@ -38,7 +38,7 @@ def eyfs_compare() -> None:
     # Get the user input
     query = st.text_input(
         label="**What's the topic you want activities for?**",
-        value="Let's create activities educating children on how whales breath",
+        value="Let's create activities educating children on how whales breathe",
         help="Prompt the large language model with a some text and it will generate an activity plan for you.",
     )
     if st.button(label="**Generate**", help="Generate an answer."):

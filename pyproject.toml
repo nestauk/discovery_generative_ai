@@ -18,7 +18,7 @@ generate-setup-file = false
 [tool.poetry.dependencies]
 python = "3.9.17"
 requests = "2.28.1"
-openai = "^0.27.8"
+openai = "0.27.8"
 streamlit = "^1.24.1"
 python-dotenv = "^1.0.0"
 streamlit-option-menu = "^0.3.6"
@@ -27,13 +27,15 @@ tenacity = "^8.2.2"
 beautifulsoup4 = "^4.12.2"
 Flask = "^2.3.2"
 twilio = "^8.5.0"
-aiofiles = "^23.1.0"
+aiofiles = "23.1.0"
 gunicorn = "^21.2.0"
 pinecone-client = "^2.2.2"
-streamlit-feedback = "^0.0.9"
+streamlit-feedback = "0.0.9"
 boto3= "1.28.17"
 s3fs = "^2023.9.0"
 seaborn = "^0.13.0"
+cchardet = "^2.1.7"
+chardet = "^5.2.0"
 
 [tool.poetry.group.test]
 optional = true

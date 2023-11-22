@@ -65,6 +65,17 @@ black = "^22.6.0"                         # Python style checks
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.24.0"
 
+
+[tool.poetry.group.slackbot.dependencies]
+langchain = "^0.0.331"
+qdrant-client = "^1.6.4"
+slack-bolt = "^1.18.0"
+pycookiecheat = "^0.6.0"
+markdownify = "^0.11.6"
+litellm = "^0.13.2"
+sentence-transformers = "^2.2.2"
+torch = ">=2.0.0,<2.0.1 || >2.0.1,<2.1.0 || >2.1.0"
+
 [build-system]
 requires = ["poetry-core>=1.2.0rc1"]
 build-backend = "poetry.core.masonry.api"

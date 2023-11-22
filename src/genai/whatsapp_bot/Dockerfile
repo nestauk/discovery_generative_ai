@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM --platform=linux/amd64 python:3.9.18-slim
+FROM --platform=linux/amd64 python:3.9.17-slim
 
 # Set environment varibles
 ENV PYTHONDONTWRITEBYTECODE 1

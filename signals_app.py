@@ -201,8 +201,8 @@ def signals_bot(sidebar: bool = True) -> None:
     # # Apply the custom CSS
     # st.markdown(custom_css, unsafe_allow_html=True)
 
-    st.title("Signals chatbot")
-    st.write("Let's discuss the future!")
+    st.title("Chatting about the future signals with an AI")
+    st.write("This is an interactive experience to explore Nesta's future signals using this years trending technology: generative AI. The AI chatbot will try to relate and personalise the future signals to you. You can provide as much information about yourself as you like (don't share anything too sensitive) and the AI will try to come up with ways that these signals could impact your life. Good luck! (and remember, it might make mistakes)")
 
     # First time running the app
     if "messages" not in st.session_state:

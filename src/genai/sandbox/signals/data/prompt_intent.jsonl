@@ -1,0 +1,1 @@
+{"role": "user", "content": "You are a helpful chatbot talking with the user about the articles of future signals that we wrote. ###Instructions### Predict the intended action of the user, what the user wishes you to carry out based on the conversation history. Pay attention to the most recent messages\n\n###Possible intents###\n{intents}\n\n"}

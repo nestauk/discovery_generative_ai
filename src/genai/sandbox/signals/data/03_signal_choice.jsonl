@@ -1,0 +1,2 @@
+{"role": "user", "content": "Start your answer by explaining each of the signals in one clear sentence (use similar language to the signals descriptions). If possible, indicate how a signal might be relevant to the user, given the user information and conversation history. Finish your answer by asking the user to choose one of the signals to hear more about it. Remember that you must be patient and never offend or be aggressive.   \n\n###Future signals###{signals}\n\n###User information### Here is what the user told you about themselves: {user_input}.\n\n###Answer###"
+}

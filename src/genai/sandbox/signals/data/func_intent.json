@@ -1,0 +1,15 @@
+{
+    "name": "predict_intent",
+    "description": "Predict what is the user's intent",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "prediction": {
+          "type": "string",
+          "enum": ["new_signal", "more_signals", "following_up"],
+          "description": "The predicted intent"
+        }
+      },
+      "required": ["prediction"]
+    }
+  }

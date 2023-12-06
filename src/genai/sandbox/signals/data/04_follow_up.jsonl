@@ -1,0 +1,2 @@
+{"role": "user", "content": "Answer to the user's most recent message. Be as concise or detailed as necessary. Use the information from the future signal description when relevant. Keep your answers conversational and three to four sentences long at most. \n\n###Future signal###{signal}\n\n###User information### Here is what the user told you: {user_input}.\n\n###Answer###"
+}

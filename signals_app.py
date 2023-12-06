@@ -147,7 +147,7 @@ def predict_top_signal(user_message: str, signals: list) -> str:
     return top_signal['prediction']
 
 
-def predict_top_three_signals(user_message: str, signals: list) -> list:
+def predict_top_three_signals(user_message: str, allowed_signals: list) -> list:
     """Predict the top signal from the user's message.
     
     Args:
@@ -158,16 +158,18 @@ def predict_top_three_signals(user_message: str, signals: list) -> list:
     """
     # Function call
     func_top_signals = json.loads(open(path_func_top_three_signals).read())
-    func_top_signals['parameters']['properties']['prediction']['items']['enum'] = signals
+    func_top_signals['parameters']['properties']['prediction']['items']['enum'] = allowed_signals
     print(func_top_signals)
     message = MessageTemplate.load(path_prompt_top_three_signals)
     function_top_three = FunctionTemplate.load(func_top_signals)
+
+    signals_descriptions_ = generate_signals_texts(signals_data, allowed_signals)
 
     response = TextGenerator.generate(
             model=selected_model,
             temperature=temperature,
             messages=[message],
-            message_kwargs={"signals": signals_descriptions, "user_input": user_message},
+            message_kwargs={"signals": signals_descriptions_, "user_input": user_message},
             stream=False,
             functions=[function_top_three.to_prompt()],
             function_call={"name": "predict_top_signals"},
@@ -315,6 +317,7 @@ def signals_bot(sidebar: bool = True) -> None:
             st.session_state.history.append({"role": "assistant", "content": full_response})
 
         elif intent == "following_up":
+            print(st.session_state.active_signal)
             #Follow up the user's message
             instruction = MessageTemplate.load(path_prompt_following_up)
             message_history = [MessageTemplate.load(m) for m in st.session_state.history]

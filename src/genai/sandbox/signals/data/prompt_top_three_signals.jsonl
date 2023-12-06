@@ -1,0 +1,1 @@
+{"role": "user", "content": "###Instructions### Predict which three of the following future signals are the most relevant to user input. You have to choose three of these signals. \n\n###Future signal summaries###\n{signals}\n\n###User input:\n{user_input}"}

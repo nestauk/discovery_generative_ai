@@ -1,0 +1,18 @@
+{
+    "name": "predict_top_signals",
+    "description": "Predict which three signals are the most relevant to user input",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "prediction": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": []
+          },
+          "description": "The predicted most relevant signals"
+        }
+      },
+      "required": ["prediction"]
+    }
+  }

@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 selected_model = "gpt-4-1106-preview"
-temperature = 0.6
+temperature = 0.000001
 
 # Paths to prompts
 PROMPT_PATH = "src/genai/sandbox/signals/data/"

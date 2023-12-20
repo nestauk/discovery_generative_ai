@@ -218,6 +218,15 @@ def signals_bot(sidebar: bool = True) -> None:
     # Define custom CSS
     custom_css = """
         <style>
+        /* Adjust the selector as needed */
+        .stHeadingContainer {
+            margin-top: -100px; /* Reduce the top margin */
+        }
+        #MainMenu {visibility: hidden;}
+        footer {visibility: hidden;}
+        header {
+            visibility: hidden
+        }
         [data-testid="chatAvatarIcon-assistant"] {
             background-color: #A59BEE !important;
         }

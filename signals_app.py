@@ -235,7 +235,7 @@ def signals_bot(sidebar: bool = True) -> None:
         }
 
         html, body, [class*="st-"] {
-            font-family: 'Averta', sans-serif;
+            font-family: 'Averta', 'Avenir', sans-serif;
         }
         </style>
         """

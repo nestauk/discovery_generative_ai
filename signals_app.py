@@ -280,13 +280,13 @@ def signals_bot() -> None:
             st.session_state["memory"].add_message(m)
         # Keep count of the number of unique sessions
         timestamp = current_time()
-        session_log = f"{timestamp}-{str(uuid.uuid4())}"
+        st.session_state["session_log"] = f"{timestamp}-{str(uuid.uuid4())}"
         write_to_s3(
             key=aws_key,
             secret=aws_secret,
             s3_path=f"{s3_path}/session-logs-signals",
             filename="session_counter",
-            data={"session": session_log, "time": timestamp},
+            data={"session": st.session_state["session_log"], "time": timestamp},
             how="a",
         )
 
@@ -333,15 +333,6 @@ def signals_bot() -> None:
                 )
                 st.session_state.messages.append({"role": "assistant", "content": full_response})
                 st.session_state["memory"].add_message({"role": "assistant", "content": full_response})
-            # Keep count of the number of signals
-            write_to_s3(
-                key=aws_key,
-                secret=aws_secret,
-                s3_path=f"{s3_path}/session-logs-signals",
-                filename="signal_counter",
-                data={"signal": signal_to_explain, "time": current_time()},
-                how="a",
-            )
 
         elif intent == "more_signals":
             # Filter out signals that have already been covered
@@ -378,6 +369,21 @@ def signals_bot() -> None:
                 )
                 st.session_state.messages.append({"role": "assistant", "content": full_response})
                 st.session_state["memory"].add_message({"role": "assistant", "content": full_response})
+
+        # Keep track of the number of messages
+        write_to_s3(
+            key=aws_key,
+            secret=aws_secret,
+            s3_path=f"{s3_path}/session-logs-signals",
+            filename="message_counter",
+            data={
+                "session": st.session_state["session_log"],
+                "time": current_time(),
+                "intent": intent,
+                "signal": st.session_state.active_signal,
+            },
+            how="a",
+        )
 
 
 def llm_call(selected_model: str, temperature: float, messages: MessageTemplate, messages_placeholders: dict) -> str:

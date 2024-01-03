@@ -1,3 +1,4 @@
+import copy
 import json
 import os
 import uuid
@@ -27,6 +28,7 @@ PATH_SIGNALS_DATA = PROMPT_PATH + "signals_2024.json"
 PATH_SYSTEM = PROMPT_PATH + "00_system.jsonl"
 PATH_INTRO = PROMPT_PATH + "01_intro.jsonl"
 PATH_ACTIONS = PROMPT_PATH + "intent_actions.json"
+PATH_ILLUSTRATIONS = "src/genai/sandbox/signals/illustrations/"
 
 # Top signal function
 path_func_top_signal = PROMPT_PATH + "func_top_signal.json"
@@ -267,6 +269,8 @@ def signals_bot() -> None:
         st.session_state.messages = []
         # Record of messages to send to the LLM
         st.session_state["memory"] = InMemoryMessageHistory()
+        st.session_state["messages_intent"] = []
+        st.session_state["messages_signal"] = []
         # Keep track of which state we're in
         st.session_state.state = "start"
         # Fetch system and introduction messages
@@ -282,6 +286,8 @@ def signals_bot() -> None:
         for m in intro_messages:
             st.session_state.messages.append(m)
             st.session_state["memory"].add_message(m)
+            st.session_state["messages_intent"].append("intro")
+            st.session_state["messages_signal"].append("none")
         # Keep count of the number of unique sessions
         timestamp = current_time()
         st.session_state["session_log"] = f"{timestamp}-{str(uuid.uuid4())}"
@@ -295,8 +301,15 @@ def signals_bot() -> None:
         )
 
     # Display chat messages on app rerun
-    for message in st.session_state.messages:
+    for i, message in enumerate(st.session_state.messages):
         with st.chat_message(message["role"]):
+            if st.session_state["messages_intent"][i] == "new_signal":
+                signal_to_explain = st.session_state["messages_signal"][i]
+                st.image(
+                    PATH_ILLUSTRATIONS + signals_dict[signal_to_explain]["img"],
+                    caption="Illustration by Chen Wu",
+                    use_column_width=True,
+                )
             st.markdown(message["content"])
 
     # Get user message
@@ -315,6 +328,8 @@ def signals_bot() -> None:
             st.markdown(user_message)
         st.session_state.messages.append({"role": "user", "content": user_message})
         st.session_state["memory"].add_message({"role": "user", "content": user_message})
+        st.session_state["messages_intent"].append("user")
+        st.session_state["messages_signal"].append("none")
         if st.session_state.state == "start":
             intent = "new_signal"
             st.session_state.user_info = user_message
@@ -334,6 +349,13 @@ def signals_bot() -> None:
             instruction = MessageTemplate.load(path_prompt_impact)
             message_history = st.session_state["memory"].get_messages(max_tokens=3000) + [instruction]
             with st.chat_message("assistant"):
+                # Show the signal image
+                st.image(
+                    PATH_ILLUSTRATIONS + signals_dict[signal_to_explain]["img"],
+                    caption="Illustration by Chen Wu",
+                    use_column_width=True,
+                )
+                # Type the response
                 full_response = llm_call(
                     selected_model,
                     temperature,
@@ -345,6 +367,8 @@ def signals_bot() -> None:
                 )
                 st.session_state.messages.append({"role": "assistant", "content": full_response})
                 st.session_state["memory"].add_message({"role": "assistant", "content": full_response})
+                st.session_state["messages_intent"].append(copy.deepcopy(intent))
+                st.session_state["messages_signal"].append(copy.deepcopy(signal_to_explain))
 
         elif intent == "more_signals":
             # Filter out signals that have already been covered
@@ -364,6 +388,8 @@ def signals_bot() -> None:
                 )
                 st.session_state.messages.append({"role": "assistant", "content": full_response})
                 st.session_state["memory"].add_message({"role": "assistant", "content": full_response})
+                st.session_state["messages_intent"].append(copy.deepcopy(intent))
+                st.session_state["messages_signal"].append("none")
 
         elif intent == "following_up":
             # Generate follow up message
@@ -381,6 +407,8 @@ def signals_bot() -> None:
                 )
                 st.session_state.messages.append({"role": "assistant", "content": full_response})
                 st.session_state["memory"].add_message({"role": "assistant", "content": full_response})
+                st.session_state["messages_intent"].append(copy.deepcopy(intent))
+                st.session_state["messages_signal"].append("none")
 
         # Keep track of the number of messages
         write_to_s3(

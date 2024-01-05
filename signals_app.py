@@ -19,9 +19,9 @@ from genai.message_history import InMemoryMessageHistory
 
 load_dotenv()
 
-# selected_model = "gpt-4-1106-preview"
+selected_model = "gpt-4-1106-preview"
 # selected_model = "gpt-3.5-turbo-1106"
-selected_model = "gpt-4"
+# selected_model = "gpt-4"
 temperature = 0.000001
 
 # Paths to prompts

@@ -4,6 +4,7 @@ import os
 import uuid
 
 from datetime import datetime
+from typing import Union
 
 import openai
 import s3fs
@@ -15,6 +16,7 @@ from genai import FunctionTemplate
 from genai import MessageTemplate
 from genai.eyfs import TextGenerator
 from genai.message_history import InMemoryMessageHistory
+from genai.message_history import TokenCounter
 
 
 load_dotenv()
@@ -23,6 +25,8 @@ selected_model = "gpt-4-1106-preview"
 # selected_model = "gpt-3.5-turbo-1106"
 # selected_model = "gpt-4"
 temperature = 0.000001
+
+CHECK_COSTS = False
 
 # Paths to prompts
 PROMPT_PATH = "src/genai/sandbox/signals/data/"
@@ -162,6 +166,17 @@ def predict_intent(user_message: str, active_signal: str) -> str:
         function_call={"name": "predict_intent"},
     )
     intent = json.loads(response["choices"][0]["message"]["function_call"]["arguments"])
+
+    if CHECK_COSTS:
+        cost_input = (
+            TokenCounter._count_tokens_from_messages(
+                messages=[m.to_prompt() for m in all_messages], model_name=selected_model
+            )
+            * 0.01
+            / 1000
+        )
+        print(f"Intent cost: {cost_input}")  # noqa: T001
+
     return intent["prediction"]
 
 
@@ -412,7 +427,32 @@ def signals_bot() -> None:
                 st.session_state["messages_intent"].append(copy.deepcopy(intent))
                 st.session_state["messages_signal"].append("none")
 
-        # Keep track of the number of messages
+        if CHECK_COSTS:
+            # Keep track of the number of messages
+            def transform_message(m: Union[MessageTemplate, dict]) -> dict:
+                """Transform all messages to dictionary format (quick hack)"""
+                try:
+                    return m.to_prompt()
+                except AttributeError:
+                    return m
+
+            cost_input = (
+                TokenCounter._count_tokens_from_messages(
+                    messages=[transform_message(m) for m in message_history], model_name=selected_model
+                )
+                * 0.01
+                / 1000
+            )
+            cost_output = (
+                TokenCounter._count_tokens_from_messages(
+                    messages=[{"role": "assistant", "content": full_response}], model_name=selected_model
+                )
+                * 0.03
+                / 1000
+            )
+            cost_total = cost_input + cost_output
+            print(f"Total cost: {cost_total}")  # noqa: T001
+
         write_to_s3(
             key=aws_key,
             secret=aws_secret,

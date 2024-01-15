@@ -1,7 +1,7 @@
 [
     {
         "name": "new_signal",
-        "description": "User wishes to change the topic and talk about an new future signal. Alternatively, the user has been just presented with a set of future signal options by the assistant, and the user has now chosen which signal to talk about more."
+        "description": "User wishes to change the topic and talk about an different future signal. Alternatively, the user has been just presented with a set of future signal options by the assistant, and the user has now chosen which signal to talk about more."
     },
     {
         "name": "more_signals",

@@ -170,3 +170,5 @@ src/evals/parenting_chatbot/*
 src/genai/parenting_chatbot/prodigy_eval/_scrap/*
 !src/genai/parenting_chatbot/prodigy_eval/data/
 !src/genai/sandbox/signals/data/
+src/genai/sandbox/signals/data/signals_2024.json
+src/genai/sandbox/signals/illustrations/*

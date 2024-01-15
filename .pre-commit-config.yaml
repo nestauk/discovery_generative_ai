@@ -75,4 +75,3 @@ repos:
             --format,
             custom,
           ]
-        stages: [commit]

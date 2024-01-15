@@ -442,6 +442,7 @@ def signals_bot() -> None:
                 )
                 * 0.01
                 / 1000
+                * 1
             )
             cost_output = (
                 TokenCounter._count_tokens_from_messages(
